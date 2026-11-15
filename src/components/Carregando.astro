@@ -1,0 +1,85 @@
+---
+// Tela de carregamento: a logo do Boni entra subindo e balança devagar, como um barco na água,
+// enquanto uma linha de 2px atravessa a tela conforme o site carrega. Some com fade quando a página termina de carregar.
+// Aparece só na primeira visita da sessão. Sem JS não aparece; com movimento reduzido, a logo não balança.
+import { Image } from 'astro:assets';
+import { imagem } from '../lib/imagens';
+---
+<div class="carregando" data-carregando aria-hidden="true">
+  <div class="carregando__conteudo">
+    <Image class="carregando__logo" src={imagem('logo_bar_do_boni.png')} alt=""
+      widths={[300, 425]} sizes="(max-width: 639px) 60vw, 360px" format="png" loading="eager" fetchpriority="high" />
+    <div class="carregando__linha"><span data-carregando-barra></span></div>
+  </div>
+</div>
+
+<style>
+  .carregando { display: none; }
+  :global(html.js-carregando) .carregando {
+    position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-end;
+    background: var(--color-base); color: var(--color-texto);
+    transition: opacity 500ms ease, visibility 500ms ease;
+  }
+  :global(html.js-carregando) .carregando.saindo { opacity: 0; visibility: hidden; }
+  .carregando__conteudo { width: 100%; display: grid; gap: 32px; padding: 0 0 96px; }
+  .carregando :global(.carregando__logo) {
+    display: block; width: min(360px, 60vw); height: auto; margin-left: var(--gutter);
+    transform-origin: 50% 90%;
+    animation: logo-entra 700ms cubic-bezier(.2, .7, .2, 1) both, logo-balanca 2400ms ease-in-out 700ms infinite;
+  }
+  .carregando__linha { height: 2px; background: var(--texto-linha); }
+  .carregando__linha span { display: block; height: 2px; width: 0; background: var(--color-texto); transition: width 400ms ease; }
+
+  @keyframes logo-entra {
+    from { opacity: 0; transform: translateY(32px); }
+    to { opacity: 1; transform: none; }
+  }
+  /* Balanço de barco: inclina e sobe/desce de leve */
+  @keyframes logo-balanca {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    25% { transform: rotate(-2deg) translateY(-4px); }
+    75% { transform: rotate(2deg) translateY(2px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .carregando :global(.carregando__logo) { animation: none; }
+  }
+</style>
+
+<script>
+  const raiz = document.documentElement;
+  const tela = document.querySelector<HTMLElement>('[data-carregando]');
+  const barra = document.querySelector<HTMLElement>('[data-carregando-barra]');
+
+  if (tela && barra && raiz.classList.contains('js-carregando')) {
+    const inicio = performance.now();
+    const MINIMO = 1100; // tempo mínimo com a logo na tela (ms)
+
+    // Progresso pelas imagens já carregadas (as de fora da tela carregam depois, sob demanda)
+    const imgs = [...document.images].filter((i) => i.loading !== 'lazy');
+    const atualizar = () => {
+      const prontas = imgs.filter((i) => i.complete).length;
+      barra.style.width = `${Math.max(12, Math.round((prontas / Math.max(1, imgs.length)) * 90))}%`;
+    };
+    imgs.forEach((i) => i.addEventListener('load', atualizar, { once: true }));
+    atualizar();
+
+    let saiu = false;
+    const sair = () => {
+      if (saiu) return;
+      saiu = true;
+      barra.style.width = '100%';
+      const espera = Math.max(0, MINIMO - (performance.now() - inicio));
+      setTimeout(() => {
+        tela.classList.add('saindo');
+        // avisa a página que a tela de carregamento está saindo (para animações de abertura)
+        dispatchEvent(new Event('boni:pronto'));
+        setTimeout(() => { raiz.classList.remove('js-carregando'); tela.remove(); }, 520);
+      }, espera + 300);
+      try { sessionStorage.setItem('boni-carregou', '1'); } catch { /* sem armazenamento: mostra de novo na próxima vez */ }
+    };
+    if (document.readyState === 'complete') sair();
+    else addEventListener('load', sair, { once: true });
+    // nunca prende o visitante: some no máximo em 5s
+    setTimeout(sair, 5000);
+  }
+</script>

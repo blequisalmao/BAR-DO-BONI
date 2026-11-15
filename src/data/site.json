@@ -1,0 +1,41 @@
+{
+  "_leia": "Dados do bar. Campos com CONFIRMAR ainda precisam ser checados com o dono. Veja a lista 'pendencias' no fim.",
+  "nome": "Bar do Boni",
+  "url": "https://www.bardoboni.com.br",
+  "descricao": "Petiscos, frutos do mar e drinks na beira da Lagoa da Conceição, em Florianópolis. Todo dia, das 11h às 2h.",
+  "endereco": {
+    "rua": "Av. das Rendeiras, 2232",
+    "bairro": "Lagoa da Conceição",
+    "cidade": "Florianópolis",
+    "uf": "SC",
+    "cep": "88062-400",
+    "pais": "BR"
+  },
+  "mapa": "https://www.google.com/maps/search/?api=1&query=Bar+do+Boni,+Av.+das+Rendeiras,+2232,+Lagoa+da+Concei%C3%A7%C3%A3o,+Florian%C3%B3polis+SC",
+  "mapaEmbed": "https://www.google.com/maps?q=Bar%20do%20Boni%2C%20Av.%20das%20Rendeiras%2C%202232%2C%20Lagoa%20da%20Concei%C3%A7%C3%A3o%2C%20Florian%C3%B3polis%20-%20SC&z=16&output=embed",
+  "telefone": {
+    "texto": "(48) 3232-1139",
+    "link": "+554832321139"
+  },
+  "whatsapp": {
+    "numero": "554832321139",
+    "mensagem": "Olá! Quero reservar uma mesa no Bar do Boni."
+  },
+  "email": "bardobonibar@gmail.com",
+  "instagram": "https://www.instagram.com/bardoboni/",
+  "facebook": "https://www.facebook.com/bardobonilagoa/",
+  "horario": {
+    "texto": "Todos os dias, 11h às 2h",
+    "curto": "Todo dia, 11h às 2h",
+    "abre": "11:00",
+    "fecha": "02:00"
+  },
+  "pendencias": [
+    "url: domínio definitivo do site (placeholder)",
+    "endereco.cep: 88062-400 ou 88062-600",
+    "whatsapp.numero: número real de reservas (hoje é o telefone fixo como placeholder)",
+    "instagram: confirmar o perfil",
+    "horario: confirmar 11h às 2h todos os dias",
+    "Praia Mole: o copo de caipirinha cita 'Praia Mole'; confirmar se existe segunda unidade antes de citar"
+  ]
+}

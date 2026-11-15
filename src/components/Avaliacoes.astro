@@ -1,0 +1,108 @@
+---
+// Avaliações reais do Google.
+// 1) Automático (recomendado): com GOOGLE_PLACES_API_KEY e GOOGLE_PLACE_ID definidos, o build busca
+//    nota, total e até 5 avaliações na API do Google Places (New). Nada é inventado.
+// 2) Manual: sem a chave, usa src/data/avaliacoes.json (avaliações reais coladas à mão).
+// 3) Sem nenhuma das duas, mostra só os botões para ver e avaliar no Google.
+import { Icon } from 'astro-icon/components';
+import site from '../data/site.json';
+import manual from '../data/avaliacoes.json';
+
+interface Avaliacao { autor: string; nota: number; texto: string; quando?: string; link?: string }
+
+const chave = import.meta.env.GOOGLE_PLACES_API_KEY as string | undefined;
+const placeId = import.meta.env.GOOGLE_PLACE_ID as string | undefined;
+
+let nota: number | null = manual.nota;
+let total: number | null = manual.total;
+let lista: Avaliacao[] = manual.avaliacoes as Avaliacao[];
+let linkGoogle = site.mapa;
+
+if (chave && placeId) {
+  try {
+    const resp = await fetch(`https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}?languageCode=pt-BR`, {
+      headers: { 'X-Goog-Api-Key': chave, 'X-Goog-FieldMask': 'rating,userRatingCount,reviews,googleMapsUri' },
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const dados = await resp.json();
+    nota = dados.rating ?? null;
+    total = dados.userRatingCount ?? null;
+    linkGoogle = dados.googleMapsUri ?? linkGoogle;
+    lista = (dados.reviews ?? []).map((r: any) => ({
+      autor: r.authorAttribution?.displayName ?? 'Cliente no Google',
+      nota: r.rating ?? 5,
+      texto: r.originalText?.text ?? r.text?.text ?? '',
+      quando: r.relativePublishTimeDescription,
+      link: r.googleMapsUri,
+    })).filter((r: Avaliacao) => r.texto);
+  } catch (erro) {
+    console.warn(`[avaliações] Não foi possível buscar no Google (${erro}). Usando src/data/avaliacoes.json.`);
+  }
+}
+
+const linkAvaliar = placeId ? `https://search.google.com/local/writereview?placeid=${encodeURIComponent(placeId)}` : site.mapa;
+const estrelas = (n: number) => Array.from({ length: 5 }, (_, i) => i < Math.round(n));
+---
+<section class="secao avaliacoes" id="avaliacoes" aria-labelledby="titulo-avaliacoes">
+  <div class="secao__cab avaliacoes__cab">
+    <h1 class="secao__titulo display" id="titulo-avaliacoes">Avaliações</h1>
+    {nota !== null && (
+      <p class="avaliacoes__nota">
+        <span class="avaliacoes__numero display">{nota.toFixed(1).replace('.', ',')}</span>
+        <span>
+          <span class="estrelas" role="img" aria-label={`${nota.toFixed(1)} de 5 estrelas`}>
+            {estrelas(nota).map((cheia) => <Icon name="lucide:star" class:list={[{ cheia }]} aria-hidden="true" />)}
+          </span>
+          <span class="avaliacoes__total">{total ? `${total} avaliações no Google` : 'no Google'}</span>
+        </span>
+      </p>
+    )}
+  </div>
+
+  {lista.length > 0 && (
+    <ul class="avaliacoes__lista">
+      {lista.map((a) => (
+        <li>
+          <span class="estrelas" role="img" aria-label={`${a.nota} de 5 estrelas`}>
+            {estrelas(a.nota).map((cheia) => <Icon name="lucide:star" class:list={[{ cheia }]} aria-hidden="true" />)}
+          </span>
+          <blockquote class="avaliacoes__texto">{a.texto}</blockquote>
+          <p class="avaliacoes__autor">
+            {a.link ? <a class="link" href={a.link} target="_blank" rel="noopener">{a.autor}</a> : a.autor}
+            {a.quando && <span>, {a.quando}</span>}
+          </p>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <div class="avaliacoes__acoes">
+    {lista.length === 0 && <p>Veja o que dizem do Boni no Google.</p>}
+    <a class="btn btn--linha" href={linkGoogle} target="_blank" rel="noopener"><Icon name="lucide:external-link" aria-hidden="true" />Ver avaliações no Google</a>
+    <a class="btn btn--ousada" href={linkAvaliar} target="_blank" rel="noopener"><Icon name="lucide:star" aria-hidden="true" />Avaliar no Google</a>
+  </div>
+</section>
+
+<style>
+  .avaliacoes { padding-bottom: 96px; }
+  .avaliacoes__cab { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; }
+  .avaliacoes__nota { display: flex; align-items: center; gap: 16px; }
+  .avaliacoes__numero { font-size: 56px; line-height: 1; }
+  .avaliacoes__nota > span:last-child { display: grid; gap: 8px; }
+  .avaliacoes__total { font-size: 16px; color: var(--texto-suave); }
+  .estrelas { display: inline-flex; gap: 4px; }
+  .estrelas :global(svg) { width: 20px; height: 20px; color: var(--color-texto); }
+  .estrelas :global(svg.cheia) { fill: currentColor; }
+
+  .avaliacoes__lista {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 32px;
+    list-style: none; margin: 0; padding: 0 var(--gutter);
+  }
+  .avaliacoes__lista li { display: grid; align-content: start; gap: 16px; padding-top: 24px; border-top: 2px solid var(--color-texto); }
+  /* texto da avaliação em grafia normal: é a fala do cliente */
+  .avaliacoes__texto { margin: 0; text-transform: none; letter-spacing: 0; font-size: 17px; line-height: 1.55; }
+  .avaliacoes__autor { font-size: 16px; font-weight: 600; }
+  .avaliacoes__autor span { font-weight: 400; color: var(--texto-suave); }
+
+  .avaliacoes__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; padding: 48px var(--gutter) 0; }
+</style>

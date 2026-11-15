@@ -1,0 +1,11 @@
+---
+// Legenda padronizada do cardápio: nome, porção e preço, cada um na sua linha.
+import { formatarPreco } from '../lib/imagens';
+interface Props { nome: string; porcao?: string; preco: string; tag?: 'figcaption' | 'div' }
+const { nome, porcao, preco, tag: Tag = 'figcaption' } = Astro.props;
+---
+<Tag class="legenda" data-legenda>
+  <span class="legenda__nome">{nome}</span>
+  <span class="legenda__porcao">{porcao ?? ''}</span>
+  <span class="legenda__preco">{formatarPreco(preco)}</span>
+</Tag>

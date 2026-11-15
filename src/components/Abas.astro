@@ -1,0 +1,81 @@
+---
+// Abas fixas da página inicial: "A casa" e "Cardápio" lado a lado, presas logo abaixo do cabeçalho.
+// Clicar troca o conteúdo direto para a seção escolhida, já do começo. Teclado: ← → entre as abas.
+// Sem JS, as duas seções aparecem uma embaixo da outra (a barra de abas fica escondida).
+interface Aba { id: string; rotulo: string; caixaAlta?: boolean }
+interface Props { abas: Aba[] }
+const { abas } = Astro.props;
+---
+<div class="abas" data-abas>
+  <div class="abas__barra" role="tablist" aria-label="Seções da página">
+    {abas.map((a, i) => (
+      <button type="button" role="tab" class:list={['abas__aba display', { 'abas__aba--normal': !a.caixaAlta }]}
+        id={`aba-${a.id}`} aria-controls={`painel-${a.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
+        data-aba={a.id}>
+        {a.rotulo}
+      </button>
+    ))}
+  </div>
+  <slot />
+</div>
+
+<style>
+  .abas__barra { display: none; }
+  :global(html.js) .abas__barra {
+    position: sticky; top: var(--topo-altura); z-index: 20;
+    display: flex; gap: 32px; align-items: end;
+    padding: 16px var(--gutter) 16px;
+    background: var(--color-base); border-bottom: 2px solid var(--color-texto);
+  }
+  .abas__aba {
+    padding: 8px 0; border: 0; background: none; color: var(--color-texto); cursor: pointer;
+    font-size: clamp(20px, 3.6vw, 56px); line-height: 1; white-space: nowrap;
+    text-transform: uppercase; /* padrão; as abas da página inicial usam a variação normal abaixo ("A casa", "Cardápio") */
+    opacity: .45;
+    text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 4px; text-underline-offset: 8px;
+    transition: opacity var(--transicao), text-decoration-color var(--transicao);
+  }
+  .abas__aba--normal { text-transform: none; }
+  .abas__aba:hover { opacity: 1; }
+  .abas__aba[aria-selected="true"] { opacity: 1; text-decoration-color: var(--color-ousada); }
+  .abas__aba:focus-visible { outline-offset: 4px; }
+  @media (max-width: 359px) {
+    :global(html.js) .abas__barra { gap: 16px; }
+    .abas__aba { font-size: 18px; }
+  }
+  /* sem JS os painéis ficam todos visíveis; com JS, só o que tem .aberto (já vem certo do servidor, sem piscar) */
+  :global(html.js) .abas :global([data-painel]:not(.aberto)) { display: none; }
+  /* a troca de painel não deve "ancorar" a rolagem em outro ponto */
+  .abas { overflow-anchor: none; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-abas]').forEach((raiz) => {
+    const abas = [...raiz.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const paineis = abas.map((a) => document.getElementById(a.getAttribute('aria-controls')!)!);
+
+    const ativar = (i: number, focar = false) => {
+      abas.forEach((a, j) => {
+        const ativa = i === j;
+        a.setAttribute('aria-selected', String(ativa));
+        a.tabIndex = ativa ? 0 : -1;
+        paineis[j].classList.toggle('aberto', ativa);
+      });
+      if (focar) abas[i].focus();
+      // a seção escolhida começa do início, logo abaixo das abas
+      scrollTo(0, 0);
+      requestAnimationFrame(() => scrollTo(0, 0));
+    };
+
+    // estado inicial: só o primeiro painel aberto
+    paineis.forEach((p, j) => { p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', abas[j].id); p.classList.toggle('aberto', j === 0); });
+
+    abas.forEach((a, i) => {
+      a.addEventListener('click', () => ativar(i));
+      a.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); ativar((i + 1) % abas.length, true); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); ativar((i - 1 + abas.length) % abas.length, true); }
+      });
+    });
+  });
+</script>

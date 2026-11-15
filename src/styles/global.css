@@ -1,0 +1,148 @@
+@import "tailwindcss" source(none);
+/* Só as utilidades realmente usadas; o resto é CSS dos componentes. */
+@source inline("sr-only");
+
+/* ==========================================================================
+   Tokens: paleta "Logo do Boni" (90 / 7,3 / 2,7) e fontes.
+   O amarelo nunca é cor de texto: só fundo de botão de ação, sublinhado e a palavra marcada.
+   Espaçamento: todo padding, margin e gap é múltiplo de 8.
+   ========================================================================== */
+@theme {
+  --color-base: #F1F9F9;
+  --color-texto: #1F4E6B;
+  --color-ousada: #FFC72C;
+  --font-display: "Syne", system-ui, sans-serif;
+  --font-corpo: "DM Sans Variable", system-ui, sans-serif;
+}
+
+:root {
+  --gutter: 16px;
+  --junta: 8px; /* espaço entre todas as fotos */
+  --topo-altura: 72px;
+  --texto-suave: rgb(31 78 107 / .75);
+  --texto-linha: rgb(31 78 107 / .25);
+  --veu: rgb(31 78 107 / .5);
+  --transicao: 200ms ease;
+}
+@media (min-width: 640px) { :root { --gutter: 32px; } }
+@media (min-width: 1440px) { :root { --gutter: 48px; } }
+
+/* ---------- base ---------- */
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: var(--topo-altura); }
+  body {
+    background: var(--color-base);
+    color: var(--color-texto);
+    font-family: var(--font-corpo);
+    font-size: 17px;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Nenhuma imagem é esticada: altura acompanha a largura. Nas molduras, a foto é cortada (cover). */
+  img { height: auto; max-width: 100%; }
+  a { color: inherit; }
+  h1, h2, h3, p, b, span, dd, li { overflow-wrap: break-word; }
+  :focus-visible { outline: 3px solid var(--color-texto); outline-offset: 2px; }
+  ::selection { background: var(--color-texto); color: var(--color-base); }
+  * { border-radius: 0; }
+}
+
+/* Conteúdo começa abaixo do cabeçalho fixo; link "pular para o conteúdo" só aparece no foco */
+.conteudo { padding-top: var(--topo-altura); }
+.pular {
+  position: fixed; top: 8px; left: 8px; z-index: 50; padding: 16px 24px;
+  background: var(--color-texto); color: var(--color-base); text-decoration: none;
+  transform: translateY(-200%);
+}
+.pular:focus { transform: none; }
+
+/* Animação de entrada (src/lib/revelar.ts). Sem JS ou com movimento reduzido, nada fica escondido. */
+html.js-revelar .revelar {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 700ms ease var(--atraso, 0ms), transform 700ms cubic-bezier(.2, .7, .2, 1) var(--atraso, 0ms);
+}
+html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}
+
+/* ---------- utilidades do projeto ---------- */
+@layer components {
+  .display { font-family: var(--font-display); font-weight: 800; line-height: .9; letter-spacing: -.01em; }
+
+  /* Contextos escuros (hero, rodapé, ver foto): foco na cor base */
+  .escuro :focus-visible { outline-color: var(--color-base); }
+
+  /* Moldura: proporção fixa, foto cortada com cover */
+  .moldura { overflow: hidden; display: block; width: 100%; }
+  .moldura picture { display: contents; }
+  .moldura img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .moldura--story { aspect-ratio: 600 / 988; }
+  .moldura--2x3 { aspect-ratio: 2 / 3; }
+  .moldura--3x4 { aspect-ratio: 3 / 4; }
+  .moldura--4x5 { aspect-ratio: 4 / 5; }
+  .moldura--1x1 { aspect-ratio: 1 / 1; }
+
+  /* Botão que abre a foto maior: ocupa a moldura inteira, sem reagir ao hover */
+  .ver { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; color: inherit; }
+  .ver:focus-visible { outline-offset: -3px; }
+
+  /* Botões: só troca de cor no hover */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 48px; max-width: 100%; /* em telas estreitas o rótulo quebra a linha */
+    padding: 8px 24px; border: 2px solid var(--color-texto);
+    font: 600 16px/1.2 var(--font-corpo); letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
+    cursor: pointer; transition: background-color var(--transicao), color var(--transicao), border-color var(--transicao);
+  }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .btn--ousada { background: var(--color-ousada); color: var(--color-texto); border-color: var(--color-ousada); }
+  .btn--ousada:hover { background: var(--color-texto); color: var(--color-base); border-color: var(--color-texto); }
+  .btn--linha { background: transparent; color: var(--color-texto); }
+  .btn--linha:hover { background: var(--color-texto); color: var(--color-base); }
+  .btn--pequeno { padding: 0 16px; }
+
+  /* Link de texto: sublinhado amarelo que escurece no hover */
+  .link {
+    text-decoration: underline; text-decoration-color: var(--color-ousada);
+    text-decoration-thickness: 3px; text-underline-offset: 6px;
+    transition: text-decoration-color var(--transicao);
+  }
+  .link:hover { text-decoration-color: currentColor; }
+
+  /* Título de seção */
+  .secao__cab { padding: 48px var(--gutter) 24px; }
+  /* em telas muito estreitas diminui o suficiente para a palavra mais longa ("Avaliações", ~10,4em na Syne) caber */
+  .secao__titulo { font-size: min(clamp(30px, 4.5vw, 72px), calc((100vw - 2 * var(--gutter)) / 10.6)); }
+
+  /* Legenda padronizada do cardápio: nome / porção / preço, empilhados à esquerda */
+  .legenda { display: grid; gap: 0; padding: 16px 16px 24px 0; font-size: 16px; line-height: 1.4; text-align: left; }
+  .legenda__nome { font-weight: 600; }
+  .legenda__porcao { color: var(--texto-suave); min-height: 1.4em; }
+  .legenda__preco { font-weight: 600; }
+}
+
+/* ---------- seta lateral padrão (foto ampliada; use em qualquer carrossel futuro) ----------
+   Quadrado amarelo com a flecha azul, uma de cada lado, no meio da altura. No hover só troca de cor.
+   Desabilitada (início/fim), some. */
+@layer components {
+  .seta-lateral {
+    position: absolute; top: 50%; z-index: 2; margin-top: -32px;
+    width: 64px; height: 64px; display: grid; place-items: center; padding: 0;
+    background: var(--color-ousada); color: var(--color-texto); border: 2px solid var(--color-ousada); cursor: pointer;
+    transition: background-color var(--transicao), color var(--transicao), border-color var(--transicao), opacity var(--transicao), visibility var(--transicao);
+  }
+  .seta-lateral:hover { background: var(--color-texto); color: var(--color-base); border-color: var(--color-texto); }
+  .seta-lateral:focus-visible { outline: 3px solid var(--color-texto); outline-offset: 2px; }
+  .seta-lateral svg { width: 32px; height: 32px; }
+  .seta-lateral--esq { left: var(--gutter); }
+  .seta-lateral--dir { right: var(--gutter); }
+  .seta-lateral:disabled { opacity: 0; visibility: hidden; }
+  @media (max-width: 639px) {
+    .seta-lateral { width: 48px; height: 48px; margin-top: -24px; }
+    .seta-lateral svg { width: 24px; height: 24px; }
+  }
+}

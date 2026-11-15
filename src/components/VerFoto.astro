@@ -1,0 +1,118 @@
+---
+// Ver foto maior: abre só a foto clicada, inteira e em destaque, com o resto do site desfocado e escurecido atrás.
+// Tamanho nativo (até 600px de largura), legenda embaixo quando houver (nome, porção e preço do cardápio).
+// Setas laterais padrão (uma de cada lado) e teclado (← → Esc) passam pelas fotos da mesma seção.
+// Só um fade de opacidade de 200ms.
+import { Icon } from 'astro-icon/components';
+---
+<dialog class="ver-foto escuro" aria-label="Foto ampliada" data-ver-foto>
+  <div class="ver-foto__palco" data-ver-palco>
+    <figure class="ver-foto__figura">
+      <img data-ver-img alt="" />
+      <figcaption class="ver-foto__legenda" data-ver-legenda hidden></figcaption>
+    </figure>
+  </div>
+  <button class="seta-lateral seta-lateral--esq" type="button" data-ver-anterior aria-label="Foto anterior"><Icon name="lucide:arrow-left" aria-hidden="true" /></button>
+  <button class="seta-lateral seta-lateral--dir" type="button" data-ver-proxima aria-label="Próxima foto"><Icon name="lucide:arrow-right" aria-hidden="true" /></button>
+  <button class="ver-foto__fechar" type="button" data-ver-fechar aria-label="Fechar"><Icon name="lucide:x" aria-hidden="true" /></button>
+</dialog>
+
+<style>
+  /* O próprio diálogo cobre a tela: véu na cor de texto + desfoque do site atrás (o destaque fica só na foto) */
+  .ver-foto {
+    position: fixed; inset: 0; width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+    background: rgb(31 78 107 / .6); color: var(--color-base);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    opacity: 0; transition: opacity var(--transicao);
+  }
+  .ver-foto.visivel { opacity: 1; }
+  .ver-foto::backdrop { background: transparent; }
+  .ver-foto__palco { height: 100%; display: grid; place-items: center; padding: 72px 104px; overflow: auto; }
+  .ver-foto__figura { margin: 0; display: grid; gap: 16px; justify-items: start; max-width: 600px; }
+  /* Foto inteira, nunca maior que o arquivo (600px), sempre na proporção natural */
+  .ver-foto__figura img { display: block; width: auto; height: auto; max-width: min(600px, 100%); max-height: calc(100svh - 240px); }
+  .ver-foto__legenda { display: grid; gap: 0; font-size: 16px; line-height: 1.4; max-width: 48ch; }
+  .ver-foto__legenda :global(.legenda__nome), .ver-foto__legenda :global(.legenda__preco) { font-weight: 600; }
+  .ver-foto__legenda :global(.legenda__porcao) { color: rgb(241 249 249 / .8); }
+  .ver-foto__fechar {
+    position: absolute; top: 16px; right: var(--gutter); z-index: 3;
+    width: 48px; height: 48px; display: grid; place-items: center; padding: 0;
+    background: transparent; color: var(--color-base); border: 2px solid var(--color-base); cursor: pointer;
+    transition: background-color var(--transicao), color var(--transicao);
+  }
+  .ver-foto__fechar:hover { background: var(--color-base); color: var(--color-texto); }
+  .ver-foto__fechar :global(svg) { width: 24px; height: 24px; }
+  .ver-foto :global(.seta-lateral[hidden]) { display: none; }
+  @media (max-width: 639px) {
+    .ver-foto__palco { padding: 72px var(--gutter) 96px; }
+    /* no celular as setas descem para baixo da foto, uma em cada canto */
+    .ver-foto :global(.seta-lateral) { top: auto; bottom: 24px; margin-top: 0; }
+  }
+</style>
+
+<script>
+  const dialogo = document.querySelector<HTMLDialogElement>('[data-ver-foto]')!;
+  const img = dialogo.querySelector<HTMLImageElement>('[data-ver-img]')!;
+  const legenda = dialogo.querySelector<HTMLElement>('[data-ver-legenda]')!;
+  const ant = dialogo.querySelector<HTMLButtonElement>('[data-ver-anterior]')!;
+  const prox = dialogo.querySelector<HTMLButtonElement>('[data-ver-proxima]')!;
+
+  let grupo: HTMLButtonElement[] = [];
+  let atual = 0;
+  let origem: HTMLButtonElement | null = null;
+
+  // Legenda: a do cardápio (nome, porção e preço), quando a foto tiver
+  const montarLegenda = (b: HTMLButtonElement) => {
+    const cap = b.closest('figure')?.querySelector('[data-legenda]');
+    legenda.innerHTML = cap ? cap.innerHTML : '';
+    legenda.hidden = !cap;
+  };
+
+  const mostrar = (i: number) => {
+    atual = (i + grupo.length) % grupo.length;
+    const b = grupo[atual];
+    img.src = b.dataset.grande!;
+    img.width = Number(b.dataset.largura);
+    img.height = Number(b.dataset.altura);
+    img.alt = b.querySelector('img')?.alt ?? '';
+    montarLegenda(b);
+  };
+
+  const abrir = (b: HTMLButtonElement) => {
+    origem = b;
+    // só as fotos visíveis do mesmo grupo (respeita o filtro e o "ver mais" da galeria)
+    grupo = [...document.querySelectorAll<HTMLButtonElement>(`[data-ver="${b.dataset.ver}"]`)].filter((x) => !x.closest('[hidden]'));
+    mostrar(grupo.indexOf(b));
+    const unico = grupo.length < 2;
+    ant.hidden = unico;
+    prox.hidden = unico;
+    dialogo.showModal();
+    requestAnimationFrame(() => dialogo.classList.add('visivel'));
+  };
+
+  const fechar = () => {
+    dialogo.classList.remove('visivel');
+    const duracao = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
+    setTimeout(() => { dialogo.close(); origem?.focus(); }, duracao);
+  };
+
+  document.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-ver]');
+    if (b) abrir(b);
+  });
+  ant.addEventListener('click', () => mostrar(atual - 1));
+  prox.addEventListener('click', () => mostrar(atual + 1));
+  dialogo.querySelector('[data-ver-fechar]')!.addEventListener('click', fechar);
+  // Esc: fecha com o mesmo fade
+  dialogo.addEventListener('cancel', (e) => { e.preventDefault(); fechar(); });
+  dialogo.addEventListener('keydown', (e) => {
+    if (grupo.length < 2) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); mostrar(atual + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); mostrar(atual - 1); }
+  });
+  // Clique fora da foto (no fundo desfocado) fecha
+  dialogo.addEventListener('click', (e) => {
+    const alvo = e.target as HTMLElement;
+    if (alvo === dialogo || alvo.hasAttribute('data-ver-palco')) fechar();
+  });
+</script>

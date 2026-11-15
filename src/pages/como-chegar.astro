@@ -1,0 +1,35 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Lista from '../components/Lista.astro';
+import site from '../data/site.json';
+
+const e = site.endereco;
+---
+<Base titulo="Como chegar" descricao={`${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}. Chegue de carro ou pela água: trapiche para barco e jet ski.`}>
+  <Lista id="como-chegar" titulo="Como chegar">
+    <a slot="acao" class="btn btn--ousada" href={site.mapa} target="_blank" rel="noopener">
+      <Icon name="lucide:map" aria-hidden="true" />Abrir no mapa
+    </a>
+    <div>
+      <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
+      <dd>{e.rua}. {e.bairro}, {e.cidade}/{e.uf}</dd>
+    </div>
+    <div>
+      <dt><Icon name="lucide:sailboat" aria-hidden="true" /><span>Pela água</span></dt>
+      <dd>Trapiche para barco e jet ski</dd>
+    </div>
+    <div>
+      <dt><Icon name="lucide:clock" aria-hidden="true" /><span>Horário</span></dt>
+      <dd>{site.horario.texto}</dd>
+    </div>
+    <iframe slot="extra" class="mapa" src={site.mapaEmbed} title="Mapa com a localização do Bar do Boni na Lagoa da Conceição"
+      loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+  </Lista>
+</Base>
+
+<style>
+  /* Mapa do Google com a localização do bar: ocupa a coluna da direita (metade da página no desktop);
+     cantos retos, linha de 2px como o resto da página */
+  .mapa { display: block; width: 100%; aspect-ratio: 4 / 3; border: 2px solid var(--color-texto); }
+</style>

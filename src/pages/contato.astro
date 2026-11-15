@@ -1,0 +1,29 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Lista from '../components/Lista.astro';
+import site from '../data/site.json';
+import { linkWhatsapp } from '../lib/links';
+---
+<Base titulo="Contato" descricao={`Reserve pelo WhatsApp ou ligue: ${site.telefone.texto}.`}>
+  <Lista id="contato" titulo="Contato">
+    <a slot="acao" class="btn btn--ousada" href={linkWhatsapp()} target="_blank" rel="noopener">
+      <Icon name="lucide:message-circle" aria-hidden="true" />Reservar pelo WhatsApp
+    </a>
+    <div>
+      <dt><Icon name="lucide:phone" aria-hidden="true" /><span>Telefone</span></dt>
+      <dd><a class="link" href={`tel:${site.telefone.link}`}>{site.telefone.texto}</a></dd>
+    </div>
+    <div>
+      <dt><Icon name="lucide:mail" aria-hidden="true" /><span>E-mail</span></dt>
+      <dd><a class="link link--email" href={`mailto:${site.email}`}>{site.email}</a></dd>
+    </div>
+    <div>
+      <dt><Icon name="lucide:at-sign" aria-hidden="true" /><span>Redes</span></dt>
+      <dd>
+        <a class="link" href={site.instagram} target="_blank" rel="noopener">Instagram</a>
+        <a class="link" href={site.facebook} target="_blank" rel="noopener">Facebook</a>
+      </dd>
+    </div>
+  </Lista>
+</Base>

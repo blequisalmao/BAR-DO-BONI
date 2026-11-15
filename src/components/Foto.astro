@@ -1,0 +1,32 @@
+---
+// Foto dentro de uma moldura de proporção fixa (cortada com cover, nunca distorcida).
+// Com `ver`, a foto vira um botão que abre só ela, ampliada (VerFoto.astro);
+// as setas passam pelas fotos visíveis do mesmo grupo.
+import { Picture, getImage } from 'astro:assets';
+import type { Foto } from '../data/fotos';
+import { imagem, LARGURAS } from '../lib/imagens';
+
+interface Props {
+  foto: Pick<Foto, 'arquivo' | 'alt' | 'posicao'>;
+  moldura: 'story' | '2/3' | '3/4' | '4/5' | '1/1';
+  sizes: string;
+  ver?: string;
+}
+
+const { foto, moldura, sizes, ver } = Astro.props;
+const src = imagem(foto.arquivo);
+const classeMoldura = { story: 'moldura--story', '2/3': 'moldura--2x3', '3/4': 'moldura--3x4', '4/5': 'moldura--4x5', '1/1': 'moldura--1x1' }[moldura];
+const grande = ver ? await getImage({ src, width: Math.min(600, src.width), format: 'webp' }) : null;
+const estilo = foto.posicao ? `object-position: ${foto.posicao}` : undefined;
+---
+<div class:list={['moldura', classeMoldura]}>
+  {grande ? (
+    <button class="ver" type="button" data-ver={ver} data-grande={grande.src}
+      data-largura={grande.attributes.width} data-altura={grande.attributes.height}
+      aria-haspopup="dialog" aria-label={`Ver foto maior: ${foto.alt}`}>
+      <Picture src={src} alt={foto.alt} widths={LARGURAS} sizes={sizes} formats={['avif']} fallbackFormat="webp" loading="lazy" decoding="async" style={estilo} />
+    </button>
+  ) : (
+    <Picture src={src} alt={foto.alt} widths={LARGURAS} sizes={sizes} formats={['avif']} fallbackFormat="webp" loading="lazy" decoding="async" style={estilo} />
+  )}
+</div>

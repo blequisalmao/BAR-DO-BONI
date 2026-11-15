@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bar do Boni: conceito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Big+Shoulders+Display:wght@800;900&family=Bungee&family=Rubik+Mono+One&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --base: #F1F9F9;
+    --texto: #1F4E6B;
+    --ousada: #FFC72C;
+    --display: "Syne", sans-serif;
+    --gutter: clamp(16px, 3vw, 48px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: Inter, system-ui, sans-serif; font-size: 17px; line-height: 1.55;
+    background: var(--base); color: var(--texto);
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  /* Nenhuma imagem é esticada: a altura acompanha a largura e, nas molduras, a foto é cortada (cover). */
+  img { display: block; max-width: 100%; height: auto; }
+  .moldura { overflow: hidden; }
+  .moldura img { width: 100%; height: 100%; object-fit: cover; }
+  .m-4x5 { aspect-ratio: 4 / 5; }
+  .m-3x4 { aspect-ratio: 3 / 4; }
+  .m-2x3 { aspect-ratio: 2 / 3; }
+  .m-story { aspect-ratio: 600 / 988; }
+  a { color: inherit; }
+  .display { font-family: var(--display); font-weight: 800; line-height: 0.9; letter-spacing: -0.01em; }
+
+  /* ---------- botões e links: só cor e sublinhado ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 600 16px/1 Inter, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+    padding: 16px 22px; border: 2px solid var(--texto); cursor: pointer;
+    transition: background-color .2s, color .2s, border-color .2s;
+  }
+  .btn--ousada { background: var(--ousada); color: var(--texto); border-color: var(--ousada); }
+  .btn--ousada:hover { background: var(--texto); color: var(--base); border-color: var(--texto); }
+  .btn--linha { background: transparent; color: var(--texto); }
+  .btn--linha:hover { background: var(--texto); color: var(--base); }
+  .link { text-decoration: underline; text-decoration-color: var(--ousada); text-decoration-thickness: 3px; text-underline-offset: 6px; transition: text-decoration-color .2s; }
+  .link:hover { text-decoration-color: var(--texto); }
+  .btn svg { width: 18px; height: 18px; }
+  :focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
+
+  /* ---------- cabeçalho ---------- */
+  .topo {
+    position: fixed; inset: 0 0 auto 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 12px var(--gutter); background: var(--base); border-bottom: 2px solid var(--texto);
+  }
+  .topo__marca { font-family: var(--display); font-weight: 800; font-size: 22px; text-decoration: none; }
+  .topo nav { display: flex; gap: 28px; font-size: 16px; font-weight: 500; }
+  .topo nav a { text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 3px; text-underline-offset: 6px; transition: text-decoration-color .2s; }
+  .topo nav a:hover { text-decoration-color: var(--ousada); }
+  .topo .btn { padding: 12px 18px; }
+  @media (max-width: 820px) { .topo nav { display: none; } }
+
+  /* ---------- entrada: tela cheia, só a foto + overlay chapado ---------- */
+  .entrada { position: relative; height: 100svh; min-height: 560px; overflow: hidden; color: var(--base); display: flex; flex-direction: column; justify-content: flex-end; }
+  .entrada__foto { position: absolute; inset: 0; width: 100%; height: 100% !important; max-width: none; object-fit: cover; object-position: center 62%; }
+  .entrada__veu { position: absolute; inset: 0; background: rgba(31, 78, 107, .5); }
+  .entrada__conteudo { position: relative; padding: 0 var(--gutter) var(--gutter); display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; min-width: 0; }
+  .entrada__titulo { font-size: 12vw; white-space: nowrap; }
+  [data-encaixe] { display: block; width: 100%; }
+  .entrada__linha { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; border-top: 2px solid var(--base); padding-top: 20px; }
+  .entrada__linha p { max-width: 40ch; }
+  .entrada__acoes { display: flex; flex-wrap: wrap; gap: 12px; }
+  .entrada .btn--linha { color: var(--base); border-color: var(--base); }
+  .entrada .btn--linha:hover { background: var(--base); color: var(--texto); }
+
+  /* cabeçalho transparente sobre a foto; ganha a cor base ao rolar */
+  .topo { transition: background-color .2s, color .2s, border-color .2s; }
+  .topo--sobre-foto { background: transparent; color: var(--base); border-bottom-color: rgba(241, 249, 249, .5); }
+
+  /* ---------- legenda ---------- */
+  .legenda { padding-top: 12px; display: grid; gap: 2px; font-size: 16px; max-width: 34ch; }
+  .legenda b { font-weight: 600; }
+  .legenda span { opacity: .75; }
+  .legenda .preco { opacity: 1; font-weight: 600; }
+
+  /* ---------- cabeçalho das seções ---------- */
+  .secao { }
+  .secao__cab { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px 24px; padding: 32px var(--gutter) 24px; }
+  .secao__cab h2 { font-size: clamp(30px, 4.5vw, 72px); overflow-wrap: break-word; min-width: 0; }
+  .secao__cab p { font-size: 16px; text-align: right; }
+  .rodape > *, .copos__legendas > *, .gente > * { min-width: 0; }
+  p, h2, b, span { overflow-wrap: break-word; }
+
+  /* ---------- carrossel (setas, arrastar, deslizar, teclado; a página rola normal) ---------- */
+  .carrossel { padding-bottom: 48px; }
+  .carrossel__pista {
+    display: flex; gap: 6px; align-items: flex-end;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+    padding: 8px var(--gutter) 24px; scrollbar-width: none; cursor: grab; overscroll-behavior-x: contain;
+  }
+  .carrossel__pista::-webkit-scrollbar { display: none; }
+  .carrossel__pista.arrastando { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+  .carrossel__pista.arrastando img { pointer-events: none; }
+  .slide { flex: none; scroll-snap-align: start; }
+  .slide img { height: min(46svh, 460px); width: auto; max-width: none; -webkit-user-drag: none; }
+  .slide--deitada img { height: min(32svh, 320px); }
+  .carrossel__controles { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; padding: 0 var(--gutter); }
+  .carrossel__contador { font-family: var(--display); font-weight: 800; font-size: 28px; line-height: 1; white-space: nowrap; }
+  .carrossel__barra { height: 2px; background: rgba(31, 78, 107, .2); position: relative; }
+  .carrossel__barra i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--texto); height: 2px; transition: width .2s; }
+  .carrossel__setas { display: flex; gap: 8px; }
+  .seta { width: 56px; height: 56px; display: grid; place-items: center; background: transparent; color: var(--texto); border: 2px solid var(--texto); cursor: pointer; transition: background-color .2s, color .2s; }
+  .seta:hover { background: var(--texto); color: var(--base); }
+  .seta:disabled { opacity: .3; cursor: default; background: transparent; color: var(--texto); }
+  .seta svg { width: 24px; height: 24px; }
+  @media (max-width: 820px) {
+    .slide img { height: 44svh; }
+    .slide--deitada img { height: 30svh; }
+    .carrossel__controles { grid-template-columns: auto auto; justify-content: space-between; }
+    .carrossel__barra { display: none; }
+  }
+
+  /* ---------- faixa de largura total: várias fotos coladas, nenhuma ampliada ---------- */
+  .faixa { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; }
+  .faixa .moldura { aspect-ratio: 600 / 988; }
+  @media (max-width: 820px) {
+    .faixa { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  /* ---------- cardápio exposto: grade padronizada de borda a borda ---------- */
+  /* Todas as fotos do cardápio: mesma moldura 4:5, mesma legenda (nome / porção / preço), linhas de 2px entre células. */
+  .cardapio-grade { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; }
+  .cardapio-grade figure { background: var(--base); }
+  .cardapio-grade .legenda--menu { border-top: 0; margin-top: 0; padding: 16px clamp(12px, 1.5vw, 24px) 20px; }
+  .legenda--menu { max-width: none; grid-template-columns: 1fr; border-top: 2px solid var(--texto); margin-top: 12px; }
+  .legenda--menu b { grid-column: auto; }
+  .legenda--menu .preco { margin-top: 4px; }
+
+  /* ---------- copos dos copos ---------- */
+  .copos { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; padding: 8px var(--gutter) 0; }
+  .copos__legendas { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; padding: 0 var(--gutter) 64px; }
+  @media (max-width: 1100px) { .cardapio-grade, .copos, .copos__legendas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .cardapio-grade, .copos, .copos__legendas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  /* ---------- história ---------- */
+  .historia { padding: clamp(40px, 6vw, 96px) var(--gutter); display: grid; grid-template-columns: minmax(160px, 260px) 1fr; gap: var(--gutter); align-items: start; }
+  .historia blockquote { font-family: var(--display); font-weight: 800; font-size: clamp(24px, 2.8vw, 44px); line-height: 1.02; }
+  .historia blockquote mark { background: var(--ousada); color: var(--texto); padding: 0 .1em; }
+  .historia figure { max-width: 260px; }
+  @media (max-width: 820px) { .historia { grid-template-columns: 1fr; } }
+
+  /* ---------- gente ---------- */
+  .gente { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; padding: 8px var(--gutter) 80px; align-items: start; }
+  .gente figure:nth-child(1) { grid-column: 1 / span 3; }
+  .gente figure:nth-child(2) { grid-column: 4 / span 3; }
+  .gente figure:nth-child(3) { grid-column: 7 / span 3; }
+  .gente figure:nth-child(4) { grid-column: 10 / span 3; }
+  @media (max-width: 820px) { .gente figure { grid-column: auto / span 6 !important; margin-top: 0 !important; } }
+
+  /* ---------- chegar ---------- */
+  .chegar { display: grid; grid-template-columns: 1.2fr 1fr; }
+  .chegar__titulo { padding: 48px var(--gutter); border-right: 2px solid var(--texto); display: grid; gap: 32px; align-content: space-between; }
+  .chegar__titulo h2 { font-size: clamp(40px, 6vw, 96px); }
+  .chegar dl { display: grid; }
+  .chegar dl div { padding: 24px var(--gutter); border-bottom: 2px solid var(--texto); display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: start; }
+  .chegar dl div:last-child { border-bottom: 0; }
+  .chegar dt svg { width: 28px; height: 28px; }
+  .chegar dd { display: grid; gap: 6px; }
+  @media (max-width: 820px) { .chegar { grid-template-columns: 1fr; } .chegar__titulo { border-right: 0; border-bottom: 2px solid var(--texto); } }
+
+  /* ---------- cardápio completo ---------- */
+  .cardapio { border-top: 2px solid var(--texto); padding-bottom: 64px; }
+  .cardapio details { border-bottom: 2px solid var(--texto); }
+  .cardapio summary { list-style: none; cursor: pointer; padding: 20px var(--gutter); display: flex; justify-content: space-between; align-items: center; font-family: var(--display); font-weight: 800; font-size: clamp(22px, 2.4vw, 34px); line-height: 1; transition: color .2s; }
+  .cardapio summary::-webkit-details-marker { display: none; }
+  .cardapio summary:hover { color: var(--texto); text-decoration: underline; text-decoration-color: var(--ousada); text-decoration-thickness: 4px; text-underline-offset: 8px; }
+  .cardapio summary svg { width: 32px; height: 32px; flex: none; transition: transform .2s; }
+  .cardapio details[open] summary svg { transform: rotate(45deg); }
+  .cardapio ul { list-style: none; padding: 0 var(--gutter) 32px; columns: 3 300px; column-gap: 48px; }
+  .cardapio li { break-inside: avoid; display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 12px 0; border-bottom: 1px solid rgba(31, 78, 107, .25); }
+  .cardapio li small { grid-column: 1 / -1; font-size: 16px; opacity: .75; }
+
+  /* ---------- rodapé ---------- */
+  .rodape { background: var(--texto); color: var(--base); padding: 48px var(--gutter) 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .rodape__marca { font-family: var(--display); font-weight: 800; font-size: 12vw; line-height: .85; white-space: nowrap; }
+  .rodape__linha { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 16px; }
+  .rodape a:hover { text-decoration-color: var(--ousada); }
+
+  /* ---------- seletor de fonte (só no conceito) ---------- */
+  .seletor { position: fixed; left: 12px; bottom: 12px; z-index: 30; display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; background: #111; text-transform: none; letter-spacing: 0; }
+  .seletor button { font: 500 14px Inter, sans-serif; color: #fff; background: transparent; border: 1px solid #555; padding: 6px 10px; cursor: pointer; }
+  .seletor button[aria-pressed="true"] { background: #fff; color: #111; }
+  .zap { position: fixed; right: 16px; bottom: 16px; z-index: 30; display: none; }
+  @media (max-width: 820px) { .zap { display: inline-flex; } }
+
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-relogio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-pino" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-barco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/></symbol>
+  <symbol id="i-fone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-esq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></symbol>
+  <symbol id="i-dir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-mais" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+</svg>
+
+<header class="topo">
+  <a class="topo__marca" href="#entrada">Bar do Boni</a>
+  <nav aria-label="Principal">
+    <a href="#lagoa">A Lagoa</a><a href="#mar">Do mar</a><a href="#copos">Copos</a><a href="#gente">Gente</a><a href="#cardapio">Cardápio</a><a href="#como-chegar">Como chegar</a>
+  </nav>
+  <a class="btn btn--ousada" href="#como-chegar"><svg><use href="#i-msg"/></svg>Reservar</a>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="entrada" id="entrada" aria-label="Entrada">
+    <img class="entrada__foto" src="imagens/sunset_bar_do_boni.png" alt="Pôr do sol sobre a Lagoa da Conceição visto do Bar do Boni, com um barco ao longe" width="600" height="988" fetchpriority="high">
+    <div class="entrada__veu" aria-hidden="true"></div>
+    <div class="entrada__conteudo">
+      <h1 class="entrada__titulo display"><span data-encaixe>Bar do Boni</span></h1>
+      <div class="entrada__linha">
+        <p>Na beira da Lagoa da Conceição. Todo dia, 11h às 2h.</p>
+        <div class="entrada__acoes">
+          <a class="btn btn--ousada" href="#como-chegar"><svg><use href="#i-msg"/></svg>Reservar mesa</a>
+          <a class="btn btn--linha" href="#cardapio">Ver cardápio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Faixa de largura total -->
+  <div class="faixa" aria-label="Fotos do bar">
+    <div class="moldura"><img src="imagens/foto_drink3.jpg" alt="Drink em taça sobre o deck, Lagoa ao fundo" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/ostra_gratinada2.png" alt="Ostras gratinadas com limão" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/area_externa.jpg" alt="Deck com guarda-sóis à beira da Lagoa" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/foto_drink5.jpg" alt="Mão segurando um drink no bar" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/frios.png" alt="Tábua de frios com azeitonas e queijos" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/deck_externo.jpg" alt="Trapiche com jet ski e o morro ao fundo" width="600" height="988" loading="lazy"></div>
+  </div>
+
+  <!-- A Lagoa: carrossel -->
+  <section class="secao" id="lagoa" aria-labelledby="t-lagoa">
+    <div class="secao__cab"><h2 id="t-lagoa" class="display">A Lagoa</h2></div>
+    <div class="carrossel" data-carrossel role="region" aria-roledescription="carrossel" aria-label="Fotos da Lagoa">
+        <div class="carrossel__pista" tabindex="0">
+          <figure class="slide"><img src="imagens/vista_da_lagoa_para_o_bar.png" alt="O Bar do Boni visto da água, com barcos atracados" width="600" height="988" loading="lazy"></figure>
+          <figure class="slide"><img src="imagens/deck_externo.jpg" alt="Trapiche do bar com jet ski atracado e o morro ao fundo" width="600" height="988" loading="lazy"></figure>
+          <figure class="slide slide--deitada"><img src="imagens/deck_bar_do_boni.jpg" alt="Casal no portal de madeira com o letreiro do Bar do Boni, de frente para a Lagoa" width="600" height="485" loading="lazy"></figure>
+          <figure class="slide"><img src="imagens/area_externa.jpg" alt="Espreguiçadeira laranja e guarda-sóis no deck à beira da Lagoa" width="600" height="988" loading="lazy"></figure>
+          <figure class="slide slide--deitada"><img src="imagens/prato_completo_vista_lagoa.jpg" alt="Mesa com pratos na beira do deck, barcos na Lagoa ao fundo" width="600" height="485" loading="lazy"></figure>
+          <figure class="slide"><img src="imagens/entrada.jpg" alt="Letreiro de madeira do Bar do Boni com placas coloridas" width="600" height="988" loading="lazy"></figure>
+          <figure class="slide"><img src="imagens/entrada2.png" alt="Fachada do bar entre árvores" width="600" height="988" loading="lazy"></figure>
+          <figure class="slide slide--deitada"><img src="imagens/imagem_praia_placas_goodvibes.jpg" alt="Placas coloridas apontando para boa conversa, cerveja gelada e música boa, com a praia ao fundo" width="600" height="485" loading="lazy"></figure>
+          <figure class="slide"><img src="imagens/area_do_bar.jpg" alt="Balcão do bar com prateleiras de bebidas e o logo do Boni" width="600" height="650" loading="lazy"></figure>
+        </div>
+        <div class="carrossel__controles">
+          <p class="carrossel__contador" aria-live="polite"><span data-atual>01</span> / <span data-total>09</span></p>
+          <div class="carrossel__barra" aria-hidden="true"><i data-progresso></i></div>
+          <div class="carrossel__setas">
+            <button class="seta" type="button" data-anterior aria-label="Foto anterior"><svg><use href="#i-esq"/></svg></button>
+            <button class="seta" type="button" data-proxima aria-label="Próxima foto"><svg><use href="#i-dir"/></svg></button>
+          </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- Do mar: grade padronizada do cardápio -->
+  <section class="secao" id="mar" aria-labelledby="t-mar">
+    <div class="secao__cab"><h2 id="t-mar" class="display">Do mar</h2></div>
+    <div class="cardapio-grade">
+      <figure><div class="moldura m-4x5"><img src="imagens/camarao_a_milanesa.png" alt="Camarão à milanesa" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Camarão à milanesa</b><span>350g / 500g</span><span class="preco">69,90 / 98,90</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/lula_a_milanesa.png" alt="Anéis de lula empanados" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Lula à dorê</b><span>350g / 500g</span><span class="preco">58,90 / 80,90</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/bolinho_de_siri.png" alt="Bolinhos de siri" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Bolinho de siri</b><span>6 unidades</span><span class="preco">43,90</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/pastel_de_camarao.png" alt="Pastel de camarão sendo segurado na mão" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Mini pastel</b><span>10 unidades</span><span class="preco">41,90</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/prato_completo2.jpg" alt="Prato com isca de peixe, camarão, batata frita e salada" width="600" height="485" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Mista especial da casa</b><span>1 kg</span><span class="preco">175,90</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/dadinho_de_tapioca2.png" alt="Dadinhos de tapioca com molho" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Dadinhos de tapioca</b><span>8 unidades</span><span class="preco">32,90</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/hamburguer2.png" alt="Hambúrguer com bacon e batata rústica" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>BBB bacon</b><span>Costela 180g e bacon</span><span class="preco">43,90</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/ostra_gratinada.png" alt="Ostras gratinadas com limão" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Ostra gratinada</b><span>Da Lagoa</span><span class="preco">Consulte</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/imagem_prato_com_camarao_a_milanesa.jpg" alt="Camarão à milanesa com salada" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Camarão alho e óleo</b><span>Sem casca, 350g / 500g</span><span class="preco">84,90 / 120,90</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/ostra_ao_bafo.png" alt="Ostras ao bafo com limão e molho" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Ostra ao bafo</b><span>Da Lagoa</span><span class="preco">Consulte</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/frios.png" alt="Tábua de frios com azeitonas e queijos" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Tábua de frios</b><span>Para dividir</span><span class="preco">Consulte</span></figcaption></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/peixe_prato_completo.jpg" alt="Peixe com arroz e salada na mesa de madeira" width="600" height="988" loading="lazy"></div><figcaption class="legenda legenda--menu"><b>Peixe inteiro</b><span>Com arroz e salada</span><span class="preco">Consulte</span></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- Copos -->
+  <section class="secao" id="copos" aria-labelledby="t-copos">
+    <div class="secao__cab"><h2 id="t-copos" class="display">Copos</h2></div>
+    <div class="copos">
+      <div class="moldura m-4x5"><img src="imagens/caipirinha_foto_drink.jpg" alt="Caipirinha de maracujá com a praia ao fundo" width="600" height="988" loading="lazy"></div>
+      <div class="moldura m-4x5"><img src="imagens/foto_drink8.jpg" alt="BBzinha, drink de morango com garrafa de Smirnoff Ice virada no copo" width="600" height="988" loading="lazy"></div>
+      <div class="moldura m-4x5"><img src="imagens/foto_drink2.jpg" alt="Gin tônica com limão na taça, mar ao fundo" width="600" height="988" loading="lazy"></div>
+      <div class="moldura m-4x5"><img src="imagens/foto_drink6.png" alt="Caipirinha de frutas vermelhas com limão" width="600" height="988" loading="lazy"></div>
+      <div class="moldura m-4x5"><img src="imagens/balde_de_cerveja_e_petisco.jpg" alt="Balde de cervejas e porção de petiscos" width="600" height="988" loading="lazy"></div>
+      <div class="moldura m-4x5"><img src="imagens/adega_de_vinhos.png" alt="Garrafas de vinho deitadas na adega" width="600" height="988" loading="lazy"></div>
+    </div>
+    <div class="copos__legendas">
+      <p class="legenda legenda--menu"><b>Caipira</b><span>Cachaça, vodka ou saquê</span><span class="preco">24,90+</span></p>
+      <p class="legenda legenda--menu"><b>BBzinha</b><span>Smirnoff Ice e morango</span><span class="preco">57,90</span></p>
+      <p class="legenda legenda--menu"><b>Gin tônica</b><span>Nacional / importado</span><span class="preco">29,90 / 36,90</span></p>
+      <p class="legenda legenda--menu"><b>Especial de frutas</b><span>500ml, até 3 frutas</span><span class="preco">54,90</span></p>
+      <p class="legenda legenda--menu"><b>Cerveja 600ml</b><span>Heineken, Original, Stella</span><span class="preco">18,90+</span></p>
+      <p class="legenda legenda--menu"><b>Vinhos</b><span>Brancos e espumantes</span><span class="preco">119,90+</span></p>
+    </div>
+  </section>
+
+  <!-- História -->
+  <section class="historia" aria-label="Nossa história">
+    <figure><div class="moldura m-story"><img src="imagens/celebrando_com_cerveja.png" alt="Dois copos de cerveja brindando contra o pôr do sol" width="600" height="988" loading="lazy"></div></figure>
+    <blockquote>Há 60 anos o vô Murlio abriu uma venda na beira da Lagoa. Cerveja, cachacinha, pastel e a almôndega da dona Marisa. <mark>O resto</mark> a Lagoa fez.</blockquote>
+  </section>
+
+  <!-- Gente -->
+  <section class="secao" id="gente" aria-labelledby="t-gente">
+    <div class="secao__cab"><h2 id="t-gente" class="display">Gente</h2></div>
+    <div class="gente">
+      <figure><div class="moldura m-4x5"><img src="imagens/clientes23.png" alt="Duas amigas sorrindo com drinks na mão" width="600" height="988" loading="lazy"></div></figure>
+      <figure><div class="moldura m-2x3"><img src="imagens/cliente_tirando_foto_de_prato.png" alt="Cliente fotografando o prato com o celular" width="600" height="988" loading="lazy"></div></figure>
+      <figure><div class="moldura m-story"><img src="imagens/clientes.png" alt="Casal na mesa à beira da Lagoa" width="600" height="988" loading="lazy"></div></figure>
+      <figure><div class="moldura m-4x5"><img src="imagens/prato_completo_barco_do_bar_do_boni_ao_fundo.jpg" alt="Pratos na mesa com o barco do Bar do Boni ao fundo" width="600" height="988" loading="lazy"></div></figure>
+    </div>
+  </section>
+
+  <!-- Cardápio completo -->
+  <section class="cardapio" id="cardapio" aria-labelledby="t-cat">
+    <div class="secao__cab"><h2 id="t-cat" class="display">Cardápio</h2></div>
+    <details open>
+      <summary>Frutos do mar <svg><use href="#i-mais"/></svg></summary>
+      <ul>
+        <li><b>Camarão rosa crocante</b><span>164,90</span><small>500g</small></li>
+        <li><b>Camarão à milanesa</b><span>69,90 / 98,90</span><small>350g / 500g</small></li>
+        <li><b>Camarão alho e óleo</b><span>84,90 / 120,90</span><small>Sem casca. 350g / 500g</small></li>
+        <li><b>Lula à dorê</b><span>58,90 / 80,90</span><small>350g / 500g</small></li>
+        <li><b>Isca de peixe congrio</b><span>76,90 / 109,90</span><small>350g / 500g</small></li>
+        <li><b>Polvo ao alho e óleo</b><span>98,90</span><small>350g</small></li>
+      </ul>
+    </details>
+    <details>
+      <summary>Petiscos <svg><use href="#i-mais"/></svg></summary>
+      <ul>
+        <li><b>Mignon acebolado gratinado</b><span>109,90 / 164,90</span><small>4 queijos. 250g / 500g</small></li>
+        <li><b>Frango à passarinho</b><span>36,90 / 54,90</span><small>250g / 500g</small></li>
+        <li><b>Calabresa acebolada</b><span>30,90 / 43,90</span><small>Com pães e farofa</small></li>
+      </ul>
+    </details>
+    <details>
+      <summary>Caipiras e coquetéis <svg><use href="#i-mais"/></svg></summary>
+      <ul>
+        <li><b>Caipira Cachaça Manezinha</b><span>30,90</span><small>Limão, morango, maracujá ou abacaxi</small></li>
+        <li><b>Lagoa Formosa</b><span>39,90</span><small>Gin, xarope violeta, limão siciliano, manjericão e tônica</small></li>
+        <li><b>Coco Boni</b><span>76,90</span><small>Servido no coco</small></li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- Faixa de largura total -->
+  <div class="faixa" aria-label="Pratos e drinks">
+    <div class="moldura"><img src="imagens/prato_para_2_completo.jpg" alt="Pratos para dois na mesa do deck, Lagoa ao fundo" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/foto_drink7.png" alt="Caipirinha de limão" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/pastel.png" alt="Pastéis no prato" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/foto_drink4.jpg" alt="Drink alaranjado com canudo no salão" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/porcao_de_bolinho_de_peixe.png" alt="Porção de bolinhos com molho" width="600" height="988" loading="lazy"></div>
+    <div class="moldura"><img src="imagens/sunset_bar_do_boni.png" alt="Pôr do sol na Lagoa" width="600" height="988" loading="lazy"></div>
+  </div>
+
+  <!-- Como chegar -->
+  <section class="chegar" id="como-chegar" aria-labelledby="t-vis">
+    <div class="chegar__titulo">
+      <h2 id="t-vis" class="display">Venha</h2>
+      <a class="btn btn--ousada" href="#"><svg><use href="#i-msg"/></svg>Reservar pelo WhatsApp</a>
+    </div>
+    <dl>
+      <div><dt><svg><use href="#i-relogio"/></svg></dt><dd><b>Horário</b><span>Todos os dias, 11h às 2h</span></dd></div>
+      <div><dt><svg><use href="#i-pino"/></svg></dt><dd><b>Endereço</b><span>Av. das Rendeiras, 2232. Lagoa da Conceição</span><a class="link" href="#">Abrir no mapa</a></dd></div>
+      <div><dt><svg><use href="#i-barco"/></svg></dt><dd><b>Pela água</b><span>Trapiche para barco e jet ski</span></dd></div>
+      <div><dt><svg><use href="#i-fone"/></svg></dt><dd><b>Telefone</b><a class="link" href="tel:+554832321139">(48) 3232-1139</a></dd></div>
+    </dl>
+  </section>
+</main>
+
+<footer class="rodape">
+  <p class="rodape__marca" aria-hidden="true"><span data-encaixe>Bar do Boni</span></p>
+  <div class="rodape__linha"><span>Lagoa da Conceição. Florianópolis. SC</span><span><a class="link" href="#">Instagram</a> &nbsp; <a class="link" href="#">Facebook</a></span><span>© 2026</span></div>
+</footer>
+
+<a class="btn btn--ousada zap" href="#como-chegar" aria-label="Reservar pelo WhatsApp"><svg><use href="#i-msg"/></svg>Reservar</a>
+
+<div class="seletor" role="toolbar" aria-label="Fonte de destaque (só no conceito)">
+  <button data-font='"Syne", sans-serif' aria-pressed="true">Syne</button>
+  <button data-font='"Big Shoulders Display", sans-serif' aria-pressed="false">Big Shoulders</button>
+  <button data-font='"Bungee", sans-serif' aria-pressed="false">Bungee</button>
+  <button data-font='"Rubik Mono One", sans-serif' aria-pressed="false">Rubik Mono</button>
+</div>
+
+<script>
+  // Carrossel: setas, contador, barra de progresso, arrastar com o mouse, deslizar no toque e setas do teclado.
+  // Sem JS continua funcionando como rolagem horizontal com snap.
+  const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-carrossel]').forEach((c) => {
+    const pista = c.querySelector('.carrossel__pista');
+    const itens = [...pista.children];
+    const ant = c.querySelector('[data-anterior]');
+    const prox = c.querySelector('[data-proxima]');
+    const atual = c.querySelector('[data-atual]');
+    const prog = c.querySelector('[data-progresso]');
+    const dois = (n) => String(n).padStart(2, '0');
+    c.querySelector('[data-total]').textContent = dois(itens.length);
+    itens.forEach((it, i) => { it.setAttribute('role', 'group'); it.setAttribute('aria-roledescription', 'foto'); it.setAttribute('aria-label', `${i + 1} de ${itens.length}`); });
+
+    const inicio = () => pista.getBoundingClientRect().left + parseFloat(getComputedStyle(pista).paddingLeft);
+    const indice = () => {
+      const x = inicio();
+      let melhor = 0, dist = Infinity;
+      itens.forEach((it, i) => { const d = Math.abs(it.getBoundingClientRect().left - x); if (d < dist) { dist = d; melhor = i; } });
+      return melhor;
+    };
+    const fim = () => pista.scrollLeft >= pista.scrollWidth - pista.clientWidth - 2;
+    const atualizar = () => {
+      const i = fim() ? itens.length - 1 : indice();
+      atual.textContent = dois(i + 1);
+      prog.style.width = ((i + 1) / itens.length * 100) + '%';
+      ant.disabled = pista.scrollLeft <= 2;
+      prox.disabled = fim();
+    };
+    const irPara = (i) => {
+      const alvo = itens[Math.max(0, Math.min(itens.length - 1, i))];
+      pista.scrollTo({ left: pista.scrollLeft + alvo.getBoundingClientRect().left - inicio(), behavior: reduzido ? 'auto' : 'smooth' });
+    };
+    ant.addEventListener('click', () => irPara(indice() - 1));
+    prox.addEventListener('click', () => irPara(indice() + 1));
+    pista.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); irPara(indice() + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); irPara(indice() - 1); }
+    });
+    pista.addEventListener('scroll', atualizar, { passive: true });
+    addEventListener('resize', atualizar);
+
+    // Arrastar com o mouse (no toque o navegador já desliza sozinho)
+    let x0 = 0, s0 = 0, arrastou = false, segurando = false;
+    pista.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      segurando = true; arrastou = false; x0 = e.clientX; s0 = pista.scrollLeft;
+    });
+    addEventListener('pointermove', (e) => {
+      if (!segurando) return;
+      const dx = e.clientX - x0;
+      if (!arrastou && Math.abs(dx) > 5) { arrastou = true; pista.classList.add('arrastando'); }
+      if (arrastou) pista.scrollLeft = s0 - dx;
+    });
+    addEventListener('pointerup', () => {
+      if (!segurando) return;
+      segurando = false;
+      if (arrastou) { pista.classList.remove('arrastando'); irPara(indice()); }
+    });
+    pista.addEventListener('click', (e) => { if (arrastou) { e.preventDefault(); e.stopPropagation(); arrastou = false; } }, true);
+    atualizar();
+  });
+
+  // Cabeçalho transparente enquanto a foto da entrada está atrás dele.
+  const topo = document.querySelector('.topo');
+  const entrada = document.getElementById('entrada');
+  const ajustarTopo = () => topo.classList.toggle('topo--sobre-foto', entrada.getBoundingClientRect().bottom > topo.offsetHeight);
+  addEventListener('scroll', ajustarTopo, { passive: true });
+  ajustarTopo();
+
+  // Título: o texto ocupa exatamente a largura disponível, com qualquer fonte.
+  const encaixar = () => document.querySelectorAll('[data-encaixe]').forEach((el) => {
+    const pai = el.parentElement;
+    pai.style.fontSize = '100px';
+    const medida = document.createElement('span');
+    medida.textContent = el.textContent;
+    medida.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:inherit;letter-spacing:inherit;text-transform:inherit';
+    pai.appendChild(medida);
+    const largura = medida.getBoundingClientRect().width;
+    medida.remove();
+    pai.style.fontSize = Math.floor(100 * el.clientWidth / largura * 0.995) + 'px';
+  });
+  addEventListener('resize', encaixar);
+  document.fonts.ready.then(encaixar);
+
+  document.querySelectorAll('[data-font]').forEach((b) => b.addEventListener('click', () => {
+    document.documentElement.style.setProperty('--display', b.dataset.font);
+    document.querySelectorAll('[data-font]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    document.fonts.ready.then(encaixar);
+  }));
+</script>
+</body>
+</html>

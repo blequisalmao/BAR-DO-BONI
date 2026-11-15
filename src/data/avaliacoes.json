@@ -1,0 +1,6 @@
+{
+  "_leia": "Avaliações do Google mostradas no site. O jeito recomendado é automático: defina GOOGLE_PLACES_API_KEY e GOOGLE_PLACE_ID (veja o README) e o build busca as avaliações reais direto do Google. Sem a chave, o site usa este arquivo: cole aqui avaliações REAIS do perfil do Bar do Boni no Google Maps (nunca invente). Campos: autor, nota (1 a 5), texto, quando (ex.: 'há 2 meses'), link (opcional, link da avaliação). Se a lista ficar vazia, a seção mostra só os botões para ver e avaliar no Google.",
+  "nota": null,
+  "total": null,
+  "avaliacoes": []
+}

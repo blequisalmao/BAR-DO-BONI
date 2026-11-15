@@ -1,0 +1,15 @@
+---
+// Página inicial: duas abas fixas, "A casa" (história, com a arte "Venha conhecer o Bar do Boni") e "Cardápio".
+// Galeria, avaliações, como chegar e contato ficam em páginas próprias (links no rodapé).
+import Base from '../layouts/Base.astro';
+import Abas from '../components/Abas.astro';
+import Casa from '../components/Casa.astro';
+import CardapioCompleto from '../components/CardapioCompleto.astro';
+---
+<Base>
+  <h1 class="sr-only">Bar do Boni, na beira da Lagoa da Conceição</h1>
+  <Abas abas={[{ id: 'a-casa', rotulo: 'A casa' }, { id: 'cardapio', rotulo: 'Cardápio' }]}>
+    <div id="painel-a-casa" class="aberto" data-painel><Casa /></div>
+    <div id="painel-cardapio" data-painel><CardapioCompleto /></div>
+  </Abas>
+</Base>

@@ -1,0 +1,105 @@
+---
+import '@fontsource-variable/dm-sans';
+import '@fontsource/syne/800.css';
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import site from '../data/site.json';
+import { imagem } from '../lib/imagens';
+import Carregando from '../components/Carregando.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import Rodape from '../components/Rodape.astro';
+import VerFoto from '../components/VerFoto.astro';
+
+// Layout de todas as páginas: tela de carregamento, cabeçalho, conteúdo, rodapé e foto ampliada.
+interface Props { titulo?: string; descricao?: string }
+const props = Astro.props;
+
+const titulo = props.titulo ? `${props.titulo} | Bar do Boni` : 'Bar do Boni | Lagoa da Conceição, Florianópolis';
+const descricao = props.descricao ?? site.descricao;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+
+// Open Graph: a foto do pôr do sol (JPEG, mais compatível com redes sociais)
+const og = await getImage({ src: imagem('sunset_bar_do_boni.png'), width: 600, format: 'jpeg' });
+const ogUrl = new URL(og.src, Astro.site ?? site.url).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BarOrPub',
+  name: site.nome,
+  url: site.url,
+  image: ogUrl,
+  telephone: site.telefone.link,
+  email: site.email,
+  servesCuisine: ['Frutos do mar', 'Petiscos'],
+  hasMenu: `${site.url}/#cardapio`,
+  acceptsReservations: true,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.endereco.rua,
+    addressLocality: site.endereco.cidade,
+    addressRegion: site.endereco.uf,
+    postalCode: site.endereco.cep,
+    addressCountry: site.endereco.pais,
+  },
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: site.horario.abre,
+    closes: site.horario.fecha,
+  }],
+  sameAs: [site.instagram, site.facebook],
+};
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Marca que há JS antes da pintura: as animações de entrada e a tela de carregamento começam sem piscar -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      // Sem "#âncora" no endereço: ao recarregar (F5), a página começa sempre do topo
+      if (location.hash) { history.replaceState(null, '', location.pathname + location.search); scrollTo(0, 0); }
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-revelar');
+      // tela de carregamento com a logo: só na primeira visita da sessão
+      try { if (!sessionStorage.getItem('boni-carregou')) document.documentElement.classList.add('js-carregando'); }
+      catch { document.documentElement.classList.add('js-carregando'); }
+    </script>
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#1F4E6B" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={site.nome} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content={String(og.attributes.width)} />
+    <meta property="og:image:height" content={String(og.attributes.height)} />
+    <meta property="og:image:alt" content="Pôr do sol sobre a Lagoa da Conceição visto do Bar do Boni" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <Carregando />
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+    <Cabecalho />
+    <main id="conteudo" class="conteudo">
+      <slot />
+    </main>
+    <Rodape />
+    <VerFoto />
+    <script>
+      // Animação de entrada dos blocos ao rolar (src/lib/revelar.ts)
+      import { iniciarRevelar } from '../lib/revelar';
+      iniciarRevelar();
+    </script>
+  </body>
+</html>

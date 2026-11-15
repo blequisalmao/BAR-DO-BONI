@@ -1,0 +1,266 @@
+{
+  "_leia": "Cardápio completo, convertido de cardapio.md (transcrito em 14/11/2026). Preços em R$. Nenhum preço foi inventado: itens sem valor aparecem como 'Consulte'. Para mudar, edite os itens aqui.",
+  "categorias": [
+    {
+      "titulo": "Frutos do mar",
+      "nota": "Porções de 350g / 500g",
+      "itens": [
+        { "nome": "Camarão rosa crocante", "descricao": "500g", "preco": "164,90" },
+        { "nome": "Camarão à milanesa", "descricao": "350g / 500g", "preco": "69,90 / 98,90" },
+        { "nome": "Camarão alho e óleo", "descricao": "Sem casca. 350g / 500g", "preco": "84,90 / 120,90" },
+        { "nome": "Camarão alho e óleo inteiro", "descricao": "Com casca, sob consulta. 350g / 500g", "preco": "59,90 / 79,90" },
+        { "nome": "Lula à dorê", "descricao": "350g / 500g", "preco": "58,90 / 80,90" },
+        { "nome": "Isca de peixe congrio", "descricao": "350g / 500g", "preco": "76,90 / 109,90" },
+        { "nome": "Isca de peixe linguado", "descricao": "350g / 500g", "preco": "69,90 / 98,90" },
+        { "nome": "Isca de peixe pescada", "descricao": "350g / 500g", "preco": "41,90 / 63,90" },
+        { "nome": "Polvo ao alho e óleo", "descricao": "350g", "preco": "98,90" },
+        { "nome": "Polvo à vinagrete", "descricao": "350g", "preco": "98,90" },
+        { "nome": "Peixe da estação em postas", "descricao": "3 un. / 5 un.", "preco": "29,90 / 43,90" }
+      ]
+    },
+    {
+      "titulo": "Sequência de camarão",
+      "nota": "Serve 2",
+      "itens": [
+        { "nome": "Sequência tradicional", "descricao": "Camarão ao bafo, camarão à milanesa, camarão alho e óleo (inteiro com casca), bolinhos de siri, filé de peixe, pirão, arroz e fritas", "preco": "196,90" },
+        { "nome": "Sequência sem casca", "preco": "244,90" },
+        { "nome": "Sequência à milanesa", "preco": "244,90" }
+      ]
+    },
+    {
+      "titulo": "Camarão e peixes",
+      "nota": "1 pessoa / 2 pessoas",
+      "itens": [
+        { "nome": "Arroz cremoso de camarão", "descricao": "1 pessoa / 2 pessoas", "preco": "94,90 / 144,90" },
+        { "nome": "Camarão com catupiry", "descricao": "1 pessoa / 2 pessoas", "preco": "99,90 / 149,90" },
+        { "nome": "Salmão grelhado com legumes", "descricao": "Com arroz e fritas. 1 pessoa / 2 pessoas", "preco": "124,90 / 194,90" }
+      ]
+    },
+    {
+      "titulo": "Gigantes do Boni",
+      "nota": "Porções de 1 kg",
+      "itens": [
+        { "nome": "Batata frita", "preco": "65,90" },
+        { "nome": "Batata frita com queijo e orégano", "preco": "75,90" },
+        { "nome": "Batata frita com cheddar e bacon", "preco": "89,90" },
+        { "nome": "Camarão à milanesa", "preco": "175,90" },
+        { "nome": "Isca de peixe", "preco": "105,90" },
+        { "nome": "Mista de carne acebolada com fritas", "descricao": "Entrecot, frango, calabresa, fritas, pão e farofa", "preco": "153,90" },
+        { "nome": "Mista especial da casa", "descricao": "Camarão à milanesa, lula à dorê, isca de peixe e batatas fritas", "preco": "175,90" }
+      ]
+    },
+    {
+      "titulo": "Petiscos",
+      "nota": "Porções de 250g / 500g",
+      "itens": [
+        { "nome": "Mignon acebolado gratinado 4 queijos", "descricao": "Mussarela, requeijão, parmesão e gorgonzola. 250g / 500g", "preco": "109,90 / 164,90" },
+        { "nome": "Mignon ao molho gorgonzola", "descricao": "250g / 500g", "preco": "104,90 / 154,90" },
+        { "nome": "Mignon acebolado", "descricao": "Com pães e farofa. 250g / 500g", "preco": "99,90 / 142,90" },
+        { "nome": "Entrecot aperitivo acebolado", "descricao": "Com pães e farofa. 250g / 500g", "preco": "69,90 / 98,90" },
+        { "nome": "Costelinha barbecue", "descricao": "Com pães e farofa. 500g", "preco": "98,90" },
+        { "nome": "Frango à passarinho", "descricao": "250g / 500g", "preco": "36,90 / 54,90" },
+        { "nome": "Frango crocante", "descricao": "Iscas de frango empanado na farinha panko. 250g / 500g", "preco": "36,90 / 54,90" },
+        { "nome": "Frango grelhado acebolado", "descricao": "Com pães e farofa. 250g / 500g", "preco": "32,90 / 47,90" },
+        { "nome": "Calabresa acebolada", "descricao": "Com pães e farofa. 250g / 500g", "preco": "30,90 / 43,90" }
+      ]
+    },
+    {
+      "titulo": "Mini porções e pastel",
+      "itens": [
+        { "nome": "Bolinho de siri", "descricao": "6 un.", "preco": "43,90" },
+        { "nome": "Bolinho de bacalhau", "descricao": "6 un.", "preco": "43,90" },
+        { "nome": "Mini pastel", "descricao": "10 un. Camarão ou carne de panela", "preco": "41,90" },
+        { "nome": "Dadinhos de tapioca", "descricao": "8 un. Tradicional ou linguiça blumenau", "preco": "32,90" },
+        { "nome": "Pastel", "descricao": "1 un. Pergunte os sabores", "preco": "Consulte" }
+      ]
+    },
+    {
+      "titulo": "Caldos",
+      "itens": [
+        { "nome": "Caldo verde", "preco": "18,90" },
+        { "nome": "Caldo de legumes", "preco": "18,90" },
+        { "nome": "Caldo de feijão", "preco": "18,90" },
+        { "nome": "Caldo de peixe", "preco": "18,90" },
+        { "nome": "Caldo de camarão", "preco": "24,90" }
+      ]
+    },
+    {
+      "titulo": "Hambúrguer",
+      "itens": [
+        { "nome": "BBB (Boni burger barbecue)", "descricao": "Pão roseta com orégano e parmesão, hambúrguer de costela bovina 180g, cheddar, alface, tomate, batata rústica e molho barbecue", "preco": "36,90" },
+        { "nome": "BBB bacon", "descricao": "O mesmo, com tiras de bacon 100g", "preco": "43,90" },
+        { "nome": "4 mini hambúrgueres e fritas", "descricao": "Tradicional, melt, americano e defumado, com batata rústica", "preco": "59,90" },
+        { "nome": "3 mini hambúrgueres e fritas", "preco": "49,90" }
+      ]
+    },
+    {
+      "titulo": "Caipiras",
+      "nota": "Limão, morango, maracujá ou abacaxi",
+      "itens": [
+        { "nome": "Caninha 51", "preco": "24,90" },
+        { "nome": "Vinho", "preco": "24,90" },
+        { "nome": "Artesanal", "preco": "24,90" },
+        { "nome": "Vodka nacional", "preco": "29,90" },
+        { "nome": "Steinhaeger", "preco": "29,90" },
+        { "nome": "Bacardi", "preco": "30,90" },
+        { "nome": "Cachaça Manezinha Prata", "preco": "30,90" },
+        { "nome": "Cachaça Manezinha Ouro", "preco": "30,90" },
+        { "nome": "Saquê", "preco": "34,90" },
+        { "nome": "Absolut", "preco": "42,90" },
+        { "nome": "Especial de frutas 500ml", "descricao": "Até 3 frutas: frutas vermelhas, kiwi, abacaxi, morango, maracujá, limão ou laranja. Com Smirnoff, Bacardi, cachaça ou Steinhaeger", "preco": "54,90" },
+        { "nome": "Especial de frutas premium 500ml", "descricao": "Até 3 frutas: frutas vermelhas, kiwi, abacaxi, pitaya com limão, maracujá, limão ou morango. Com Absolut ou Cachaça Manezinha", "preco": "59,90" }
+      ]
+    },
+    {
+      "titulo": "Coquetéis",
+      "itens": [
+        { "nome": "Rayssa Fruts", "descricao": "Vodka, frutas vermelhas, xarope de morango, leite condensado e creme de leite", "preco": "38,90" },
+        { "nome": "Jager Boni", "descricao": "Jägermeister, energético tropical e suco de laranja", "preco": "46,90" },
+        { "nome": "Gin tônica importado", "preco": "36,90" },
+        { "nome": "Gin tônica nacional", "preco": "29,90" },
+        { "nome": "Campari tônica", "descricao": "Campari, tônica e suco de laranja", "preco": "32,90" },
+        { "nome": "Mojito", "descricao": "Rum, suco de limão, água com gás, açúcar, hortelã e gelo picado", "preco": "32,90" },
+        { "nome": "Kir Royal", "descricao": "Espumante brut, licor de cassis e cereja", "preco": "26,90" },
+        { "nome": "Margarita", "descricao": "Curaçau, tequila, limão e gelo", "preco": "32,90" },
+        { "nome": "Galheta", "descricao": "Licor de cacau, conhaque, leite de coco, leite condensado, creme de leite e gelo", "preco": "32,90" },
+        { "nome": "Piña Colada", "descricao": "Rum, abacaxi, leite de coco, leite condensado e gelo", "preco": "32,90" },
+        { "nome": "Lagoa Formosa", "descricao": "Gin Beefeater, xarope violeta, limão siciliano, manjericão e tônica", "preco": "39,90" },
+        { "nome": "Negroni", "descricao": "Campari, Cinzano Rosso e gin Tanqueray", "preco": "36,90" }
+      ]
+    },
+    {
+      "titulo": "Coquetéis premium",
+      "itens": [
+        { "nome": "Coco Boni", "descricao": "Servido no coco. Vodka Absolut, rum Malibu, água de coco, polpa de coco, leite condensado e creme de leite", "preco": "76,90" },
+        { "nome": "BBzinha", "descricao": "Smirnoff Ice, mousse de morango e calda de frutas vermelhas", "preco": "57,90" },
+        { "nome": "Paulo's Gin", "descricao": "Gin Beefeater, suco de limão siciliano, flor de hibisco, alecrim e água tônica", "preco": "57,90" },
+        { "nome": "Arrombassi", "descricao": "Steinhaeger, Corona, limão taiti, xarope de açúcar e Cointreau", "preco": "57,90" },
+        { "nome": "Darci", "descricao": "Cachaça especial de butiá, limão, maracujá, melado apimentado e gengibre", "preco": "52,90" }
+      ]
+    },
+    {
+      "titulo": "Chopp e cervejas",
+      "itens": [
+        { "nome": "Chopp IPA Kairós", "descricao": "300ml", "preco": "18,90" },
+        { "nome": "Chopp Pilsen Kairós", "descricao": "300ml", "preco": "14,90" },
+        { "nome": "Chopp Heineken", "descricao": "300ml", "preco": "16,90" },
+        { "nome": "Chopp Amstel", "descricao": "300ml", "preco": "14,90" },
+        { "nome": "Heineken", "descricao": "Garrafa 600ml", "preco": "24,90" },
+        { "nome": "Amstel", "descricao": "Garrafa 600ml", "preco": "18,90" },
+        { "nome": "Eisenbahn", "descricao": "Garrafa 600ml", "preco": "18,90" },
+        { "nome": "Original", "descricao": "Garrafa 600ml", "preco": "21,90" },
+        { "nome": "Stella Artois", "descricao": "Garrafa 600ml", "preco": "22,90" },
+        { "nome": "Schornstein Weiss", "descricao": "500ml. Trigo, 5,0%: banana, cravo e notas cítricas. Produzida em SC", "preco": "28,90" },
+        { "nome": "Schornstein APA", "descricao": "500ml. American Pale Ale, 5,0%: lúpulos cítricos, amargor moderado", "preco": "28,90" },
+        { "nome": "Schornstein IPA", "descricao": "500ml. India Pale Ale, 6,5%: floral, cítrico e frutado", "preco": "28,90" },
+        { "nome": "Schornstein IPA long neck", "preco": "15,90" }
+      ]
+    },
+    {
+      "titulo": "Vinhos brancos",
+      "itens": [
+        { "nome": "Privado Oasis Sur Chardonnay", "descricao": "Chardonnay. Mendoza, Argentina", "preco": "179,90" },
+        { "nome": "Goup Sauvignon Blanc", "descricao": "Sauvignon Blanc. Vale do Curicó, Chile", "preco": "149,90" },
+        { "nome": "Ola Po Chardonnay", "descricao": "Chardonnay. Vale Central, Chile", "preco": "140,90" },
+        { "nome": "Viña Errazuriz Ovalle Collection", "descricao": "Chardonnay. Vale do Curicó, Chile", "preco": "119,90" },
+        { "nome": "Dama Pinot Grigio", "descricao": "Pinot Grigio. Puglia, Itália", "preco": "164,90" },
+        { "nome": "Perereca do Monte Vinho Verde", "descricao": "Arinto, Bical e Fernão Pires. Dão, Alentejo e Douro, Portugal", "preco": "139,90" },
+        { "nome": "Quinta de Gomariz Grande Escolha Verde", "descricao": "Alvarinho, Trajadura, Loureiro, Avesso e Azal. Vale do Ave, Portugal", "preco": "164,90" }
+      ]
+    },
+    {
+      "titulo": "Espumantes",
+      "itens": [
+        { "nome": "Casa Perini Moscatel Aquarela", "descricao": "Moscatos. Serra Gaúcha", "preco": "139,90" },
+        { "nome": "Chandon Brut", "descricao": "Riesling Itálico, Pinot Noir e Chardonnay. Serra Gaúcha", "preco": "179,90" },
+        { "nome": "Go Up Brut Branco", "descricao": "Chardonnay. Serra Gaúcha", "preco": "169,90" },
+        { "nome": "Go Up Brut Rosé", "descricao": "Pinot Noir. Serra Gaúcha", "preco": "169,90" },
+        { "nome": "Terranova Moscatel", "descricao": "Chardonnay e Pinot Noir. Serra Gaúcha", "preco": "129,90" },
+        { "nome": "Cava Bonaval Brut", "descricao": "Garnacha e Trepat. Extremadura, Espanha", "preco": "129,90" },
+        { "nome": "Freixenet Carta Nevada", "descricao": "Macabeo, Parellada e Xarel·lo. Catalunha, Espanha", "preco": "159,90" },
+        { "nome": "Freixenet Carta Rosada", "descricao": "Garnacha e Trepat. Catalunha, Espanha", "preco": "159,90" },
+        { "nome": "Freixenet Cordon Negro", "descricao": "Catalunha, Espanha", "preco": "159,90" }
+      ]
+    },
+    {
+      "titulo": "Doses",
+      "itens": [
+        { "nome": "Absolut", "preco": "28,90" },
+        { "nome": "Jägermeister", "preco": "40,90" },
+        { "nome": "Gin Beefeater Dry", "preco": "35,90" },
+        { "nome": "Grey Goose", "preco": "42,90" },
+        { "nome": "Tequila 1800 Silver", "preco": "68,90" },
+        { "nome": "Tequila Herradura", "preco": "65,90" },
+        { "nome": "Jack Honey", "preco": "33,90" },
+        { "nome": "Jack Daniel's", "preco": "29,90" },
+        { "nome": "Black Label", "preco": "33,90" },
+        { "nome": "Gold Label", "preco": "45,90" },
+        { "nome": "Blue Label", "preco": "160,90" },
+        { "nome": "Chivas Regal 12 anos", "preco": "33,90" },
+        { "nome": "Royal Salute", "preco": "160,90" },
+        { "nome": "Cachaça sabores Degusta", "descricao": "Pergunte ao garçom", "preco": "33,90" },
+        { "nome": "Cachaça especial da casa", "descricao": "Barril de carvalho", "preco": "33,90" },
+        { "nome": "Cachaça Manezinha Ouro", "preco": "19,90" },
+        { "nome": "Gelo de coco", "preco": "8,00" }
+      ]
+    },
+    {
+      "titulo": "Licores",
+      "itens": [
+        { "nome": "Licor de cassis", "preco": "35,90" },
+        { "nome": "Amarula", "preco": "35,90" },
+        { "nome": "Cointreau", "preco": "35,90" },
+        { "nome": "43", "preco": "39,90" },
+        { "nome": "Ballena", "preco": "35,90" }
+      ]
+    },
+    {
+      "titulo": "Garrafas",
+      "itens": [
+        { "nome": "Vodka Smirnoff", "preco": "139,90" },
+        { "nome": "Gin nacional", "preco": "172,90" },
+        { "nome": "Absolut", "preco": "294,90" },
+        { "nome": "Tequila José Cuervo", "preco": "299,90" },
+        { "nome": "Tequila 1800 Silver", "preco": "749,90" },
+        { "nome": "Gin Beefeater Dry", "preco": "360,90" },
+        { "nome": "Grey Goose 750ml", "preco": "449,90" },
+        { "nome": "Red Label", "preco": "270,90" },
+        { "nome": "Black Label", "preco": "510,90" },
+        { "nome": "Gold Label", "preco": "574,90" }
+      ]
+    },
+    {
+      "titulo": "Combos",
+      "nota": "Garrafa e 6 Red Bull",
+      "itens": [
+        { "nome": "Blue Label", "preco": "1.999,00" },
+        { "nome": "Royal Salute", "preco": "1.999,00" },
+        { "nome": "Gold Label", "preco": "680,90" },
+        { "nome": "Black Label", "preco": "610,90" },
+        { "nome": "Chivas Regal 12 anos", "preco": "610,90" },
+        { "nome": "Grey Goose 750ml", "preco": "550,90" },
+        { "nome": "Jack Daniel's", "preco": "502,90" },
+        { "nome": "Absolut Elyx", "preco": "490,90" },
+        { "nome": "Gin importado", "descricao": "Com 6 Red Bull ou 8 tônicas", "preco": "460,90" },
+        { "nome": "Gin Beefeater Dry", "preco": "449,90" },
+        { "nome": "Absolut", "preco": "399,90" },
+        { "nome": "Red Label", "preco": "370,90" },
+        { "nome": "Gin nacional", "descricao": "Com 6 Red Bull ou 8 tônicas", "preco": "272,90" },
+        { "nome": "Vodka Smirnoff", "preco": "229,90" }
+      ]
+    },
+    {
+      "titulo": "Sem álcool",
+      "itens": [
+        { "nome": "Água mineral Imperatriz", "descricao": "Com ou sem gás", "preco": "7,00" },
+        { "nome": "Água tônica", "descricao": "Normal ou zero", "preco": "7,90" },
+        { "nome": "H2OH Limão", "preco": "8,90" },
+        { "nome": "Coco verde", "descricao": "Pergunte ao garçom", "preco": "Consulte" },
+        { "nome": "Suco natural", "descricao": "Limão, laranja, morango, abacaxi ou abacaxi com hortelã", "preco": "13,90" },
+        { "nome": "Suco de polpa", "descricao": "Acerola ou maracujá", "preco": "12,90" },
+        { "nome": "Suco com leite", "preco": "14,90" },
+        { "nome": "Suco misto", "descricao": "2 frutas", "preco": "14,90" }
+      ]
+    }
+  ]
+}

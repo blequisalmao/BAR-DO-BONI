@@ -1,0 +1,97 @@
+---
+// Galeria: todas as fotos do bar num lugar só, com filtros por categoria e "Ver mais fotos".
+// Clicar numa foto abre só ela, ampliada, com o site desfocado atrás (VerFoto.astro);
+// as setas passam pelas fotos visíveis no filtro atual. Só a foto, sem nome nem preço.
+// Sem JS, aparecem todas as fotos.
+import Foto from './Foto.astro';
+import { categorias, galeria } from '../data/fotos';
+
+const POR_VEZ = 12;
+---
+<section class="secao galeria" id="galeria" aria-labelledby="titulo-galeria" data-galeria data-por-vez={POR_VEZ}>
+  <div class="secao__cab galeria__cab">
+    <h1 class="secao__titulo display" id="titulo-galeria">Galeria</h1>
+    <div class="galeria__filtros" role="group" aria-label="Filtrar fotos">
+      <button type="button" class="galeria__filtro" data-filtro="todas" aria-pressed="true">Todas</button>
+      {categorias.map((c) => (
+        <button type="button" class="galeria__filtro" data-filtro={c.id} aria-pressed="false">{c.nome}</button>
+      ))}
+    </div>
+  </div>
+
+  <ul class="galeria__grade" data-galeria-grade>
+    {galeria.map((foto) => (
+      <li data-categoria={foto.categoria}>
+        <figure>
+          <Foto foto={foto} moldura="4/5" ver="galeria" sizes="(max-width: 479px) 50vw, (max-width: 767px) 34vw, (max-width: 1099px) 25vw, 17vw" />
+        </figure>
+      </li>
+    ))}
+  </ul>
+
+  <div class="galeria__mais">
+    <button type="button" class="btn btn--linha" data-galeria-mais hidden>Ver mais fotos</button>
+  </div>
+</section>
+
+<style>
+  .galeria__cab { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; }
+  .galeria__filtros { display: flex; flex-wrap: wrap; gap: 8px; }
+  .galeria__filtro {
+    min-height: 48px; padding: 0 16px; border: 2px solid var(--color-texto);
+    background: transparent; color: var(--color-texto); cursor: pointer;
+    font: 600 16px/1 var(--font-corpo); letter-spacing: .08em; text-transform: uppercase;
+    transition: background-color var(--transicao), color var(--transicao);
+  }
+  .galeria__filtro:hover { background: var(--color-texto); color: var(--color-base); }
+  .galeria__filtro[aria-pressed="true"] { background: var(--color-texto); color: var(--color-base); }
+
+  .galeria__grade {
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--junta);
+    list-style: none; margin: 0; padding: 0;
+  }
+  .galeria__grade > li { min-width: 0; }
+  .galeria__grade figure { margin: 0; }
+  .galeria__grade > li[hidden] { display: none; }
+  /* 6 colunas no desktop, 4 em tablet, 3 em celular grande, 2 nos menores */
+  @media (max-width: 1099px) { .galeria__grade { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (max-width: 767px) { .galeria__grade { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 479px) { .galeria__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  /* centralizado, com o mesmo espaço acima (fotos) e abaixo (rodapé) */
+  .galeria__mais { display: flex; justify-content: center; padding: 32px var(--gutter); }
+</style>
+
+<script>
+  const secao = document.querySelector<HTMLElement>('[data-galeria]');
+  if (secao) {
+    const porVez = Number(secao.dataset.porVez) || 12;
+    const itens = [...secao.querySelectorAll<HTMLLIElement>('[data-galeria-grade] > li')];
+    const filtros = [...secao.querySelectorAll<HTMLButtonElement>('[data-filtro]')];
+    const mais = secao.querySelector<HTMLButtonElement>('[data-galeria-mais]')!;
+    let filtro = 'todas';
+    let limite = porVez;
+
+    const aplicar = () => {
+      const doFiltro = itens.filter((li) => filtro === 'todas' || li.dataset.categoria === filtro);
+      itens.forEach((li) => { li.hidden = true; });
+      doFiltro.forEach((li, i) => { li.hidden = i >= limite; });
+      mais.hidden = doFiltro.length <= limite;
+    };
+
+    filtros.forEach((b) => b.addEventListener('click', () => {
+      filtro = b.dataset.filtro ?? 'todas';
+      limite = porVez;
+      filtros.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      aplicar();
+    }));
+    mais.addEventListener('click', () => {
+      const primeiraNova = itens.filter((li) => !li.hidden).length;
+      limite += porVez;
+      aplicar();
+      // leva o foco para a primeira foto que apareceu
+      itens.filter((li) => !li.hidden)[primeiraNova]?.querySelector<HTMLElement>('[data-ver]')?.focus();
+    });
+    aplicar();
+  }
+</script>

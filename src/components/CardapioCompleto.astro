@@ -1,0 +1,63 @@
+---
+// Cardápio completo (src/data/cardapio.json): <details> por categoria, itens em colunas,
+// preço à direita e descrição embaixo. Funciona sem JS.
+import { Icon } from 'astro-icon/components';
+import cardapio from '../data/cardapio.json';
+import { formatarPreco } from '../lib/imagens';
+
+interface Item { nome: string; descricao?: string; preco: string }
+interface Categoria { titulo: string; nota?: string; itens: Item[] }
+const categorias = cardapio.categorias as Categoria[];
+---
+<section class="cardapio" id="cardapio" aria-labelledby="titulo-cardapio">
+  <h2 class="sr-only" id="titulo-cardapio">Cardápio</h2>
+  {categorias.map((cat, i) => (
+    <details open={i === 0}>
+      <summary>
+        <h3 class="cardapio__categoria display">{cat.titulo}</h3>
+        <Icon name="lucide:plus" aria-hidden="true" />
+      </summary>
+      {cat.nota && <p class="cardapio__nota">{cat.nota}</p>}
+      <ul class="cardapio__itens">
+        {cat.itens.map((item) => (
+          <li>
+            <span class="cardapio__nome">{item.nome}</span>
+            <span class="cardapio__preco">{formatarPreco(item.preco)}</span>
+            {item.descricao && <span class="cardapio__desc">{item.descricao}</span>}
+          </li>
+        ))}
+      </ul>
+    </details>
+  ))}
+</section>
+
+<style>
+  .cardapio { padding-bottom: 96px; }
+  details { border-bottom: 2px solid var(--color-texto); }
+  summary {
+    list-style: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 24px var(--gutter);
+    transition: color var(--transicao);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:focus-visible { outline-offset: -3px; }
+  .cardapio__categoria {
+    min-width: 0; hyphens: auto; overflow-wrap: anywhere;
+    font-size: clamp(22px, 2.4vw, 34px); line-height: 1;
+    text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 4px; text-underline-offset: 8px;
+    transition: text-decoration-color var(--transicao);
+  }
+  summary:hover .cardapio__categoria { text-decoration-color: var(--color-ousada); }
+  summary :global(svg) { width: 32px; height: 32px; flex: none; transition: transform var(--transicao); }
+  details[open] summary :global(svg) { transform: rotate(45deg); }
+  .cardapio__nota { padding: 0 var(--gutter) 8px; font-size: 16px; color: var(--texto-suave); }
+  .cardapio__itens { list-style: none; margin: 0; padding: 0 var(--gutter) 32px; columns: 3 300px; column-gap: 48px; }
+  .cardapio__itens li {
+    break-inside: avoid; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 16px;
+    padding: 16px 0; border-bottom: 2px solid var(--texto-linha);
+  }
+  .cardapio__nome { font-weight: 600; }
+  .cardapio__preco { font-weight: 600; text-align: right; white-space: nowrap; }
+  .cardapio__desc { grid-column: 1 / -1; font-size: 16px; color: var(--texto-suave); padding-top: 8px; }
+</style>
