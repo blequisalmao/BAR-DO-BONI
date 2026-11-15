@@ -1,6 +1,26 @@
 {
-  "_leia": "Avaliações do Google mostradas no site. O jeito recomendado é automático: defina GOOGLE_PLACES_API_KEY e GOOGLE_PLACE_ID (veja o README) e o build busca as avaliações reais direto do Google. Sem a chave, o site usa este arquivo: cole aqui avaliações REAIS do perfil do Bar do Boni no Google Maps (nunca invente). Campos: autor, nota (1 a 5), texto, quando (ex.: 'há 2 meses'), link (opcional, link da avaliação). Se a lista ficar vazia, a seção mostra só os botões para ver e avaliar no Google.",
-  "nota": null,
-  "total": null,
-  "avaliacoes": []
+  "_leia": "Avaliações REAIS do perfil do Bar do Boni no Google Maps ('Bar e Restaurante do Boni'), escolhidas a dedo e copiadas como estão (nunca invente nem reescreva). Para trocar ou acrescentar, copie do Google Maps: autor, nota (1 a 5), texto, quando (ex.: 'há uma semana', do jeito que o Google mostra no dia em que foi copiada) e, se quiser, link da avaliação. 'nota' e 'total' são a média e o número de avaliações do perfil; atualize de vez em quando. 'link' é o perfil no Google Maps. Copiado em 15/11/2026. Com GOOGLE_PLACES_API_KEY e GOOGLE_PLACE_ID definidos no build, o site busca direto do Google e ignora a lista abaixo.",
+  "nota": 4.5,
+  "total": 7475,
+  "link": "https://maps.google.com/?cid=9033395182460031782",
+  "avaliacoes": [
+    {
+      "autor": "Jade Falcioli",
+      "nota": 5,
+      "quando": "novembro de 2026",
+      "texto": "Comemorei meu aniversário de 30 anos no bar do Boni e foi tudo Maravilhoso, mesmo com o dia frio e nublado eles conseguiram promover uma experiência perfeita. O atendimento é rápido e atencioso, o cardápio tem opções para todos os gostos e bolsos, assim todos conseguem participar independente do orçamento. A comida estava toda muito gostosa, destaque para a opção de 1 kg de batata, drinks divertidos e bem apresentados e ostras, tudo muito bom. O ambiente também é lindo super aconchegante e funciona bem durante a noite ou dia com diversos ambientes diferentes. Minha conta ficou em 120 reais por pessoa por que peguei um polvo, mas da pra ser muito mais em conta."
+    },
+    {
+      "autor": "Cosette Silva",
+      "nota": 5,
+      "quando": "novembro de 2026",
+      "texto": "O Lucas me atendeu maravilhosamente bem 😍 Atendimento sempre é tudo. Curti um som acústico e ao vivo e ainda pedi música 🎤 Olha mas agora vou deixar a dica de ouro: PEÇAM O PASTEL DE CAMARÃO 🍤 Eu adoro muito ❤️"
+    },
+    {
+      "autor": "Livia Rezende Girardi",
+      "nota": 5,
+      "quando": "novembro de 2026",
+      "texto": "Somos clientes de carteirinha 😅🙈 Começando pelo atendimento top, a Osmarina sempre muito atenciosa e cuidadosa com a nossa família, sempre atenta e fazendo um excelente atendimento!! …"
+    }
+  ]
 }

@@ -1,18 +1,13 @@
-// Animação de entrada: ao rolar a página, cada bloco surge com fade e uma leve subida.
+// Animação de entrada: ao rolar a página, cada foto surge com fade e uma leve subida.
+// Só fotos: os textos (títulos, cardápio, avaliações, informações, rodapé) ficam sempre visíveis, sem animação.
 // Só roda com JS (a classe .js no <html> esconde os blocos antes) e sem prefers-reduced-motion.
 // Fotos de uma mesma grade entram em sequência (atraso por posição na linha).
 
 const BLOCOS = [
-  '.secao__cab',
-  '.casa__texto > *',
   '.casa__foto',
-  '.cardapio details',
+  '.espaco__grade > li',
+  '.destaques__grade > li',
   '.galeria__grade > li',
-  '.info > *',
-  '.avaliacoes__lista > li',
-  '.avaliacoes__acoes',
-  '.rodape__marca',
-  '.rodape__linha',
 ];
 
 export function iniciarRevelar() {

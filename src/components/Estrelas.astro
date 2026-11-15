@@ -1,0 +1,26 @@
+---
+// Estrelas de 0 a 5, em meias estrelas (4,5 = 4 cheias e 1 meia). SVG próprio (desenho da estrela do Lucide),
+// porque o ícone do Lucide vem com fill="none" e não dá para preencher pelo CSS.
+interface Props { nota: number }
+const { nota } = Astro.props;
+const r = Math.round(nota * 2) / 2;
+const tipos = Array.from({ length: 5 }, (_, i) => (i + 1 <= r ? 'cheia' : i + 0.5 === r ? 'meia' : 'vazia'));
+const D = 'M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z';
+---
+<span class="estrelas" role="img" aria-label={`${String(nota).replace('.', ',')} de 5 estrelas`}>
+  {tipos.map((tipo) => (
+    <svg viewBox="0 0 24 24" aria-hidden="true" class={tipo}>
+      {tipo !== 'vazia' && <path class="estrelas__fundo" d={D} />}
+      <path class="estrelas__linha" d={D} />
+    </svg>
+  ))}
+</span>
+
+<style>
+  .estrelas { display: inline-flex; gap: 4px; color: var(--color-texto); }
+  svg { width: 20px; height: 20px; display: block; overflow: visible; }
+  .estrelas__linha { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+  .estrelas__fundo { fill: currentColor; }
+  /* meia estrela: só a metade esquerda preenchida */
+  .meia .estrelas__fundo { clip-path: inset(0 50% 0 0); }
+</style>

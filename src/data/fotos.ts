@@ -87,3 +87,28 @@ export const galeria: FotoGaleria[] = [
   { categoria: 'gente', arquivo: 'clientes.png', alt: 'Casal numa mesa à beira da Lagoa, com barcos ao fundo' },
   { categoria: 'gente', arquivo: 'prato_completo_barco_do_bar_do_boni_ao_fundo.jpg', alt: 'Pratos na mesa com o barco do Bar do Boni ao fundo' },
 ];
+
+// Aba "A casa": as mesmas fotos da galeria (mesmo texto alternativo e legenda), escolhidas pelo nome do arquivo.
+const daGaleria = (arquivo: string): Foto => {
+  const f = galeria.find((g) => g.arquivo === arquivo);
+  if (!f) throw new Error(`Foto não encontrada na galeria: ${arquivo}`);
+  return f;
+};
+
+/** "O lugar": fotos do espaço (6, em 3 colunas no desktop e 2 no celular). */
+export const espaco: Foto[] = [
+  'sunset_bar_do_boni.png',
+  'area_externa.jpg',
+  'vista_da_lagoa_para_o_bar.png',
+  'area_do_bar.jpg',
+  'entrada.jpg',
+  'prato_completo_vista_lagoa.jpg',
+].map(daGaleria);
+
+/** "Da cozinha e do bar": destaques com nome, porção e preço (4). */
+export const destaques: Foto[] = [
+  'camarao_a_milanesa.png',
+  'pastel_de_camarao.png',
+  'prato_completo2.jpg',
+  'caipirinha_foto_drink.jpg',
+].map(daGaleria);

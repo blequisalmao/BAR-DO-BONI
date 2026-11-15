@@ -5,10 +5,10 @@ Feito com Astro, Tailwind CSS v4 e TypeScript. Saída estática, sem framework d
 
 **Páginas:**
 
-- `/` (início): **A casa** (história, com a arte "Venha conhecer o Bar do Boni") e o **Cardápio** completo.
-- `/galeria`, `/avaliacoes`, `/como-chegar` e `/contato`: uma página para cada, acessadas pelo rodapé.
+- `/` (início): duas abas. **A casa** é a apresentação do bar: história (com a arte "Venha conhecer o Bar do Boni"), "O lugar" (fotos do espaço), "Da cozinha e do bar" (destaques com preço e botão para o cardápio), avaliações reais do Google e "Reserve seu evento conosco" (endereço, horário, WhatsApp e mapa). **Cardápio** tem o cardápio completo, em fundo azul.
+- `/galeria` e `/contato`: uma página para cada, acessadas pelo rodapé. O link "Avaliações" do rodapé leva às avaliações na aba "A casa" (`/#avaliacoes`; o antigo `/avaliacoes` redireciona para lá). O contato reúne a chamada "Reserve seu evento conosco", os contatos, o endereço, o horário e o mapa (o antigo `/como-chegar` redireciona para `/contato`).
 
-O cabeçalho (azul bem claro, com a logo em PNG e o botão "Reservar") fica sempre visível. O rodapé (azul) tem só os links HOME, GALERIA, AVALIAÇÕES, COMO CHEGAR e CONTATO, em Syne.
+O cabeçalho (azul bem claro, com a logo em PNG e o botão "Reservar") fica sempre visível. O rodapé (azul) tem só os links HOME, GALERIA, AVALIAÇÕES e CONTATO, em Urbanist.
 
 ## Rodar no computador
 
@@ -41,11 +41,11 @@ O script salva capturas em `capturas/` (todas as páginas em 390px e 1440px, mai
 
 | O quê | Arquivo |
 |---|---|
-| Foto da "A casa" e fotos da galeria (categoria, texto alternativo e legenda do cardápio: nome, porção, preço) | `src/data/fotos.ts` |
+| Fotos da aba "A casa" (`casa`, `espaco` = "O lugar", `destaques` = "Da cozinha e do bar") e da galeria (categoria, texto alternativo e legenda do cardápio: nome, porção, preço) | `src/data/fotos.ts` |
 | Texto da introdução "A casa" | `src/components/Casa.astro` |
-| Páginas (início, galeria, avaliações, como chegar, contato) | `src/pages/` |
+| Páginas (início, galeria, contato) | `src/pages/` |
 | Links do rodapé | `src/components/Rodape.astro` |
-| Avaliações coladas à mão (quando não houver a chave do Google) | `src/data/avaliacoes.json` |
+| Avaliações reais do Google escolhidas a dedo (em uso), nota e total | `src/data/avaliacoes.json` |
 | Animação de entrada ao rolar (quais blocos animam) | `src/lib/revelar.ts` |
 | Tela de carregamento com a logo | `src/components/Carregando.astro` |
 | Cardápio completo (categorias, itens, descrições, preços) | `src/data/cardapio.json` |
@@ -54,11 +54,11 @@ O script salva capturas em `capturas/` (todas as páginas em 390px e 1440px, mai
 
 **Fotos:** coloque o arquivo novo em `imagens/` e troque o nome em `fotos.ts` (na galeria, escolha a categoria: lagoa, pratos, copos ou gente). As fotos são otimizadas no build (AVIF e WebP, 300px e 600px). Não use as páginas do cardápio impresso (`cardapio_*.png`, `vinhos*.png`) como fotos: elas ficam fora do site de propósito.
 
-**Mapa:** a página "Como chegar" mostra o mapa do Google com a localização do bar. Para trocar o ponto, edite `mapaEmbed` em `src/data/site.json` (e `mapa`, o link do botão "Abrir no mapa").
+**Mapa:** a página "Contato" mostra o mapa do Google com a localização do bar. Para trocar o ponto, edite `mapaEmbed` em `src/data/site.json` (e `mapa`, o link do botão "Abrir no mapa").
 
 ## Avaliações do Google (reais)
 
-O site nunca inventa avaliações. Há três modos, nesta ordem:
+O site nunca inventa avaliações. Elas aparecem na aba "A casa". Hoje o site usa o modo manual (2), com avaliações escolhidas a dedo. Há três modos, nesta ordem:
 
 1. **Automático (recomendado):** o build busca a nota, o total e até 5 avaliações recentes direto da API do Google Places.
    - No Google Cloud Console, ative a **Places API (New)** e crie uma chave de API (restrinja à Places API).
@@ -75,10 +75,10 @@ O site nunca inventa avaliações. Há três modos, nesta ordem:
 ## Regras de estilo (resumo)
 
 - Tudo em caixa alta via CSS; nos arquivos de dados o texto fica em grafia normal.
-- Títulos em **Syne 800**; corpo em **DM Sans**, de 16 a 18px.
+- Títulos em **Urbanist 800**; corpo em **DM Sans**, de 16 a 18px.
 - Três cores: base `#F1F9F9`, texto `#1F4E6B` e amarelo `#FFC72C` (só em botões, sublinhados e na palavra marcada; nunca como cor de texto).
 - Espaçamentos em múltiplos de 8px, inclusive os 8px entre todas as fotos (variável `--junta`).
-- Animações: tela de carregamento com a logo (só na 1ª visita da sessão), entrada das seções ao rolar e foto ampliada com o site desfocado atrás. Tudo respeita `prefers-reduced-motion`.
+- Animações: tela de carregamento com a logo (só na 1ª visita da sessão), entrada das fotos ao rolar (os textos ficam sempre visíveis) e foto ampliada com o site desfocado atrás. Tudo respeita `prefers-reduced-motion`.
 - Setas: um padrão só (quadrado amarelo, flecha azul, uma de cada lado), classe `.seta-lateral` em `global.css`.
 - Sem degradê, sem emoji, sem sombra, cantos retos. O hover só muda cor e sublinhado; fotos não reagem ao hover.
 - Fotos nunca distorcem: ficam numa moldura com proporção fixa e são cortadas (`object-fit: cover`), exceto na foto ampliada, que mostra a foto inteira.

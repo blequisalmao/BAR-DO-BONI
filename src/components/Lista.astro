@@ -1,13 +1,16 @@
 ---
-// Página de informação (Contato, Como chegar): título grande, botão principal, lista com linha de 2px e ícone por linha
-// e, opcionalmente, um bloco extra (slot "extra", ex.: o mapa em Como chegar): à direita no desktop, embaixo no celular.
-interface Props { id: string; titulo: string }
-const { id, titulo } = Astro.props;
+// Página de informação (Contato): título grande, chamada opcional em destaque, botões, lista com linha de 2px
+// e ícone por linha e, opcionalmente, um bloco extra (slot "extra", ex.: o mapa): à direita no desktop, embaixo no celular.
+interface Props { id: string; titulo: string; chamada?: string }
+const { id, titulo, chamada } = Astro.props;
 const temExtra = Astro.slots.has('extra');
 ---
 <section class:list={['info', { 'info--lado': temExtra }]} aria-labelledby={`titulo-${id}`}>
   <div class="info__texto">
-    <h1 class="secao__titulo display" id={`titulo-${id}`}>{titulo}</h1>
+    <div class="info__cab">
+      <h1 class="secao__titulo display" id={`titulo-${id}`}>{titulo}</h1>
+      {chamada && <p class="info__chamada display">{chamada}</p>}
+    </div>
     <div class="info__acao"><slot name="acao" /></div>
     <dl class="info__lista"><slot /></dl>
   </div>
@@ -17,8 +20,12 @@ const temExtra = Astro.slots.has('extra');
 <style>
   .info { display: grid; gap: 32px; padding: 48px var(--gutter) 96px; }
   .info__texto { display: grid; justify-items: start; align-content: start; gap: 32px; min-width: 0; }
+  .info__cab { display: grid; gap: 16px; }
+  /* chamada em destaque logo abaixo do título (ex.: "Reserve seu evento conosco"), sem caixa alta */
+  .info__chamada { margin: 0; max-width: 18ch; font-size: clamp(26px, 3.2vw, 48px); line-height: 1.05; text-transform: none; }
   .info__acao { display: flex; flex-wrap: wrap; gap: 16px; }
-  .info__lista { margin: 0; width: 100%; max-width: 960px; border-top: 2px solid var(--color-texto); }
+  /* itens da lista (telefone, e-mail, endereço...) em grafia normal, sem caixa alta */
+  .info__lista { margin: 0; width: 100%; max-width: 960px; border-top: 2px solid var(--color-texto); text-transform: none; letter-spacing: 0; }
   .info__lista :global(> div) { display: grid; gap: 8px; padding: 24px 0; border-bottom: 2px solid var(--texto-linha); }
   .info__lista :global(dt) { display: flex; align-items: center; gap: 16px; font-weight: 600; }
   .info__lista :global(dt svg) { width: 24px; height: 24px; flex: none; }

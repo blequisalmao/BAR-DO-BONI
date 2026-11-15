@@ -1,11 +1,10 @@
 ---
-// Rodapé: só as palavras dos links (Home, Galeria, Avaliações, Como chegar, Contato) em Syne.
+// Rodapé: só as palavras dos links (Home, Galeria, Avaliações, Contato; o Contato inclui o "Como chegar") em Urbanist.
 // Cores invertidas: fundo azul oficial (#1F4E6B) e texto na cor base do site (#F1F9F9).
 const links = [
   { href: '/', texto: 'Home' },
   { href: '/galeria', texto: 'Galeria' },
-  { href: '/avaliacoes', texto: 'Avaliações' },
-  { href: '/como-chegar', texto: 'Como chegar' },
+  { href: '/#avaliacoes', texto: 'Avaliações' }, // atalho para as avaliações na aba "A casa"
   { href: '/contato', texto: 'Contato' },
 ];
 const atual = Astro.url.pathname.replace(/\/$/, '') || '/';

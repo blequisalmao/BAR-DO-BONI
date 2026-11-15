@@ -12,8 +12,6 @@ const LARGURAS = [390, 1440];
 const PAGINAS = [
   { caminho: '/', nome: 'inicio' },
   { caminho: '/galeria', nome: 'galeria' },
-  { caminho: '/avaliacoes', nome: 'avaliacoes' },
-  { caminho: '/como-chegar', nome: 'como-chegar' },
   { caminho: '/contato', nome: 'contato' },
 ];
 const falhas = [];
