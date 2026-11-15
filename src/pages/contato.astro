@@ -1,15 +1,25 @@
 ---
+// Contato e Como chegar na mesma página: chamada para eventos, reserva pelo WhatsApp, telefone, e-mail, redes,
+// endereço, horário e o mapa (à direita no desktop, embaixo no celular).
+// O endereço antigo /como-chegar redireciona para cá (astro.config.mjs).
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
 import Lista from '../components/Lista.astro';
 import site from '../data/site.json';
 import { linkWhatsapp } from '../lib/links';
+
+const e = site.endereco;
 ---
-<Base titulo="Contato" descricao={`Reserve pelo WhatsApp ou ligue: ${site.telefone.texto}.`}>
-  <Lista id="contato" titulo="Contato">
-    <a slot="acao" class="btn btn--ousada" href={linkWhatsapp()} target="_blank" rel="noopener">
-      <Icon name="lucide:message-circle" aria-hidden="true" />Reservar pelo WhatsApp
-    </a>
+<Base titulo="Contato" descricao={`Reserve seu evento conosco pelo WhatsApp ou ligue: ${site.telefone.texto}. ${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}.`}>
+  <Lista id="contato" titulo="Contato" chamada="Reserve seu evento conosco.">
+    <Fragment slot="acao">
+      <a class="btn btn--ousada" href={linkWhatsapp()} target="_blank" rel="noopener">
+        <Icon name="lucide:message-circle" aria-hidden="true" />Reservar pelo WhatsApp
+      </a>
+      <a class="btn btn--linha" href={site.mapa} target="_blank" rel="noopener">
+        <Icon name="lucide:map" aria-hidden="true" />Abrir no mapa
+      </a>
+    </Fragment>
     <div>
       <dt><Icon name="lucide:phone" aria-hidden="true" /><span>Telefone</span></dt>
       <dd><a class="link" href={`tel:${site.telefone.link}`}>{site.telefone.texto}</a></dd>
@@ -25,5 +35,21 @@ import { linkWhatsapp } from '../lib/links';
         <a class="link" href={site.facebook} target="_blank" rel="noopener">Facebook</a>
       </dd>
     </div>
+    <div>
+      <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
+      <dd>{e.rua}. {e.bairro}, {e.cidade}/{e.uf}</dd>
+    </div>
+    <div>
+      <dt><Icon name="lucide:clock" aria-hidden="true" /><span>Horário</span></dt>
+      <dd>{site.horario.texto}</dd>
+    </div>
+    <iframe slot="extra" class="mapa" src={site.mapaEmbed} title="Mapa com a localização do Bar do Boni na Lagoa da Conceição"
+      loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
   </Lista>
 </Base>
+
+<style>
+  /* Mapa do Google com a localização do bar: ocupa a coluna da direita (metade da página no desktop);
+     cantos retos, linha de 2px como o resto da página */
+  .mapa { display: block; width: 100%; aspect-ratio: 4 / 3; border: 2px solid var(--color-texto); }
+</style>

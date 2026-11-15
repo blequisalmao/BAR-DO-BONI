@@ -9,6 +9,11 @@ export default defineConfig({
   // Endereço público do site (usado no sitemap, no canonical e no Open Graph). Troque em src/data/site.json.
   site: site.url,
   output: 'static',
+  // Páginas que viraram parte de outras; os endereços antigos continuam funcionando
+  redirects: {
+    '/como-chegar': '/contato', // "Como chegar" agora está no Contato
+    '/avaliacoes': '/#avaliacoes', // avaliações agora estão na aba "A casa"
+  },
   integrations: [icon(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

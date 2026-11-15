@@ -11,7 +11,7 @@
   --color-base: #F1F9F9;
   --color-texto: #1F4E6B;
   --color-ousada: #FFC72C;
-  --font-display: "Syne", system-ui, sans-serif;
+  --font-display: "Urbanist Variable", system-ui, sans-serif;
   --font-corpo: "DM Sans Variable", system-ui, sans-serif;
 }
 
@@ -29,7 +29,8 @@
 
 /* ---------- base ---------- */
 @layer base {
-  html { scroll-behavior: smooth; scroll-padding-top: var(--topo-altura); }
+  /* --abas-altura: altura da barra de abas fixa da página inicial (medida em Abas.astro; 0 nas outras páginas) */
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--topo-altura) + var(--abas-altura, 0px)); }
   body {
     background: var(--color-base);
     color: var(--color-texto);
@@ -72,7 +73,8 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
 
 /* ---------- utilidades do projeto ---------- */
 @layer components {
-  .display { font-family: var(--font-display); font-weight: 800; line-height: .9; letter-spacing: -.01em; }
+  /* Títulos: só a primeira letra maiúscula (como estão escritos). Exceções em caixa alta: o cardápio e as abas. */
+  .display { font-family: var(--font-display); font-weight: 800; line-height: .9; letter-spacing: -.01em; text-transform: none; }
 
   /* Contextos escuros (hero, rodapé, ver foto): foco na cor base */
   .escuro :focus-visible { outline-color: var(--color-base); }
@@ -115,7 +117,7 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
 
   /* Título de seção */
   .secao__cab { padding: 48px var(--gutter) 24px; }
-  /* em telas muito estreitas diminui o suficiente para a palavra mais longa ("Avaliações", ~10,4em na Syne) caber */
+  /* em telas muito estreitas diminui o suficiente para a palavra mais longa ("Avaliações", com folga para a fonte de títulos) caber */
   .secao__titulo { font-size: min(clamp(30px, 4.5vw, 72px), calc((100vw - 2 * var(--gutter)) / 10.6)); }
 
   /* Legenda padronizada do cardápio: nome / porção / preço, empilhados à esquerda */

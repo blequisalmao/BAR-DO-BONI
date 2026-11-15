@@ -45,6 +45,7 @@ const categorias = cardapio.categorias as Categoria[];
   .cardapio__categoria {
     min-width: 0; hyphens: auto; overflow-wrap: anywhere;
     font-size: clamp(22px, 2.4vw, 34px); line-height: 1;
+    text-transform: uppercase; /* no cardápio, tudo em maiúsculas (os outros títulos do site não) */
     text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 4px; text-underline-offset: 8px;
     transition: text-decoration-color var(--transicao);
   }

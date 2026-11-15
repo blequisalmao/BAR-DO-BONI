@@ -1,6 +1,6 @@
 ---
 import '@fontsource-variable/dm-sans';
-import '@fontsource/syne/800.css';
+import '@fontsource-variable/urbanist';
 import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import site from '../data/site.json';
@@ -58,8 +58,12 @@ const jsonLd = {
     <!-- Marca que há JS antes da pintura: as animações de entrada e a tela de carregamento começam sem piscar -->
     <script is:inline>
       document.documentElement.classList.add('js');
-      // Sem "#âncora" no endereço: ao recarregar (F5), a página começa sempre do topo
-      if (location.hash) { history.replaceState(null, '', location.pathname + location.search); scrollTo(0, 0); }
+      // Sem "#âncora" no endereço: ao recarregar (F5), a página começa sempre do topo.
+      // A âncora fica guardada em data-ancora para as abas da página inicial rolarem até ela (ex.: /#avaliacoes).
+      if (location.hash) {
+        document.documentElement.dataset.ancora = decodeURIComponent(location.hash.slice(1));
+        history.replaceState(null, '', location.pathname + location.search); scrollTo(0, 0);
+      }
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-revelar');
       // tela de carregamento com a logo: só na primeira visita da sessão
       try { if (!sessionStorage.getItem('boni-carregou')) document.documentElement.classList.add('js-carregando'); }

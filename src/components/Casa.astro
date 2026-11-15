@@ -1,8 +1,19 @@
 ---
-// A casa: breve introdução com a história do bar (texto do próprio cardápio, "Nossa história")
-// e a arte "Venha conhecer o Bar do Boni" (quadrada, mostrada inteira para não cortar a logo).
+// Aba "A casa": página de apresentação do Bar do Boni.
+// 1) História (texto do próprio cardápio, "Nossa história") com a arte "Venha conhecer o Bar do Boni"
+// 2) O lugar: fotos do espaço (fotos.ts → espaco), cada uma abre ampliada
+// 3) Da cozinha e do bar: destaques com nome, porção e preço (fotos.ts → destaques) e botão para a aba Cardápio
+// 4) Avaliações reais do Google (Avaliacoes.astro)
+// 5) Eventos e visita: "Reserve seu evento conosco", endereço, horário, WhatsApp e mapa
+import { Icon } from 'astro-icon/components';
 import Foto from './Foto.astro';
-import { casa } from '../data/fotos';
+import Legenda from './Legenda.astro';
+import Avaliacoes from './Avaliacoes.astro';
+import { casa, espaco, destaques } from '../data/fotos';
+import site from '../data/site.json';
+import { linkWhatsapp } from '../lib/links';
+
+const e = site.endereco;
 ---
 <section class="casa" id="a-casa" aria-labelledby="titulo-casa">
   <div class="casa__texto">
@@ -19,6 +30,70 @@ import { casa } from '../data/fotos';
   <figure class="casa__foto">
     <Foto foto={casa} moldura="1/1" sizes="(max-width: 719px) 90vw, (max-width: 1023px) 34vw, 420px" />
   </figure>
+</section>
+
+<section class="bloco espaco" id="o-lugar" aria-labelledby="titulo-lugar">
+  <div class="secao__cab bloco__cab">
+    <h2 class="secao__titulo display" id="titulo-lugar">O lugar</h2>
+    <p class="bloco__sub">O deck, o balcão e o pôr do sol da Lagoa da Conceição.</p>
+  </div>
+  <ul class="espaco__grade">
+    {espaco.map((foto) => (
+      <li>
+        <figure><Foto foto={foto} moldura="4/5" ver="espaco" sizes="(max-width: 639px) 50vw, 33vw" /></figure>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<section class="bloco destaques" id="destaques" aria-labelledby="titulo-destaques">
+  <div class="secao__cab bloco__cab">
+    <h2 class="secao__titulo display" id="titulo-destaques">Da cozinha e do bar</h2>
+    <button type="button" class="btn btn--ousada" data-ir-aba="cardapio">
+      <Icon name="lucide:utensils" aria-hidden="true" />Ver o cardápio completo
+    </button>
+  </div>
+  <ul class="destaques__grade">
+    {destaques.map((foto) => (
+      <li>
+        <figure>
+          <Foto foto={foto} moldura="4/5" ver="destaques" sizes="(max-width: 639px) 50vw, 25vw" />
+          {foto.nome && foto.preco && <Legenda nome={foto.nome} porcao={foto.porcao} preco={foto.preco} />}
+        </figure>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<Avaliacoes />
+
+<section class="bloco eventos" id="eventos" aria-labelledby="titulo-eventos">
+  <div class="eventos__chamada">
+    <h2 class="eventos__titulo display" id="titulo-eventos">Reserve seu evento conosco.</h2>
+    <p class="eventos__texto">Aniversário, confraternização ou encontro de amigos na beira da Lagoa: chame a gente no WhatsApp e reserve o seu espaço.</p>
+    <div class="eventos__acoes">
+      <a class="btn btn--ousada" href={linkWhatsapp()} target="_blank" rel="noopener">
+        <Icon name="lucide:message-circle" aria-hidden="true" />Reservar pelo WhatsApp
+      </a>
+      <a class="btn btn--linha" href={site.mapa} target="_blank" rel="noopener">
+        <Icon name="lucide:map" aria-hidden="true" />Abrir no mapa
+      </a>
+    </div>
+  </div>
+  <dl class="eventos__info">
+    <div>
+      <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
+      <dd>{e.rua}. {e.bairro}, {e.cidade}/{e.uf}</dd>
+    </div>
+    <div>
+      <dt><Icon name="lucide:clock" aria-hidden="true" /><span>Horário</span></dt>
+      <dd>{site.horario.texto}</dd>
+    </div>
+    <div>
+      <dt><Icon name="lucide:phone" aria-hidden="true" /><span>Telefone</span></dt>
+      <dd><a class="link" href={`tel:${site.telefone.link}`}>{site.telefone.texto}</a></dd>
+    </div>
+  </dl>
 </section>
 
 <style>
@@ -50,4 +125,41 @@ import { casa } from '../data/fotos';
     .casa__historia { order: 4; }
     .casa__foto { max-width: 420px; }
   }
+
+  /* Blocos da apresentação: sem linha entre eles, separados só pelo espaço; título grande à esquerda */
+  .bloco { padding-bottom: 96px; }
+  .bloco__cab { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 24px; }
+  .bloco__sub { max-width: 40ch; color: var(--texto-suave); }
+
+  /* O lugar: 3 colunas no desktop, 2 no celular, mesma junta da galeria */
+  .espaco__grade, .destaques__grade {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--junta);
+    list-style: none; margin: 0; padding: 0;
+  }
+  .espaco__grade figure, .destaques__grade figure { margin: 0; }
+  /* Destaques: 4 colunas, legenda (nome, porção, preço) embaixo de cada foto */
+  .destaques__grade { grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0 var(--gutter); gap: 24px; }
+  @media (max-width: 1023px) { .destaques__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 639px) {
+    .espaco__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .destaques__grade { gap: 16px; }
+  }
+
+  /* Eventos e visita: chamada à esquerda, informações à direita (empilha no celular) */
+  .eventos {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start;
+    padding: 64px var(--gutter) 96px;
+  }
+  .eventos__chamada { display: grid; gap: 24px; justify-items: start; }
+  .eventos__titulo { font-size: clamp(30px, 4.5vw, 72px); line-height: 1; text-transform: none; max-width: 14ch; }
+  .eventos__texto { max-width: 46ch; text-transform: none; letter-spacing: 0; font-size: 18px; }
+  .eventos__acoes { display: flex; flex-wrap: wrap; gap: 16px; }
+  /* endereço, horário e telefone em grafia normal (sem caixa alta) */
+  .eventos__info { margin: 0; border-top: 2px solid var(--color-texto); text-transform: none; letter-spacing: 0; }
+  .eventos__info > div { display: grid; gap: 8px; padding: 24px 0; border-bottom: 2px solid var(--texto-linha); }
+  .eventos__info dt { display: flex; align-items: center; gap: 16px; font-weight: 600; }
+  .eventos__info dt :global(svg) { width: 24px; height: 24px; flex: none; }
+  .eventos__info dd { margin: 0 0 0 40px; }
+  .btn :global(svg) { width: 18px; height: 18px; flex: none; }
+  @media (max-width: 767px) { .eventos { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 48px; } }
 </style>
