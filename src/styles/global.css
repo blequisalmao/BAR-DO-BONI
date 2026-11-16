@@ -27,7 +27,9 @@
   --color-base: #3E6377;
   --color-texto: #F3B416;
   --color-ousada: #F3B416;
-  --font-display: "Urbanist Variable", system-ui, sans-serif;
+  /* Textos grandes (frase do hero, frase da história, links do rodapé e do menu): Bricolage Grotesque.
+     Os títulos de seção não usam esta fonte: ficam na letra cursiva sobre a pincelada (--font-script). */
+  --font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
   --font-corpo: "DM Sans Variable", system-ui, sans-serif;
   /* Acento: Fraunces itálico, só em frases curtas (chamadas das seções, rodapé). Nunca em caixa alta. */
   --font-acento: "Fraunces Variable", Georgia, serif;
