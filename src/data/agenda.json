@@ -1,0 +1,4 @@
+{
+  "_leia": "Agenda da aba 'A casa'. Cada evento: data (AAAA-MM-DD), hora (texto livre, ex.: '19h' ou '19h às 23h'), titulo, descricao (opcional) e link (opcional, ex.: post do Instagram). Eventos com data passada somem sozinhos. Sem eventos futuros, a seção mostra o convite para acompanhar no Instagram. Exemplo: { \"data\": \"2026-12-05\", \"hora\": \"19h\", \"titulo\": \"Samba no deck\", \"descricao\": \"Roda de samba ao pôr do sol.\" }",
+  "eventos": []
+}

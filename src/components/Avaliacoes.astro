@@ -45,7 +45,7 @@ const linkAvaliar = placeId ? `https://search.google.com/local/writereview?place
 ---
 <section class="secao avaliacoes" id="avaliacoes" aria-labelledby="titulo-avaliacoes">
   <div class="secao__cab avaliacoes__cab">
-    <h2 class="secao__titulo display" id="titulo-avaliacoes">Avaliações</h2>
+    <h2 class="secao__titulo pincel pincel--2" id="titulo-avaliacoes">Avaliações</h2>
     {nota !== null && (
       <p class="avaliacoes__nota">
         <span class="avaliacoes__numero display">{nota.toFixed(1).replace('.', ',')}</span>
@@ -81,7 +81,9 @@ const linkAvaliar = placeId ? `https://search.google.com/local/writereview?place
 
 <style>
   .avaliacoes { padding-bottom: 96px; }
-  .avaliacoes__cab { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; }
+  /* nome da seção centralizado, com a nota do Google logo abaixo */
+  .avaliacoes__cab { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; }
+  .avaliacoes__cab .pincel { align-self: center; }
   .avaliacoes__nota { display: flex; align-items: center; gap: 16px; }
   .avaliacoes__numero { font-size: 56px; line-height: 1; }
   .avaliacoes__nota > span:last-child { display: grid; gap: 8px; }

@@ -1,0 +1,107 @@
+---
+// Agenda: programação do bar (src/data/agenda.json), na aba "A casa".
+// - Só eventos de hoje em diante, em ordem de data. Filtra no build e de novo no navegador
+//   (o site é estático: um evento que passou depois do último build some sozinho).
+// - Sem eventos futuros: convite para acompanhar a programação no Instagram e para reservar um evento.
+import { Icon } from 'astro-icon/components';
+import agenda from '../data/agenda.json';
+import site from '../data/site.json';
+
+interface Evento { data: string; hora?: string; titulo: string; descricao?: string; link?: string }
+
+const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+const SEMANA = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const hoje = new Date().toISOString().slice(0, 10);
+
+const eventos = (agenda.eventos as Evento[])
+  .filter((e) => /^\d{4}-\d{2}-\d{2}$/.test(e.data) && e.data >= hoje)
+  .sort((a, b) => a.data.localeCompare(b.data));
+
+const partes = (data: string) => {
+  const [a, m, d] = data.split('-').map(Number);
+  const dia = new Date(Date.UTC(a, m - 1, d));
+  return { dia: String(d).padStart(2, '0'), mes: MESES[m - 1], semana: SEMANA[dia.getUTCDay()] };
+};
+---
+<section class="bloco agenda" id="agenda" aria-labelledby="titulo-agenda" data-agenda>
+  <div class="secao__cab bloco__cab">
+    <div class="bloco__titulos">
+      <h2 class="secao__titulo pincel pincel--4" id="titulo-agenda">Agenda</h2>
+      <p class="bloco__sub acento">Música, jogo e data especial: o que rola no Boni.</p>
+    </div>
+    <a class="btn btn--linha" href={site.instagram} target="_blank" rel="noopener">
+      <Icon name="lucide:instagram" aria-hidden="true" />Novidades no Instagram
+    </a>
+  </div>
+
+  {eventos.length > 0 && (
+    <ol class="agenda__lista" data-agenda-lista>
+      {eventos.map((ev) => {
+        const p = partes(ev.data);
+        return (
+          <li class="agenda__item" data-data={ev.data}>
+            <p class="agenda__data display">
+              <span class="agenda__dia">{p.dia}</span>
+              <span class="agenda__mes">{p.mes}</span>
+            </p>
+            <div class="agenda__corpo">
+              <p class="agenda__quando">
+                <time datetime={ev.data}>{p.semana}</time>{ev.hora && <>, {ev.hora}</>}
+              </p>
+              <h3 class="agenda__titulo display">{ev.titulo}</h3>
+              {ev.descricao && <p class="agenda__desc">{ev.descricao}</p>}
+              {ev.link && <a class="link" href={ev.link} target="_blank" rel="noopener">Saiba mais</a>}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  )}
+
+  <div class="agenda__vazia" data-agenda-vazia hidden={eventos.length > 0}>
+    <p class="agenda__convite">A programação da semana sai primeiro no Instagram. Quer fazer o seu aniversário ou a confraternização aqui?</p>
+    <a class="link" href="#eventos">Reserve seu evento</a>
+  </div>
+</section>
+
+<style>
+  .btn :global(svg) { width: 18px; height: 18px; flex: none; }
+
+  .agenda__lista { list-style: none; margin: 0 var(--gutter); padding: 0; border-top: 2px solid var(--color-texto); }
+  .agenda__item {
+    display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 24px; align-items: start;
+    padding: 24px 0; border-bottom: 2px solid var(--texto-linha);
+  }
+  .agenda__data { display: grid; justify-items: start; gap: 0; margin: 0; }
+  .agenda__dia { font-size: clamp(48px, 5vw, 72px); line-height: .9; }
+  .agenda__mes { font-size: 20px; text-transform: uppercase; }
+  .agenda__corpo { display: grid; gap: 8px; justify-items: start; text-transform: none; letter-spacing: 0; }
+  .agenda__quando { font-weight: 600; }
+  .agenda__titulo { font-size: clamp(24px, 2.6vw, 36px); line-height: 1; }
+  .agenda__desc { max-width: 56ch; color: var(--texto-suave); }
+
+  .agenda__vazia {
+    display: grid; gap: 16px; justify-items: start; margin: 0 var(--gutter);
+    padding: 8px 0 32px; text-transform: none; letter-spacing: 0;
+  }
+  .agenda__vazia[hidden] { display: none; }
+  .agenda__convite { max-width: 52ch; font-size: 18px; }
+
+  @media (max-width: 639px) {
+    .agenda__item { grid-template-columns: 72px minmax(0, 1fr); gap: 16px; }
+  }
+</style>
+
+<script>
+  // Esconde eventos que já passaram desde o último build (data local do visitante)
+  document.querySelectorAll<HTMLElement>('[data-agenda]').forEach((raiz) => {
+    const d = new Date();
+    const hoje = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const itens = [...raiz.querySelectorAll<HTMLElement>('[data-data]')];
+    itens.forEach((li) => { if ((li.dataset.data ?? '') < hoje) li.remove(); });
+    if (itens.length && !raiz.querySelector('[data-data]')) {
+      raiz.querySelector('[data-agenda-lista]')?.remove();
+      raiz.querySelector<HTMLElement>('[data-agenda-vazia]')!.hidden = false;
+    }
+  });
+</script>

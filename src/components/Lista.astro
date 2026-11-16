@@ -8,7 +8,7 @@ const temExtra = Astro.slots.has('extra');
 <section class:list={['info', { 'info--lado': temExtra }]} aria-labelledby={`titulo-${id}`}>
   <div class="info__texto">
     <div class="info__cab">
-      <h1 class="secao__titulo display" id={`titulo-${id}`}>{titulo}</h1>
+      <h1 class="secao__titulo pincel pincel--3" id={`titulo-${id}`}>{titulo}</h1>
       {chamada && <p class="info__chamada display">{chamada}</p>}
     </div>
     <div class="info__acao"><slot name="acao" /></div>

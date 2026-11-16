@@ -1,0 +1,48 @@
+---
+// Instagram: 6 fotos quadradas que levam ao perfil do bar (ou a um post, se a foto tiver `link` em fotos.ts → instagram).
+// Feito à mão, sem widget nem API: não carrega nada de terceiros e não depende de token.
+import { Icon } from 'astro-icon/components';
+import Foto from './Foto.astro';
+import { instagram } from '../data/fotos';
+import site from '../data/site.json';
+
+// "@bardoboni" a partir do endereço do perfil
+const usuario = '@' + (site.instagram.replace(/\/+$/, '').split('/').pop() ?? 'bardoboni');
+---
+<section class="bloco instagram" id="instagram" aria-labelledby="titulo-instagram">
+  <div class="secao__cab bloco__cab">
+    <div class="bloco__titulos">
+      <h2 class="secao__titulo pincel pincel--1" id="titulo-instagram">
+        <a class="instagram__perfil" href={site.instagram} target="_blank" rel="noopener">{usuario}</a>
+      </h2>
+      <p class="bloco__sub acento">Tirou foto do pôr do sol? Marca a gente.</p>
+    </div>
+    <a class="btn btn--ousada" href={site.instagram} target="_blank" rel="noopener">
+      <Icon name="lucide:instagram" aria-hidden="true" />Seguir no Instagram
+    </a>
+  </div>
+  <ul class="instagram__grade">
+    {instagram.map((foto) => (
+      <li>
+        <a class="instagram__foto" href={foto.link ?? site.instagram} target="_blank" rel="noopener"
+          aria-label={`${foto.alt} (abre o Instagram)`}>
+          <Foto foto={foto} moldura="1/1" sizes="(max-width: 639px) 33vw, 17vw" />
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .instagram__perfil { text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 4px; text-underline-offset: 8px; transition: text-decoration-color var(--transicao); }
+  .instagram__perfil:hover { text-decoration-color: var(--color-ousada); }
+  .btn :global(svg) { width: 18px; height: 18px; flex: none; }
+  /* 6 colunas no desktop, 3 no celular, mesma junta das outras fotos */
+  .instagram__grade {
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--junta);
+    list-style: none; margin: 0; padding: 0;
+  }
+  .instagram__foto { display: block; }
+  .instagram__foto:focus-visible { outline-offset: -3px; }
+  @media (max-width: 639px) { .instagram__grade { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

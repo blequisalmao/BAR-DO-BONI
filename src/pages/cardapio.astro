@@ -1,0 +1,21 @@
+---
+// Cardápio completo (src/data/cardapio.json), em página própria.
+// Título em pincelada e as categorias alternando fundo azul e bege, como as páginas do cardápio impresso
+// (.paleta-bege em global.css: o bege no lugar do amarelo; cabeçalho e rodapé seguem amarelos).
+import Base from '../layouts/Base.astro';
+import CardapioCompleto from '../components/CardapioCompleto.astro';
+---
+<Base titulo="Cardápio" descricao="Cardápio do Bar do Boni: frutos do mar, petiscos, porções, caipiras, drinks, chopp e vinhos, na beira da Lagoa da Conceição.">
+  <div class="paleta-bege">
+    <header class="secao__cab cardapio__cab">
+      <h1 class="secao__titulo pincel pincel--2" id="titulo-cardapio">Cardápio</h1>
+    </header>
+    <CardapioCompleto />
+  </div>
+</Base>
+
+<style>
+  /* Título da página centralizado e maior que os das seções; cabe no celular ("Cardápio" com a pincelada mede 3,7em) */
+  .cardapio__cab { display: grid; justify-items: center; gap: 8px; padding-bottom: 40px; text-align: center; }
+  .cardapio__cab .pincel { justify-self: center; font-size: min(clamp(72px, 9vw, 144px), calc((100vw - 2 * var(--gutter)) / 4.2)); }
+</style>

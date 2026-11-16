@@ -1,0 +1,177 @@
+---
+// Hero: abertura da aba "A casa". Texto à esquerda (frase, chamada, botões) e uma faixa de fotos em carrossel à direita.
+// As fotos originais têm 600px e são verticais, por isso a faixa mostra várias fotos lado a lado em vez de uma
+// foto horizontal em tela cheia (que ficaria borrada).
+// Carrossel: rolagem com snap (funciona sem JS, no dedo e no trackpad), setas laterais padrão (.seta-lateral),
+// passa sozinho a cada 5 s, volta ao início no fim, pausa com o mouse/foco em cima e tem botão de pausar.
+// Com prefers-reduced-motion, não passa sozinho.
+import { Icon } from 'astro-icon/components';
+import Foto from './Foto.astro';
+import { hero } from '../data/fotos';
+import site from '../data/site.json';
+import { linkWhatsapp } from '../lib/links';
+---
+<section class="hero" aria-labelledby="titulo-hero">
+  <div class="hero__texto">
+    <h2 class="hero__titulo display" id="titulo-hero">
+      <span class="hero__linha">Música <mark>ao vivo</mark></span>
+      <span class="hero__linha">de quinta a domingo</span>
+      <span class="hero__linha">na <mark>Lagoa da Conceição</mark></span>
+    </h2>
+    <p class="hero__chamada">Frutos do mar, porção pra dividir e caipira gelada, com o barco atracado ali do lado.</p>
+    <div class="hero__acoes">
+      <a class="btn btn--ousada" href={linkWhatsapp()} target="_blank" rel="noopener">
+        <Icon name="lucide:message-circle" aria-hidden="true" />Reservar mesa
+      </a>
+      <a class="btn btn--linha" href="/cardapio">
+        <Icon name="lucide:utensils" aria-hidden="true" />Ver o cardápio
+      </a>
+    </div>
+    <p class="hero__horario"><Icon name="lucide:clock" aria-hidden="true" />{site.horario.curto}</p>
+  </div>
+
+  <div class="hero__faixa" data-carrossel role="region" aria-roledescription="carrossel" aria-label="Fotos do Bar do Boni">
+    <ul class="hero__trilho" data-trilho tabindex="0" aria-label="Fotos (role para o lado)">
+      {hero.map((foto, i) => (
+        <li class="hero__slide" aria-roledescription="slide" aria-label={`${i + 1} de ${hero.length}`}>
+          <Foto foto={foto} moldura="3/4" ver="hero" carregamento={i < 3 ? 'eager' : 'lazy'}
+            sizes="(max-width: 899px) 78vw, 24vw" />
+        </li>
+      ))}
+    </ul>
+    <button class="seta-lateral seta-lateral--esq" type="button" data-anterior aria-label="Foto anterior" hidden><Icon name="lucide:arrow-left" aria-hidden="true" /></button>
+    <button class="seta-lateral seta-lateral--dir" type="button" data-proxima aria-label="Próxima foto" hidden><Icon name="lucide:arrow-right" aria-hidden="true" /></button>
+    <button class="hero__pausa" type="button" data-pausa aria-pressed="false" hidden>
+      <Icon name="lucide:pause" class="hero__icone-pausa" aria-hidden="true" />
+      <Icon name="lucide:play" class="hero__icone-tocar" aria-hidden="true" />
+      <span class="sr-only" data-pausa-rotulo>Pausar fotos</span>
+    </button>
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center;
+    padding: 48px 0 64px var(--gutter);
+  }
+  .hero__texto { display: grid; gap: 24px; justify-items: start; container-type: inline-size; }
+  /* Três linhas fixas, para ler melhor: "Música ao vivo" / "de quinta a domingo" / "na Lagoa da Conceição".
+     Cada linha nunca quebra; a fonte acompanha a largura da coluna para a mais longa caber. */
+  .hero__titulo { font-size: min(80px, 100cqi / 11.4); line-height: 1.22; text-transform: none; } /* espaço para as caudas (q, g) não encostarem no destaque da linha de baixo */ /* a mais longa, com o destaque, mede ~10,8em */
+  .hero__linha { display: block; white-space: nowrap; }
+  .hero__titulo mark { background: var(--color-ousada); color: var(--color-base); padding: 0 8px .16em; /* desce para cobrir as caudas (g, ç) */ white-space: nowrap; display: inline-block; line-height: 1; }
+  .hero__chamada { max-width: 40ch; font-size: 18px; text-transform: none; letter-spacing: 0; }
+  .hero__acoes { display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero__horario { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; }
+  .hero__horario :global(svg) { width: 20px; height: 20px; flex: none; }
+
+  /* Faixa de fotos: sangra até a borda direita da tela */
+  .hero__faixa { position: relative; min-width: 0; }
+  .hero__trilho {
+    display: flex; gap: var(--junta); margin: 0; padding: 0; list-style: none;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .hero__trilho::-webkit-scrollbar { display: none; }
+  .hero__trilho:focus-visible { outline-offset: -3px; }
+  /* ~2,4 fotos visíveis no desktop; nunca mais largas que 600px (o tamanho do arquivo) */
+  .hero__slide { flex: 0 0 min(600px, calc((100% - 2 * var(--junta)) / 2.4)); scroll-snap-align: start; }
+  .hero__slide :global(.moldura) { display: block; }
+
+  .hero__pausa {
+    position: absolute; left: 16px; bottom: 16px; z-index: 2;
+    width: 48px; height: 48px; display: grid; place-items: center; padding: 0;
+    background: var(--color-base); color: var(--color-texto); border: 2px solid var(--color-texto); cursor: pointer;
+    transition: background-color var(--transicao), color var(--transicao);
+  }
+  .hero__pausa:hover { background: var(--color-texto); color: var(--color-base); }
+  .hero__pausa :global(svg) { width: 20px; height: 20px; }
+  .hero__pausa :global(.hero__icone-tocar), .hero__pausa[aria-pressed="true"] :global(.hero__icone-pausa) { display: none; }
+  .hero__pausa[aria-pressed="true"] :global(.hero__icone-tocar) { display: block; }
+
+  @media (max-width: 899px) {
+    .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 32px 0 48px; }
+    .hero__texto { padding: 0 var(--gutter); }
+    .hero__faixa { padding-left: var(--gutter); }
+    .hero__trilho { scroll-padding-left: 0; }
+    .hero__slide { flex-basis: min(600px, 78%); }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carrossel]').forEach((raiz) => {
+    const trilho = raiz.querySelector<HTMLElement>('[data-trilho]')!;
+    const anterior = raiz.querySelector<HTMLButtonElement>('[data-anterior]')!;
+    const proxima = raiz.querySelector<HTMLButtonElement>('[data-proxima]')!;
+    const pausa = raiz.querySelector<HTMLButtonElement>('[data-pausa]')!;
+    const rotuloPausa = raiz.querySelector<HTMLElement>('[data-pausa-rotulo]')!;
+    const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // com JS, as setas aparecem; sem JS, a faixa rola no dedo
+    anterior.hidden = false; proxima.hidden = false;
+
+    // Infinito: uma cópia do conjunto de fotos antes e outra depois (escondidas de leitores de tela e do teclado).
+    // Quando a rolagem para numa cópia, salta sem animação para o mesmo ponto do conjunto original,
+    // então tanto para a direita quanto para a esquerda sempre passa só uma foto, sem "voltar ao início".
+    const originais = [...trilho.children] as HTMLElement[];
+    const copiar = () => originais.map((li) => {
+      const c = li.cloneNode(true) as HTMLElement;
+      c.setAttribute('aria-hidden', 'true'); c.inert = true; c.removeAttribute('aria-label');
+      return c;
+    });
+    trilho.prepend(...copiar());
+    trilho.append(...copiar());
+
+    const conjunto = () => originais[0].offsetLeft - (trilho.firstElementChild as HTMLElement).offsetLeft;
+    const saltar = (para: number) => {
+      trilho.style.scrollBehavior = 'auto';
+      trilho.scrollLeft = para;
+      trilho.style.scrollBehavior = '';
+    };
+    const normalizar = () => {
+      const w = conjunto();
+      if (trilho.scrollLeft < w - 4) saltar(trilho.scrollLeft + w);
+      else if (trilho.scrollLeft >= 2 * w - 4) saltar(trilho.scrollLeft - w);
+    };
+    saltar(conjunto()); // começa no conjunto original
+    addEventListener('resize', () => saltar(conjunto() + (trilho.scrollLeft % conjunto())));
+    // fim da rolagem (botões, dedo ou trackpad): scrollend onde existe, senão uma pausa curta no scroll
+    if ('onscrollend' in window) trilho.addEventListener('scrollend', normalizar);
+    else { let t: number; trilho.addEventListener('scroll', () => { clearTimeout(t); t = window.setTimeout(normalizar, 150); }); }
+
+    const passo = () => originais[1].offsetLeft - originais[0].offsetLeft;
+    const ir = (direcao: 1 | -1) => trilho.scrollBy({ left: direcao * passo() });
+    // Passa sozinho: só com movimento liberado, aba visível e a faixa na tela
+    let timer: number | undefined;
+    let pausadoPeloUsuario = reduzido;
+    let emCima = false;
+    let naTela = true;
+    const atualizarPausa = () => {
+      pausa.setAttribute('aria-pressed', String(pausadoPeloUsuario));
+      rotuloPausa.textContent = pausadoPeloUsuario ? 'Passar as fotos' : 'Pausar fotos';
+    };
+    const tocar = () => {
+      clearInterval(timer);
+      if (pausadoPeloUsuario || emCima || !naTela || document.hidden) return;
+      timer = window.setInterval(() => ir(1), 5000);
+    };
+    // clique nas setas ou toque: o visitante assumiu o controle, então para de passar sozinho
+    const parar = () => { pausadoPeloUsuario = true; atualizarPausa(); clearInterval(timer); };
+
+    anterior.addEventListener('click', () => { ir(-1); parar(); });
+    proxima.addEventListener('click', () => { ir(1); parar(); });
+
+    if (reduzido) return;
+    pausa.hidden = false;
+    atualizarPausa();
+    pausa.addEventListener('click', () => { pausadoPeloUsuario = !pausadoPeloUsuario; atualizarPausa(); tocar(); });
+    raiz.addEventListener('pointerenter', () => { emCima = true; tocar(); });
+    raiz.addEventListener('pointerleave', () => { emCima = false; tocar(); });
+    raiz.addEventListener('focusin', () => { emCima = true; tocar(); });
+    raiz.addEventListener('focusout', () => { emCima = false; tocar(); });
+    trilho.addEventListener('touchstart', () => parar(), { passive: true });
+    document.addEventListener('visibilitychange', tocar);
+    new IntersectionObserver(([e]) => { naTela = e.isIntersecting; tocar(); }, { threshold: 0.3 }).observe(raiz);
+    tocar();
+  });
+</script>

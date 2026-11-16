@@ -1,36 +1,105 @@
 ---
-// Rodapé: só as palavras dos links (Home, Galeria, Avaliações, Contato; o Contato inclui o "Como chegar") em Urbanist.
-// Cores invertidas: fundo azul oficial (#1F4E6B) e texto na cor base do site (#F1F9F9).
+// Rodapé: links grandes em Urbanist (à esquerda) e o essencial para visitar (à direita):
+// chamada, endereço, horário, telefone, WhatsApp, e-mail e redes. Embaixo, o ano e "voltar ao topo".
+// Cores invertidas (.tema-invertido): fundo amarelo e texto azul.
+import { Icon } from 'astro-icon/components';
+import site from '../data/site.json';
+import { linkWhatsapp } from '../lib/links';
+
 const links = [
   { href: '/', texto: 'Home' },
+  { href: '/cardapio', texto: 'Cardápio' },
+  { href: '/#agenda', texto: 'Agenda' },
   { href: '/galeria', texto: 'Galeria' },
-  { href: '/#avaliacoes', texto: 'Avaliações' }, // atalho para as avaliações na aba "A casa"
+  { href: '/#avaliacoes', texto: 'Avaliações' }, // atalho para as avaliações na página inicial
   { href: '/contato', texto: 'Contato' },
 ];
 const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
+const e = site.endereco;
+const ano = new Date().getFullYear();
 ---
-<footer class="rodape escuro">
-  <nav aria-label="Mais do Boni">
-    <ul>
-      {links.map((l) => (
-        <li>
-          <a class="rodape__link display" href={l.href} aria-current={atual === l.href ? 'page' : undefined}>{l.texto}</a>
-        </li>
-      ))}
-    </ul>
-  </nav>
+<footer class="rodape tema-invertido">
+  <div class="rodape__grade">
+    <nav aria-label="Mais do Boni">
+      <ul class="rodape__links">
+        {links.map((l) => (
+          <li>
+            <a class="rodape__link display" href={l.href} aria-current={atual === l.href ? 'page' : undefined}>{l.texto}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="rodape__visita">
+      <p class="rodape__chamada acento">Tá combinado? A gente te espera na beira da Lagoa.</p>
+      <dl class="rodape__info">
+        <div>
+          <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
+          <dd><a class="link" href={site.mapa} target="_blank" rel="noopener">{e.rua}. {e.bairro}, {e.cidade}/{e.uf}</a></dd>
+        </div>
+        <div>
+          <dt><Icon name="lucide:clock" aria-hidden="true" /><span>Horário</span></dt>
+          <dd>{site.horario.texto}</dd>
+        </div>
+        <div>
+          <dt><Icon name="lucide:phone" aria-hidden="true" /><span>Contato</span></dt>
+          <dd class="rodape__contatos">
+            <a class="link" href={`tel:${site.telefone.link}`}>{site.telefone.texto}</a>
+            <a class="link" href={linkWhatsapp()} target="_blank" rel="noopener">WhatsApp</a>
+            <a class="link rodape__email" href={`mailto:${site.email}`}>{site.email}</a>
+          </dd>
+        </div>
+        <div>
+          <dt><Icon name="lucide:at-sign" aria-hidden="true" /><span>Redes</span></dt>
+          <dd class="rodape__contatos">
+            <a class="link" href={site.instagram} target="_blank" rel="noopener">Instagram</a>
+            <a class="link" href={site.facebook} target="_blank" rel="noopener">Facebook</a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="rodape__base">
+    <p>© {ano} {site.nome}. {e.bairro}, {e.cidade}/{e.uf}.</p>
+    <a class="link" href="#conteudo">Voltar ao topo</a>
+  </div>
 </footer>
 
 <style>
-  .rodape { background: var(--color-texto); color: var(--color-base); padding: 48px var(--gutter) 64px; }
-  .rodape ul { display: grid; gap: 0; }
-  .rodape ul { list-style: none; margin: 0; padding: 0; }
-  /* tamanho contido: de 16px (celular) a 36px (desktop) */
+  /* cores do .tema-invertido (global.css): fundo amarelo, texto, sublinhados e destaques azuis */
+  .rodape { padding: 48px var(--gutter) 32px; }
+  .rodape__grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+  .rodape__links { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; }
+  /* tamanho contido: de 24px (celular) a 40px (desktop) */
   .rodape__link {
-    display: inline-block; padding: 16px 0;
-    font-size: clamp(16px, 2.5vw, 36px); line-height: 1; white-space: nowrap;
+    display: inline-block; padding: 8px 0;
+    font-size: clamp(24px, 2.8vw, 40px); line-height: 1; white-space: nowrap;
     text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 4px; text-underline-offset: 8px;
     transition: text-decoration-color var(--transicao);
   }
   .rodape__link:hover, .rodape__link[aria-current="page"] { text-decoration-color: var(--color-ousada); }
+
+  .rodape__visita { display: grid; gap: 24px; }
+  .rodape__chamada { font-size: clamp(22px, 2.2vw, 32px); max-width: 22ch; }
+  .rodape__info { margin: 0; border-top: 2px solid var(--color-base); text-transform: none; letter-spacing: 0; }
+  .rodape__info > div { display: grid; gap: 8px; padding: 16px 0; border-bottom: 2px solid rgb(62 99 119 / .3); }
+  .rodape__info dt { display: flex; align-items: center; gap: 16px; font-weight: 600; }
+  .rodape__info dt :global(svg) { width: 20px; height: 20px; flex: none; }
+  .rodape__info dd { margin: 0 0 0 36px; }
+  .rodape__contatos { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  .rodape__email { overflow-wrap: anywhere; }
+  /* no fundo azul, o sublinhado amarelo continua; o hover vai para a cor base */
+  .rodape .link:hover { text-decoration-color: var(--color-texto); }
+
+  .rodape__base {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
+    margin-top: 48px; padding-top: 24px; border-top: 2px solid rgb(62 99 119 / .3);
+    font-size: 14px; text-transform: none; letter-spacing: 0;
+  }
+  .rodape__base p { margin: 0; }
+
+  @media (max-width: 767px) {
+    .rodape__grade { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  }
 </style>

@@ -21,7 +21,7 @@ import { Icon } from 'astro-icon/components';
   /* O próprio diálogo cobre a tela: véu na cor de texto + desfoque do site atrás (o destaque fica só na foto) */
   .ver-foto {
     position: fixed; inset: 0; width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
-    background: rgb(31 78 107 / .6); color: var(--color-base);
+    background: rgb(62 99 119 / .7); color: var(--amarelo);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     opacity: 0; transition: opacity var(--transicao);
   }
@@ -33,14 +33,14 @@ import { Icon } from 'astro-icon/components';
   .ver-foto__figura img { display: block; width: auto; height: auto; max-width: min(600px, 100%); max-height: calc(100svh - 240px); }
   .ver-foto__legenda { display: grid; gap: 0; font-size: 16px; line-height: 1.4; max-width: 48ch; }
   .ver-foto__legenda :global(.legenda__nome), .ver-foto__legenda :global(.legenda__preco) { font-weight: 600; }
-  .ver-foto__legenda :global(.legenda__porcao) { color: rgb(241 249 249 / .8); }
+  .ver-foto__legenda :global(.legenda__porcao) { color: rgb(243 180 22 / .85); }
   .ver-foto__fechar {
     position: absolute; top: 16px; right: var(--gutter); z-index: 3;
     width: 48px; height: 48px; display: grid; place-items: center; padding: 0;
-    background: transparent; color: var(--color-base); border: 2px solid var(--color-base); cursor: pointer;
+    background: transparent; color: var(--amarelo); border: 2px solid var(--amarelo); cursor: pointer;
     transition: background-color var(--transicao), color var(--transicao);
   }
-  .ver-foto__fechar:hover { background: var(--color-base); color: var(--color-texto); }
+  .ver-foto__fechar:hover { background: var(--amarelo); color: var(--azul); }
   .ver-foto__fechar :global(svg) { width: 24px; height: 24px; }
   .ver-foto :global(.seta-lateral[hidden]) { display: none; }
   @media (max-width: 639px) {
@@ -81,7 +81,7 @@ import { Icon } from 'astro-icon/components';
   const abrir = (b: HTMLButtonElement) => {
     origem = b;
     // só as fotos visíveis do mesmo grupo (respeita o filtro e o "ver mais" da galeria)
-    grupo = [...document.querySelectorAll<HTMLButtonElement>(`[data-ver="${b.dataset.ver}"]`)].filter((x) => !x.closest('[hidden]'));
+    grupo = [...document.querySelectorAll<HTMLButtonElement>(`[data-ver="${b.dataset.ver}"]`)].filter((x) => !x.closest('[hidden]') && !x.closest('[inert]')); // as cópias do carrossel infinito (inert) não entram
     mostrar(grupo.indexOf(b));
     const unico = grupo.length < 2;
     ant.hidden = unico;
