@@ -1,5 +1,6 @@
 ---
-// Tela de carregamento: a logo do Boni entra subindo e balança devagar, como um barco na água,
+// Tela de carregamento: a logo do Boni, sobre uma pincelada bege (a mesma dos títulos), entra subindo e balança
+// devagar, como um barco na água,
 // enquanto uma linha de 2px atravessa a tela conforme o site carrega. Some com fade quando a página termina de carregar.
 // Aparece só na primeira visita da sessão. Sem JS não aparece; com movimento reduzido, a logo não balança.
 import { Image } from 'astro:assets';
@@ -7,8 +8,11 @@ import { imagem } from '../lib/imagens';
 ---
 <div class="carregando" data-carregando aria-hidden="true">
   <div class="carregando__conteudo">
-    <Image class="carregando__logo" src={imagem('logo_bar_do_boni.png')} alt=""
-      widths={[300, 425]} sizes="(max-width: 639px) 60vw, 360px" format="png" loading="eager" fetchpriority="high" />
+    <!-- .marcado: a pincelada já aparece pintada (sem a animação de pintar dos títulos) -->
+    <span class="carregando__marca pincel pincel--1 marcado">
+      <Image class="carregando__logo" src={imagem('logo_bar_do_boni.png')} alt=""
+        widths={[300, 425]} sizes="(max-width: 639px) 40vw, 330px" format="png" loading="eager" fetchpriority="high" />
+    </span>
     <div class="carregando__linha"><span data-carregando-barra></span></div>
   </div>
 </div>
@@ -22,11 +26,16 @@ import { imagem } from '../lib/imagens';
   }
   :global(html.js-carregando) .carregando.saindo { opacity: 0; visibility: hidden; }
   .carregando__conteudo { width: 100%; display: grid; gap: 32px; padding: 0 0 96px; }
-  .carregando :global(.carregando__logo) {
-    display: block; width: min(360px, 60vw); height: auto; margin-left: var(--gutter);
+  /* Pincelada com a logo dentro: a altura da logo é 1em; a pincelada (2,7em de largura no total) cabe na tela */
+  .carregando__marca {
+    font-size: min(220px, calc((100vw - 2 * var(--gutter)) / 2.8));
+    /* bem justa na logo, como uma etiqueta pintada: as pontas da pincelada passam um pouco por baixo dela */
+    --pincel-h: 1.6em; padding: .2em .45em .4em .6em;
+    margin-left: var(--gutter);
     transform-origin: 50% 90%;
     animation: logo-entra 700ms cubic-bezier(.2, .7, .2, 1) both, logo-balanca 2400ms ease-in-out 700ms infinite;
   }
+  .carregando :global(.carregando__logo) { display: block; height: 1em; width: auto; max-width: none; }
   .carregando__linha { height: 2px; background: var(--texto-linha); }
   .carregando__linha span { display: block; height: 2px; width: 0; background: var(--color-texto); transition: width 400ms ease; }
 
@@ -41,7 +50,7 @@ import { imagem } from '../lib/imagens';
     75% { transform: rotate(2deg) translateY(2px); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .carregando :global(.carregando__logo) { animation: none; }
+    .carregando__marca { animation: none; }
   }
 </style>
 

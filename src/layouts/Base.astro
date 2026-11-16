@@ -109,7 +109,7 @@ const jsonLd = {
       iniciarRevelar();
       iniciarDestaques();
 
-      // Vindo de outra página com âncora (ex.: /#agenda, /#avaliacoes): o script do <head> tirou o "#" do endereço
+      // Vindo de outra página com âncora (ex.: /#avaliacoes): o script do <head> tirou o "#" do endereço
       // e guardou em data-ancora; aqui rola até a seção (de novo quando a tela de carregamento sai)
       const ancora = document.documentElement.dataset.ancora;
       if (ancora) {

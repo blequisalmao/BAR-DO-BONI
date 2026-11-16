@@ -4,15 +4,13 @@
 // 1) História (texto do próprio cardápio, "Nossa história") com a arte "Venha conhecer o Bar do Boni"
 // 2) O lugar: mosaico de 8 fotos do espaço (fotos.ts → espaco), cada uma abre ampliada, e botão para a galeria
 // 3) Da cozinha e do bar: destaques com nome, porção e preço (fotos.ts → destaques) e botão para a aba Cardápio
-// 4) Agenda (Agenda.astro, dados em agenda.json)
-// 5) Avaliações reais do Google (Avaliacoes.astro)
+// 4) Avaliações reais do Google (Avaliacoes.astro)
 // Entre uma seção e outra: a faixa de renda de bilro (.divisor), o único lugar onde o ornamento aparece.
 // 6) Eventos e visita: "Reserve seu evento conosco", endereço, horário, WhatsApp e mapa
 import { Icon } from 'astro-icon/components';
 import Foto from './Foto.astro';
 import Legenda from './Legenda.astro';
 import Hero from './Hero.astro';
-import Agenda from './Agenda.astro';
 import Avaliacoes from './Avaliacoes.astro';
 import Renda from './Renda.astro';
 import { historia, espaco, destaques } from '../data/fotos';
@@ -26,8 +24,8 @@ const e = site.endereco;
 <div class="divisor" aria-hidden="true"><Renda /></div>
 
 <section class="casa" id="a-casa" aria-labelledby="titulo-casa">
+  <h2 class="secao__titulo pincel pincel--2 casa__titulo" id="titulo-casa">Nossa história</h2>
   <div class="casa__texto">
-    <h2 class="sr-only" id="titulo-casa">A casa</h2>
     <p class="casa__frase display">
       Há 60 anos, seu Murlio, o vô do Boni, abriu uma venda na beira da Lagoa para atender a comunidade.
       <span class="casa__fim"><mark>O resto</mark> a Lagoa fez.</span>
@@ -96,10 +94,6 @@ const e = site.endereco;
 
 <div class="divisor" aria-hidden="true"><Renda /></div>
 
-<Agenda />
-
-<div class="divisor" aria-hidden="true"><Renda /></div>
-
 <Avaliacoes />
 
 <div class="divisor" aria-hidden="true"><Renda /></div>
@@ -138,6 +132,8 @@ const e = site.endereco;
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center;
     padding: 48px var(--gutter) 96px;
   }
+  /* título em pincelada centralizado no topo, nas duas colunas, como nas outras seções */
+  .casa__titulo { grid-column: 1 / -1; justify-self: center; margin-bottom: -16px; }
   .casa__texto { display: grid; gap: 32px; justify-items: start; }
   /* Só nesta seção: título, frase e história em caixa normal (maiúscula só no início da frase) */
   .casa .display, .casa__historia { text-transform: none; }
@@ -177,9 +173,9 @@ const e = site.endereco;
   @media (max-width: 1023px) { .casa { gap: 32px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   @media (max-width: 719px) {
     .casa { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 32px 64px; }
-    /* no celular a imagem vem logo depois do título "A casa" */
+    /* no celular a imagem vem logo depois do título "Nossa história" */
     .casa__texto { display: contents; }
-    .casa__texto h2 { order: 1; }
+    .casa__titulo { margin-bottom: 0; }
     .casa__foto { order: 2; }
     .casa__frase { order: 3; }
     .casa__historia { order: 4; }
@@ -191,7 +187,7 @@ const e = site.endereco;
   .divisor { padding: 0; margin: -32px 0 16px; color: var(--bege); } /* de ponta a ponta, sem margem lateral */
   @media (max-width: 639px) { .divisor { margin: -16px 0 8px; } }
 
-  /* .bloco, .bloco__cab, .bloco__titulos e .bloco__sub ficam em global.css (usados também em Agenda e Instagram) */
+  /* .bloco, .bloco__cab, .bloco__titulos e .bloco__sub ficam em global.css (usados também em Avaliações) */
 
   .espaco__grade, .destaques__grade {
     display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--junta);

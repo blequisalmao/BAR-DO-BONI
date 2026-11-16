@@ -3,7 +3,6 @@
 // Fundo claro: o amarelo do site (#F3B416), a 97% de opacidade; ali o CTA "Reservar" fica azul,
 // para a logo (barco azul e linha "Lagoa da Conceição") aparecer bem.
 // Desktop (≥ 1024px): links em linha. Menor que isso: botão "Menu" abre um painel com os links grandes.
-// O link "Agenda" (/#agenda) leva à seção da agenda na página inicial.
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import { imagem } from '../lib/imagens';
@@ -13,7 +12,6 @@ import site from '../data/site.json';
 const links = [
   { href: '/', texto: 'Início' },
   { href: '/cardapio', texto: 'Cardápio' },
-  { href: '/#agenda', texto: 'Agenda' },
   { href: '/galeria', texto: 'Galeria' },
   { href: '/contato', texto: 'Contato' },
 ];
