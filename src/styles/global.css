@@ -27,7 +27,9 @@
   --color-base: #3E6377;
   --color-texto: #F3B416;
   --color-ousada: #F3B416;
-  --font-display: "Urbanist Variable", system-ui, sans-serif;
+  /* Textos grandes (frase do hero, frase da história, links do rodapé e do menu): Bricolage Grotesque.
+     Os títulos de seção não usam esta fonte: ficam na letra cursiva sobre a pincelada (--font-script). */
+  --font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
   --font-corpo: "DM Sans Variable", system-ui, sans-serif;
   /* Acento: Fraunces itálico, só em frases curtas (chamadas das seções, rodapé). Nunca em caixa alta. */
   --font-acento: "Fraunces Variable", Georgia, serif;
@@ -85,6 +87,30 @@
   transform: translateY(-200%);
 }
 .pular:focus { transform: none; }
+
+/* Destaque (<mark>: "ao vivo", "Lagoa da Conceição", "O resto"): faixa amarela atrás do texto azul.
+   Ao entrar na tela (src/lib/destaques.ts), a faixa passa da esquerda para a direita como um marca-texto e vai
+   revelando o texto (azul sobre o fundo azul fica invisível até a faixa chegar). Vários destaques na mesma frase
+   entram em sequência. Sem JS ou com movimento reduzido (sem html.js-revelar), o destaque já aparece pronto.
+   Feito só com background-size: funciona em qualquer navegador. */
+mark {
+  color: var(--color-base);
+  background: linear-gradient(var(--color-ousada), var(--color-ousada)) no-repeat 0 0 / 100% 100%;
+  background-color: transparent; /* sem o amarelo padrão do navegador para <mark> */
+}
+html.js-revelar mark {
+  background-size: 0% 100%;
+  transition: background-size 750ms cubic-bezier(.65, 0, .35, 1) var(--atraso-marca, 0ms);
+}
+html.js-revelar mark.marcado { background-size: 100% 100%; }
+
+/* Pincelada animada: a tinta é pintada da esquerda para a direita quando o título entra na tela (uma vez só) e vai
+   revelando o título, que tem a cor do fundo da seção e só aparece onde já tem tinta. Mesmo gatilho dos destaques. */
+html.js-revelar .pincel::before {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 900ms cubic-bezier(.65, 0, .35, 1) var(--atraso-marca, 0ms);
+}
+html.js-revelar .pincel.marcado::before { clip-path: inset(0 0 0 0); }
 
 /* Animação de entrada (src/lib/revelar.ts). Sem JS ou com movimento reduzido, nada fica escondido. */
 html.js-revelar .revelar {
