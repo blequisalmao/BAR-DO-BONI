@@ -7,6 +7,7 @@ const BLOCOS = [
   '.casa__foto',
   '.espaco__grade > li',
   '.destaques__grade > li',
+  '.instagram__grade > li',
   '.galeria__grade > li',
 ];
 

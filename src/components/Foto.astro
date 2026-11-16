@@ -8,14 +8,17 @@ import { imagem, LARGURAS } from '../lib/imagens';
 
 interface Props {
   foto: Pick<Foto, 'arquivo' | 'alt' | 'posicao'>;
-  moldura: 'story' | '2/3' | '3/4' | '4/5' | '1/1';
+  /** 'livre': sem proporção própria, ocupa a célula da grade (mosaico de "O lugar") */
+  moldura: 'story' | '2/3' | '3/4' | '4/5' | '1/1' | 'livre';
   sizes: string;
   ver?: string;
+  /** 'eager' para fotos que aparecem logo ao abrir (hero) */
+  carregamento?: 'lazy' | 'eager';
 }
 
-const { foto, moldura, sizes, ver } = Astro.props;
+const { foto, moldura, sizes, ver, carregamento = 'lazy' } = Astro.props;
 const src = imagem(foto.arquivo);
-const classeMoldura = { story: 'moldura--story', '2/3': 'moldura--2x3', '3/4': 'moldura--3x4', '4/5': 'moldura--4x5', '1/1': 'moldura--1x1' }[moldura];
+const classeMoldura = { story: 'moldura--story', '2/3': 'moldura--2x3', '3/4': 'moldura--3x4', '4/5': 'moldura--4x5', '1/1': 'moldura--1x1', livre: 'moldura--livre' }[moldura];
 const grande = ver ? await getImage({ src, width: Math.min(600, src.width), format: 'webp' }) : null;
 const estilo = foto.posicao ? `object-position: ${foto.posicao}` : undefined;
 ---
@@ -24,9 +27,9 @@ const estilo = foto.posicao ? `object-position: ${foto.posicao}` : undefined;
     <button class="ver" type="button" data-ver={ver} data-grande={grande.src}
       data-largura={grande.attributes.width} data-altura={grande.attributes.height}
       aria-haspopup="dialog" aria-label={`Ver foto maior: ${foto.alt}`}>
-      <Picture src={src} alt={foto.alt} widths={LARGURAS} sizes={sizes} formats={['avif']} fallbackFormat="webp" loading="lazy" decoding="async" style={estilo} />
+      <Picture src={src} alt={foto.alt} widths={LARGURAS} sizes={sizes} formats={['avif']} fallbackFormat="webp" loading={carregamento} decoding="async" style={estilo} />
     </button>
   ) : (
-    <Picture src={src} alt={foto.alt} widths={LARGURAS} sizes={sizes} formats={['avif']} fallbackFormat="webp" loading="lazy" decoding="async" style={estilo} />
+    <Picture src={src} alt={foto.alt} widths={LARGURAS} sizes={sizes} formats={['avif']} fallbackFormat="webp" loading={carregamento} decoding="async" style={estilo} />
   )}
 </div>

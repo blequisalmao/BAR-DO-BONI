@@ -1,6 +1,8 @@
 ---
 // Cardápio completo (src/data/cardapio.json): <details> por categoria, itens em colunas,
-// preço à direita e descrição embaixo. Funciona sem JS.
+// preço à direita e descrição embaixo. Todas as categorias começam fechadas.
+// Abrir e fechar desliza a altura com suavidade (script abaixo); sem JS, o <details> abre e fecha normalmente,
+// e com prefers-reduced-motion abre na hora.
 import { Icon } from 'astro-icon/components';
 import cardapio from '../data/cardapio.json';
 import { formatarPreco } from '../lib/imagens';
@@ -10,48 +12,47 @@ interface Categoria { titulo: string; nota?: string; itens: Item[] }
 const categorias = cardapio.categorias as Categoria[];
 ---
 <section class="cardapio" id="cardapio" aria-labelledby="titulo-cardapio">
-  <h2 class="sr-only" id="titulo-cardapio">Cardápio</h2>
   {categorias.map((cat, i) => (
-    <details open={i === 0}>
+    <details class:list={{ 'tema-invertido': i % 2 === 0 }} data-categoria>
       <summary>
-        <h3 class="cardapio__categoria display">{cat.titulo}</h3>
+        <h3 class={`cardapio__categoria pincel pincel--${(i % 4) + 1}`}>{cat.titulo}</h3>
         <Icon name="lucide:plus" aria-hidden="true" />
       </summary>
-      {cat.nota && <p class="cardapio__nota">{cat.nota}</p>}
-      <ul class="cardapio__itens">
-        {cat.itens.map((item) => (
-          <li>
-            <span class="cardapio__nome">{item.nome}</span>
-            <span class="cardapio__preco">{formatarPreco(item.preco)}</span>
-            {item.descricao && <span class="cardapio__desc">{item.descricao}</span>}
-          </li>
-        ))}
-      </ul>
+      <div class="cardapio__conteudo" data-conteudo>
+        {cat.nota && <p class="cardapio__nota">{cat.nota}</p>}
+        <ul class="cardapio__itens">
+          {cat.itens.map((item) => (
+            <li>
+              <span class="cardapio__nome">{item.nome}</span>
+              <span class="cardapio__preco">{formatarPreco(item.preco)}</span>
+              {item.descricao && <span class="cardapio__desc">{item.descricao}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
     </details>
   ))}
 </section>
 
 <style>
-  .cardapio { padding-bottom: 96px; }
-  details { border-bottom: 2px solid var(--color-texto); }
+  /* Categorias alternam fundo amarelo (.tema-invertido, pincel azul) e azul (pincel amarelo), sem linhas entre elas */
+  .cardapio { padding-bottom: 0; }
+  details { background: var(--color-base); color: var(--color-texto); }
   summary {
     list-style: none; cursor: pointer;
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
-    padding: 24px var(--gutter);
-    transition: color var(--transicao);
+    padding: 32px var(--gutter) 24px;
   }
   summary::-webkit-details-marker { display: none; }
   summary:focus-visible { outline-offset: -3px; }
-  .cardapio__categoria {
-    min-width: 0; hyphens: auto; overflow-wrap: anywhere;
-    font-size: clamp(22px, 2.4vw, 34px); line-height: 1;
-    text-transform: uppercase; /* no cardápio, tudo em maiúsculas (os outros títulos do site não) */
-    text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 4px; text-underline-offset: 8px;
-    transition: text-decoration-color var(--transicao);
-  }
-  summary:hover .cardapio__categoria { text-decoration-color: var(--color-ousada); }
-  summary :global(svg) { width: 32px; height: 32px; flex: none; transition: transform var(--transicao); }
+  /* título como no cardápio impresso: letra cursiva sobre a pincelada */
+  .cardapio__categoria { min-width: 0; font-size: min(clamp(48px, 5.4vw, 88px), calc((100vw - 2 * var(--gutter) - 48px) / 6.9)); /* o mais longo: "Sequência de camarão", 6,5em */ }
+  /* o "+" gira junto com a abertura (mesma duração e curva da animação da altura) */
+  summary :global(svg) { width: 32px; height: 32px; flex: none; transition: transform 400ms cubic-bezier(.2, .7, .2, 1); }
   details[open] summary :global(svg) { transform: rotate(45deg); }
+  /* durante o fechamento o <details> ainda está aberto: o "+" já volta */
+  details.fechando summary :global(svg) { transform: none; }
+  .cardapio__conteudo { overflow: hidden; }
   .cardapio__nota { padding: 0 var(--gutter) 8px; font-size: 16px; color: var(--texto-suave); }
   .cardapio__itens { list-style: none; margin: 0; padding: 0 var(--gutter) 32px; columns: 3 300px; column-gap: 48px; }
   .cardapio__itens li {
@@ -62,3 +63,44 @@ const categorias = cardapio.categorias as Categoria[];
   .cardapio__preco { font-weight: 600; text-align: right; white-space: nowrap; }
   .cardapio__desc { grid-column: 1 / -1; font-size: 16px; color: var(--texto-suave); padding-top: 8px; }
 </style>
+
+<script>
+  // Abre e fecha cada categoria deslizando a altura do conteúdo (Web Animations API, funciona em todos os navegadores).
+  // Clicar de novo no meio da animação inverte o movimento a partir da altura atual, sem pulo.
+  const DURACAO = 400;
+  const CURVA = 'cubic-bezier(.2, .7, .2, 1)';
+  const reduzido = matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLDetailsElement>('[data-categoria]').forEach((det) => {
+    const summary = det.querySelector('summary')!;
+    const conteudo = det.querySelector<HTMLElement>('[data-conteudo]')!;
+    let animacao: Animation | null = null;
+
+    const animar = (de: number, para: number, aoFim: () => void) => {
+      animacao?.cancel();
+      const a = conteudo.animate(
+        [{ height: `${de}px`, opacity: de > 0 ? 1 : 0 }, { height: `${para}px`, opacity: para > 0 ? 1 : 0 }],
+        { duration: DURACAO, easing: CURVA },
+      );
+      animacao = a;
+      a.onfinish = () => { if (animacao === a) animacao = null; aoFim(); };
+    };
+
+    summary.addEventListener('click', (e) => {
+      if (reduzido.matches) return; // abre/fecha na hora, do jeito nativo
+      e.preventDefault();
+      const emAndamento = animacao !== null;
+      const atual = conteudo.getBoundingClientRect().height; // altura agora (no meio de uma animação, a parcial)
+      const vaiFechar = det.open && !det.classList.contains('fechando');
+      if (vaiFechar) {
+        det.classList.add('fechando');
+        animar(atual, 0, () => { det.open = false; det.classList.remove('fechando'); });
+      } else {
+        // abrir (ou reabrir no meio do fechamento): começa da altura atual se estava animando, senão de zero
+        det.classList.remove('fechando');
+        det.open = true; // abre já, para o conteúdo ter altura medível
+        animar(emAndamento ? atual : 0, conteudo.scrollHeight, () => {});
+      }
+    });
+  });
+</script>

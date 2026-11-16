@@ -1,20 +1,32 @@
 ---
 // Aba "A casa": página de apresentação do Bar do Boni.
+// 0) Hero: frase, botões e faixa de fotos em carrossel (Hero.astro)
 // 1) História (texto do próprio cardápio, "Nossa história") com a arte "Venha conhecer o Bar do Boni"
-// 2) O lugar: fotos do espaço (fotos.ts → espaco), cada uma abre ampliada
+// 2) O lugar: mosaico de 8 fotos do espaço (fotos.ts → espaco), cada uma abre ampliada, e botão para a galeria
 // 3) Da cozinha e do bar: destaques com nome, porção e preço (fotos.ts → destaques) e botão para a aba Cardápio
-// 4) Avaliações reais do Google (Avaliacoes.astro)
-// 5) Eventos e visita: "Reserve seu evento conosco", endereço, horário, WhatsApp e mapa
+// 4) Agenda (Agenda.astro, dados em agenda.json)
+// 5) Avaliações reais do Google (Avaliacoes.astro)
+// 6) Instagram (Instagram.astro, fotos em fotos.ts → instagram)
+// Entre uma seção e outra: a faixa de renda de bilro (.divisor), o único lugar onde o ornamento aparece.
+// 7) Eventos e visita: "Reserve seu evento conosco", endereço, horário, WhatsApp e mapa
 import { Icon } from 'astro-icon/components';
 import Foto from './Foto.astro';
 import Legenda from './Legenda.astro';
+import Hero from './Hero.astro';
+import Agenda from './Agenda.astro';
 import Avaliacoes from './Avaliacoes.astro';
-import { casa, espaco, destaques } from '../data/fotos';
+import Instagram from './Instagram.astro';
+import Renda from './Renda.astro';
+import { historia, espaco, destaques } from '../data/fotos';
 import site from '../data/site.json';
 import { linkWhatsapp } from '../lib/links';
 
 const e = site.endereco;
 ---
+<Hero />
+
+<div class="divisor" aria-hidden="true"><Renda /></div>
+
 <section class="casa" id="a-casa" aria-labelledby="titulo-casa">
   <div class="casa__texto">
     <h2 class="sr-only" id="titulo-casa">A casa</h2>
@@ -27,31 +39,50 @@ const e = site.endereco;
       <p>Hoje a casa recebe pescadores, moradores e turistas, com o mesmo clima de amigos, preço justo e a Lagoa da Conceição a um passo da mesa.</p>
     </div>
   </div>
-  <figure class="casa__foto">
-    <Foto foto={casa} moldura="1/1" sizes="(max-width: 719px) 90vw, (max-width: 1023px) 34vw, 420px" />
-  </figure>
+  <div class="casa__foto pilha">
+    {historia.map((foto, i) => (
+      <figure class={`pilha__item pilha__item--${i + 1}`}>
+        <Foto foto={foto} moldura="livre" ver="historia" sizes="(max-width: 719px) 40vw, (max-width: 1023px) 20vw, 290px" />
+      </figure>
+    ))}
+  </div>
 </section>
+
+<div class="divisor" aria-hidden="true"><Renda /></div>
 
 <section class="bloco espaco" id="o-lugar" aria-labelledby="titulo-lugar">
   <div class="secao__cab bloco__cab">
-    <h2 class="secao__titulo display" id="titulo-lugar">O lugar</h2>
-    <p class="bloco__sub">O deck, o balcão e o pôr do sol da Lagoa da Conceição.</p>
+    <div class="bloco__titulos">
+      <h2 class="secao__titulo pincel pincel--1" id="titulo-lugar">O lugar</h2>
+      <p class="bloco__sub acento lugar__sub">
+        <span>Deck de madeira, barco atracado e o pôr do sol na frente.</span>
+        <span>Escolhe a mesa e vem!</span>
+      </p>
+    </div>
+    <a class="btn btn--linha" href="/galeria">
+      <Icon name="lucide:images" aria-hidden="true" />Galeria completa
+    </a>
   </div>
   <ul class="espaco__grade">
     {espaco.map((foto) => (
       <li>
-        <figure><Foto foto={foto} moldura="4/5" ver="espaco" sizes="(max-width: 639px) 50vw, 33vw" /></figure>
+        <figure><Foto foto={foto} moldura="livre" ver="espaco" sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 17vw" /></figure>
       </li>
     ))}
   </ul>
 </section>
 
+<div class="divisor" aria-hidden="true"><Renda /></div>
+
 <section class="bloco destaques" id="destaques" aria-labelledby="titulo-destaques">
   <div class="secao__cab bloco__cab">
-    <h2 class="secao__titulo display" id="titulo-destaques">Da cozinha e do bar</h2>
-    <button type="button" class="btn btn--ousada" data-ir-aba="cardapio">
-      <Icon name="lucide:utensils" aria-hidden="true" />Ver o cardápio completo
-    </button>
+    <div class="bloco__titulos">
+      <h2 class="secao__titulo pincel pincel--3" id="titulo-destaques">Da cozinha e do bar</h2>
+      <p class="bloco__sub acento">Porção pra dividir, fruto do mar e caipira gelada.</p>
+    </div>
+    <a class="btn btn--ousada" href="/cardapio">
+      <Icon name="lucide:utensils" aria-hidden="true" />Ver cardápio
+    </a>
   </div>
   <ul class="destaques__grade">
     {destaques.map((foto) => (
@@ -65,11 +96,23 @@ const e = site.endereco;
   </ul>
 </section>
 
+<div class="divisor" aria-hidden="true"><Renda /></div>
+
+<Agenda />
+
+<div class="divisor" aria-hidden="true"><Renda /></div>
+
 <Avaliacoes />
 
+<div class="divisor" aria-hidden="true"><Renda /></div>
+
+<Instagram />
+
+<div class="divisor" aria-hidden="true"><Renda /></div>
+
 <section class="bloco eventos" id="eventos" aria-labelledby="titulo-eventos">
+  <h2 class="eventos__titulo pincel pincel--3" id="titulo-eventos">Reserve seu evento conosco.</h2>
   <div class="eventos__chamada">
-    <h2 class="eventos__titulo display" id="titulo-eventos">Reserve seu evento conosco.</h2>
     <p class="eventos__texto">Aniversário, confraternização ou encontro de amigos na beira da Lagoa: chame a gente no WhatsApp e reserve o seu espaço.</p>
     <div class="eventos__acoes">
       <a class="btn btn--ousada" href={linkWhatsapp()} target="_blank" rel="noopener">
@@ -98,7 +141,7 @@ const e = site.endereco;
 
 <style>
   .casa {
-    display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 420px); gap: 48px; align-items: start;
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center;
     padding: 48px var(--gutter) 96px;
   }
   .casa__texto { display: grid; gap: 32px; justify-items: start; }
@@ -107,14 +150,37 @@ const e = site.endereco;
   .casa__historia { letter-spacing: 0; }
   .casa__frase { font-size: clamp(24px, 2.8vw, 44px); line-height: 1.05; max-width: 28ch; }
   /* "O resto a Lagoa fez." começa numa linha própria, alinhado à esquerda com as outras; "O resto" nunca quebra */
-  .casa__fim { display: block; }
-  .casa__frase mark { background: var(--color-ousada); color: var(--color-texto); padding: 0 8px; margin-left: -8px; white-space: nowrap;
+  .casa__fim { display: block; margin-top: .45em; } /* respiro antes de "O resto a Lagoa fez." */
+  /* "O lugar": duas frases, cada uma na sua linha (no celular a primeira pode quebrar) */
+  .lugar__sub { max-width: none; }
+  .lugar__sub span { display: block; }
+  @media (min-width: 640px) { .lugar__sub span { white-space: nowrap; } }
+  .casa__frase mark { background: var(--color-ousada); color: var(--color-base); padding: 0 8px .16em; /* desce para cobrir as caudas (g, ç) */ margin-left: -8px; white-space: nowrap;
     /* o fundo amarelo fica só na altura da linha, sem invadir a linha de cima */
     display: inline-block; line-height: 1; }
   .casa__historia { display: grid; gap: 16px; max-width: 56ch; font-size: 18px; }
   .casa__foto { margin: 0; width: 100%; }
+
+  /* 3 fotos (fotos.ts → historia) lado a lado, retas: a da esquerda e a da direita atrás, a do meio na frente,
+     um pouco mais baixa e cobrindo parte das outras duas. Posições em % da caixa (tiradas do esboço).
+     Cada foto: cantos de cima bem arredondados, os de baixo quase retos, e um contorno na cor do texto
+     atrás dela, aparecendo dos dois lados e embaixo (em cima, nada sobra). */
+  .pilha { position: relative; aspect-ratio: 1.62 / 1; --raio: clamp(20px, 3.4vw, 44px); --contorno: clamp(6px, 1vw, 12px); }
+  .pilha__item { position: absolute; margin: 0; }
+  .pilha__item::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: var(--color-texto);
+    /* os cantos de cima do contorno acompanham os da foto, um pouco maiores; embaixo, quase retos */
+    border-radius: calc(var(--raio) + var(--contorno)) calc(var(--raio) + var(--contorno)) 12px 12px;
+    inset: 0 calc(-1 * var(--contorno)) calc(-1 * var(--contorno));
+  }
+  .pilha__item :global(.moldura) { position: relative; border-radius: var(--raio) var(--raio) 10px 10px; }
+  /* esquerda, direita e, na frente, a do meio (ordem de fotos.ts → historia) */
+  .pilha__item--1 { left: 1.5%; top: 2%; width: 33%; height: 84%; z-index: 1; }
+  .pilha__item--2 { left: 60%; top: 1.5%; width: 39.5%; height: 88%; z-index: 2; }
+  .pilha__item--3 { left: 27%; top: 14.5%; width: 39.5%; height: 85.5%; z-index: 3; }
   /* tablet: a imagem fica com ~1/3 da largura, para a frase respirar */
-  @media (max-width: 1023px) { .casa { gap: 32px; grid-template-columns: minmax(0, 1fr) minmax(200px, 34%); } }
+  @media (max-width: 1023px) { .casa { gap: 32px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   @media (max-width: 719px) {
     .casa { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 32px 64px; }
     /* no celular a imagem vem logo depois do título "A casa" */
@@ -123,35 +189,60 @@ const e = site.endereco;
     .casa__foto { order: 2; }
     .casa__frase { order: 3; }
     .casa__historia { order: 4; }
-    .casa__foto { max-width: 420px; }
+    .casa__foto { max-width: 560px; width: 100%; justify-self: center; }
   }
 
   /* Blocos da apresentação: sem linha entre eles, separados só pelo espaço; título grande à esquerda */
-  .bloco { padding-bottom: 96px; }
-  .bloco__cab { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 24px; }
-  .bloco__sub { max-width: 40ch; color: var(--texto-suave); }
+  /* Divisor entre seções: a faixa de renda na largura toda da página, com o mesmo respiro em cima e embaixo */
+  .divisor { padding: 0; margin: -32px 0 16px; color: var(--color-texto); } /* de ponta a ponta, sem margem lateral */
+  @media (max-width: 639px) { .divisor { margin: -16px 0 8px; } }
 
-  /* O lugar: 3 colunas no desktop, 2 no celular, mesma junta da galeria */
+  /* .bloco, .bloco__cab, .bloco__titulos e .bloco__sub ficam em global.css (usados também em Agenda e Instagram) */
+
   .espaco__grade, .destaques__grade {
     display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--junta);
     list-style: none; margin: 0; padding: 0;
   }
   .espaco__grade figure, .destaques__grade figure { margin: 0; }
-  /* Destaques: 4 colunas, legenda (nome, porção, preço) embaixo de cada foto */
-  .destaques__grade { grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0 var(--gutter); gap: 24px; }
-  @media (max-width: 1023px) { .destaques__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  /* O lugar: mosaico em 4 colunas e 3 linhas. As fotos 1, 4, 5 e 8 são altas (2 linhas), em zigue-zague:
+     col 1: alta + baixa | col 2: baixa + alta | col 3: alta + baixa | col 4: baixa + alta.
+     Nenhuma célula passa de uma coluna (as fotos têm 600px e não podem ficar mais largas que isso). */
+  .espaco__grade {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(3, clamp(160px, 19vw, 320px));
+  }
+  .espaco__grade > li, .espaco__grade figure { min-height: 0; height: 100%; }
+  .espaco__grade > li:nth-child(1) { grid-area: 1 / 1 / span 2 / 2; }
+  .espaco__grade > li:nth-child(2) { grid-area: 3 / 1 / 4 / 2; }
+  .espaco__grade > li:nth-child(3) { grid-area: 1 / 2 / 2 / 3; }
+  .espaco__grade > li:nth-child(4) { grid-area: 2 / 2 / span 2 / 3; }
+  .espaco__grade > li:nth-child(5) { grid-area: 1 / 3 / span 2 / 4; }
+  .espaco__grade > li:nth-child(6) { grid-area: 3 / 3 / 4 / 4; }
+  .espaco__grade > li:nth-child(7) { grid-area: 1 / 4 / 2 / 5; }
+  .espaco__grade > li:nth-child(8) { grid-area: 2 / 4 / span 2 / 5; }
+  /* Destaques: 6 itens (6 colunas no desktop, 3 no tablet, 2 no celular), legenda embaixo de cada foto */
+  .destaques__grade { grid-template-columns: repeat(6, minmax(0, 1fr)); padding: 0 var(--gutter); gap: 24px; }
+  @media (max-width: 1023px) { .destaques__grade { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 639px) { .destaques__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 639px) {
-    .espaco__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* celular: 2 colunas iguais, sem mosaico (as células ficariam estreitas demais) */
+    .espaco__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+    .espaco__grade > li:nth-child(n) { grid-area: auto; aspect-ratio: 4 / 5; }
     .destaques__grade { gap: 16px; }
   }
 
   /* Eventos e visita: chamada à esquerda, informações à direita (empilha no celular) */
   .eventos {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start;
-    padding: 64px var(--gutter) 96px;
+    padding: 64px var(--gutter) 96px; container-type: inline-size;
   }
   .eventos__chamada { display: grid; gap: 24px; justify-items: start; }
-  .eventos__titulo { font-size: clamp(30px, 4.5vw, 72px); line-height: 1; text-transform: none; max-width: 14ch; }
+  /* nome da seção centralizado, em cima das duas colunas */
+  .eventos__titulo { grid-column: 1 / -1; justify-self: center; }
+  /* Título longo numa pincelada só, numa linha: a fonte acompanha a largura da coluna (container query).
+     "Reserve seu evento conosco." com a pincelada mede 7,3em (medido). */
+  .eventos__titulo { margin: 0; font-size: min(80px, 100cqi / 7.8); }
   .eventos__texto { max-width: 46ch; text-transform: none; letter-spacing: 0; font-size: 18px; }
   .eventos__acoes { display: flex; flex-wrap: wrap; gap: 16px; }
   /* endereço, horário e telefone em grafia normal (sem caixa alta) */

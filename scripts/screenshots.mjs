@@ -11,6 +11,7 @@ const SAIDA = 'capturas';
 const LARGURAS = [390, 1440];
 const PAGINAS = [
   { caminho: '/', nome: 'inicio' },
+  { caminho: '/cardapio', nome: 'cardapio' },
   { caminho: '/galeria', nome: 'galeria' },
   { caminho: '/contato', nome: 'contato' },
 ];
@@ -69,26 +70,23 @@ for (const largura of LARGURAS) {
 
     await pagina.screenshot({ path: `${SAIDA}/${nome}-${largura}.png`, fullPage: true });
 
-    // Início: abas fixas "A casa" / "Cardápio" (troca de conteúdo e volta para o topo)
+    // Início: sem abas; seções separadas pela faixa de renda; "Ver cardápio" leva à página do cardápio
     if (caminho === '/') {
-      await pagina.evaluate(() => scrollTo(0, 600));
-      await pagina.locator('[role="tab"][data-aba="cardapio"]').click();
-      await pagina.waitForTimeout(500);
       const estado = await pagina.evaluate(() => ({
-        cardapio: getComputedStyle(document.getElementById('painel-cardapio')).display !== 'none',
-        casa: getComputedStyle(document.getElementById('painel-a-casa')).display !== 'none',
-        y: scrollY,
-        barraTopo: Math.round(document.querySelector('[role="tablist"]').getBoundingClientRect().top),
+        abas: document.querySelectorAll('[role="tablist"]').length,
+        divisores: document.querySelectorAll('.divisor .renda').length,
+        verCardapio: [...document.querySelectorAll('a')].filter((a) => a.getAttribute('href') === '/cardapio').length,
       }));
-      console.log(`${rotulo} abas: cardápio visível ${estado.cardapio}, a casa visível ${estado.casa}, rolagem ${estado.y}, barra em ${estado.barraTopo}px`);
-      if (!estado.cardapio || estado.casa || estado.y !== 0) falhas.push(`${rotulo} abas: a troca para o cardápio não funcionou (${JSON.stringify(estado)})`);
-      await pagina.screenshot({ path: `${SAIDA}/inicio-cardapio-${largura}.png`, fullPage: true });
-      await pagina.evaluate(() => scrollTo(0, 1200));
-      await pagina.waitForTimeout(200);
-      const barra = await pagina.evaluate(() => Math.round(document.querySelector('[role="tablist"]').getBoundingClientRect().top));
-      if (barra !== 72) falhas.push(`${rotulo} abas: a barra não ficou presa sob o cabeçalho ao rolar (top ${barra}px)`);
-      await pagina.screenshot({ path: `${SAIDA}/inicio-abas-presas-${largura}.png` });
-      await pagina.locator('[role="tab"][data-aba="a-casa"]').click();
+      console.log(`${rotulo} início: ${estado.divisores} divisores de renda, ${estado.verCardapio} links para /cardapio`);
+      if (estado.abas) falhas.push(`${rotulo} início: ainda há barra de abas`);
+      if (estado.divisores < 6) falhas.push(`${rotulo} início: só ${estado.divisores} divisores de renda entre as seções`);
+      if (!estado.verCardapio) falhas.push(`${rotulo} início: nenhum link para /cardapio`);
+      // a faixa de renda vai de ponta a ponta da página (sem margem nas laterais)
+      const faixa = await pagina.evaluate(() => {
+        const r = document.querySelector('.divisor .renda').getBoundingClientRect();
+        return { esq: Math.round(r.left), dir: Math.round(innerWidth - r.right) };
+      });
+      if (faixa.esq !== 0 || faixa.dir > 1) falhas.push(`${rotulo} início: a faixa de renda não ocupa a largura toda (${JSON.stringify(faixa)})`);
     }
 
     // Galeria: 12 fotos de início, filtro "Pratos", "Ver mais fotos" e foto ampliada (setas e legenda)

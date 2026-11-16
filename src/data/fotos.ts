@@ -1,5 +1,5 @@
 // Fotos do site.
-// - casa: a foto da introdução ("A casa")
+// - historia: as 3 fotos da introdução ("A casa"), definidas mais abaixo
 // - galeria: todas as outras, separadas por categoria (os filtros da galeria)
 // Campos: arquivo (em /imagens), alt (grafia normal; a caixa alta é só visual),
 // nome / porcao / preco (fotos do cardápio: viram a legenda da foto ampliada; preços conferidos com cardapio.md),
@@ -18,11 +18,6 @@ export interface Foto {
 }
 
 export interface FotoGaleria extends Foto { categoria: Categoria }
-
-export const casa: Foto = {
-  arquivo: 'venha-conhecer-o-bar-do-boni.jpg',
-  alt: 'Amigas brindando com copos de cerveja no Bar do Boni, com um balde de cerveja na mesa e a logo do bar',
-};
 
 export const categorias: { id: Categoria; nome: string }[] = [
   { id: 'lagoa', nome: 'A Lagoa' },
@@ -95,20 +90,55 @@ const daGaleria = (arquivo: string): Foto => {
   return f;
 };
 
-/** "O lugar": fotos do espaço (6, em 3 colunas no desktop e 2 no celular). */
-export const espaco: Foto[] = [
+/** Hero (abertura da aba "A casa"): faixa de fotos em carrossel. A primeira aparece já ao abrir. */
+export const hero: Foto[] = [
   'sunset_bar_do_boni.png',
-  'area_externa.jpg',
+  'caipirinha_foto_drink.jpg',
   'vista_da_lagoa_para_o_bar.png',
-  'area_do_bar.jpg',
-  'entrada.jpg',
-  'prato_completo_vista_lagoa.jpg',
+  'camarao_a_milanesa.png',
+  'celebrando_com_cerveja.png',
+  'deck_externo.jpg',
+  'clientes.png',
+  'foto_drink2.jpg',
 ].map(daGaleria);
 
-/** "Da cozinha e do bar": destaques com nome, porção e preço (4). */
+/** "O lugar": mosaico de 8 fotos. Posições 1, 4, 5 e 8 são as altas (ocupam 2 linhas no desktop):
+ *  coloque ali as fotos verticais; nas outras, as que aguentam corte (as horizontais ficam ótimas). */
+export const espaco: Foto[] = [
+  'vista_da_lagoa_para_o_bar.png', // alta
+  'area_do_bar.jpg',
+  'prato_completo_vista_lagoa.jpg',
+  'sunset_bar_do_boni.png', // alta
+  'area_externa.jpg', // alta
+  'imagem_praia_placas_goodvibes.jpg',
+  'entrada.jpg',
+  'deck_externo.jpg', // alta
+].map(daGaleria);
+
+/** Instagram: 6 fotos quadradas. Sem `link`, a foto leva ao perfil (site.json → instagram).
+ *  Para apontar para um post, use { ...daGaleria('arquivo'), link: 'https://www.instagram.com/p/...' }. */
+export const instagram: (Foto & { link?: string })[] = [
+  'clientes23.png',
+  'foto_drink8.jpg',
+  'prato_completo_barco_do_bar_do_boni_ao_fundo.jpg',
+  'ostra_gratinada.png',
+  'celebrando_com_cerveja.png',
+  'foto_drink.jpg',
+].map(daGaleria);
+
+/** História ("A casa"): 3 fotos lado a lado. Ordem: esquerda, direita e, na frente, a do meio. */
+export const historia: Foto[] = [
+  daGaleria('entrada2.png'),     // esquerda
+  daGaleria('area_do_bar.jpg'),  // direita
+  daGaleria('entrada.jpg'),      // meio, na frente
+];
+
+/** "Da cozinha e do bar": destaques com nome, porção e preço (6: 4 pratos e 2 drinks). */
 export const destaques: Foto[] = [
   'camarao_a_milanesa.png',
   'pastel_de_camarao.png',
+  'bolinho_de_siri.png',
   'prato_completo2.jpg',
   'caipirinha_foto_drink.jpg',
+  'foto_drink2.jpg',
 ].map(daGaleria);

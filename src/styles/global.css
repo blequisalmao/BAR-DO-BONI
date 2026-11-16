@@ -2,27 +2,54 @@
 /* Só as utilidades realmente usadas; o resto é CSS dos componentes. */
 @source inline("sr-only");
 
+/* Aliya Ramsey: a letra cursiva dos títulos (arquivo em public/fonts/). Tem os acentos do português.
+   Pré-carregada no <head> (Base.astro) para os títulos não piscarem. */
+@font-face {
+  font-family: "Aliya Ramsey";
+  src: url("/fonts/AliyaRamsey.ttf") format("truetype");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
 /* ==========================================================================
-   Tokens: paleta "Logo do Boni" (90 / 7,3 / 2,7) e fontes.
-   O amarelo nunca é cor de texto: só fundo de botão de ação, sublinhado e a palavra marcada.
+   Tokens: paleta (amarelo da logo + azul do cardápio impresso + creme de destaque) e fontes.
+   Duas cores só: azul #3E6377 e amarelo #F3B416 (contraste 3,5:1: bom para títulos e texto grande,
+   abaixo do recomendado (4,5:1) para texto pequeno).
+   Fundo azul com texto, pinceladas, CTAs e destaques (palavra marcada, sublinhados) em amarelo.
+   O cabeçalho e os blocos .tema-invertido (categorias alternadas do cardápio, rodapé) são o contrário:
+   fundo amarelo com texto azul, e ali os CTAs e destaques ficam azuis (senão sumiriam no amarelo).
+   Cores fixas: --azul e --amarelo. Papéis: --color-base (fundo), --color-texto (texto) e --color-ousada
+   (CTA/destaque) apontam para elas e invertem juntos.
+   Azul sobre amarelo: contraste 4,1:1 (passa no AA só para texto grande, ≥ 24px ou ≥ 18,7px em negrito).
+   O amarelo (da logo) nunca é cor de texto: só fundo de botão de ação, sublinhado e a palavra marcada.
    Espaçamento: todo padding, margin e gap é múltiplo de 8.
    ========================================================================== */
 @theme {
-  --color-base: #F1F9F9;
-  --color-texto: #1F4E6B;
-  --color-ousada: #FFC72C;
+  --color-base: #3E6377;
+  --color-texto: #F3B416;
+  --color-ousada: #F3B416;
   --font-display: "Urbanist Variable", system-ui, sans-serif;
   --font-corpo: "DM Sans Variable", system-ui, sans-serif;
+  /* Acento: Fraunces itálico, só em frases curtas (chamadas das seções, rodapé). Nunca em caixa alta. */
+  --font-acento: "Fraunces Variable", Georgia, serif;
+  /* Títulos de seção e do cardápio: letra cursiva sobre a pincelada, como no cardápio impresso */
+  --font-script: "Aliya Ramsey", "Brush Script MT", cursive;
 }
 
 :root {
+  /* Cores fixas (não invertem nos blocos azuis); use --color-base / --color-texto no dia a dia */
+  --amarelo: #F3B416;
+  --bege: #F0DEC5; /* creme dos títulos do cardápio impresso: usado só na página do cardápio (.paleta-bege) */
+  --azul: #3E6377;
   --gutter: 16px;
   --junta: 8px; /* espaço entre todas as fotos */
   --topo-altura: 72px;
-  --texto-suave: rgb(31 78 107 / .75);
-  --texto-linha: rgb(31 78 107 / .25);
-  --veu: rgb(31 78 107 / .5);
+  --texto-suave: rgb(243 180 22 / .88);
+  --texto-linha: rgb(243 180 22 / .3);
+  --veu: rgb(62 99 119 / .5);
   --transicao: 200ms ease;
+  /* Pincelada: no fundo amarelo, pincel azul com letra amarela; nos blocos azuis, o contrário */
+  --pincel-fundo: var(--amarelo);
+  --pincel-letra: var(--azul);
 }
 @media (min-width: 640px) { :root { --gutter: 32px; } }
 @media (min-width: 1440px) { :root { --gutter: 48px; } }
@@ -88,9 +115,22 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
   .moldura--3x4 { aspect-ratio: 3 / 4; }
   .moldura--4x5 { aspect-ratio: 4 / 5; }
   .moldura--1x1 { aspect-ratio: 1 / 1; }
+  /* Livre: ocupa a altura da célula (mosaico); quem define a proporção é a grade */
+  .moldura--livre { height: 100%; }
 
-  /* Botão que abre a foto maior: ocupa a moldura inteira, sem reagir ao hover */
-  .ver { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; color: inherit; }
+  /* Botão que abre a foto maior: ocupa a moldura inteira, cursor de clique */
+  .ver { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; color: inherit; }
+
+  /* Toda foto clicável (abre ampliada ou é link, como as do Instagram): véu azul suave no hover e no foco do teclado.
+     A foto em si não mexe (sem zoom); só o véu aparece por cima, acompanhando os cantos da moldura. */
+  .moldura { position: relative; }
+  .moldura::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: rgb(62 99 119 / .45); opacity: 0; transition: opacity var(--transicao);
+  }
+  .moldura:has(.ver):hover::after, .moldura:has(.ver:focus-visible)::after,
+  a:hover > .moldura::after, a:focus-visible > .moldura::after { opacity: 1; }
+  a:has(> .moldura) { cursor: pointer; }
   .ver:focus-visible { outline-offset: -3px; }
 
   /* Botões: só troca de cor no hover */
@@ -101,8 +141,10 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
     cursor: pointer; transition: background-color var(--transicao), color var(--transicao), border-color var(--transicao);
   }
   .btn svg { width: 18px; height: 18px; flex: none; }
-  .btn--ousada { background: var(--color-ousada); color: var(--color-texto); border-color: var(--color-ousada); }
-  .btn--ousada:hover { background: var(--color-texto); color: var(--color-base); border-color: var(--color-texto); }
+  /* CTA: fundo na cor de destaque e texto na cor do fundo da seção (amarelo/azul no fundo azul; azul/amarelo nos
+     blocos amarelos). No hover vira contorno, com fundo transparente. */
+  .btn--ousada { background: var(--color-ousada); color: var(--color-base); border-color: var(--color-ousada); }
+  .btn--ousada:hover { background: transparent; color: var(--color-ousada); border-color: var(--color-ousada); }
   .btn--linha { background: transparent; color: var(--color-texto); }
   .btn--linha:hover { background: var(--color-texto); color: var(--color-base); }
   .btn--pequeno { padding: 0 16px; }
@@ -115,10 +157,95 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
   }
   .link:hover { text-decoration-color: currentColor; }
 
+  /* Frase de acento (Fraunces itálico): chamadas curtas, em grafia normal */
+  .acento { font-family: var(--font-acento); font-style: italic; font-weight: 400; text-transform: none; letter-spacing: 0; line-height: 1.3; }
+
+  /* Blocos da apresentação (aba "A casa"): sem linha entre eles, separados só pelo espaço; título grande à esquerda,
+     chamada em Fraunces itálico embaixo e o botão da seção à direita */
+  .bloco { padding-bottom: 96px; }
+  /* nome da seção centralizado: título em pincelada, frase de apoio e o botão da seção logo abaixo */
+  .bloco__cab { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; }
+  .bloco__titulos { display: grid; gap: 8px; justify-items: center; }
+  .bloco__titulos .pincel { justify-self: center; }
+  .bloco__sub { max-width: 40ch; color: var(--texto-suave); }
+  .bloco__sub.acento { font-size: clamp(18px, 1.6vw, 24px); color: var(--color-texto); max-width: 44ch; }
+
+  /* Pincelada: título em letra cursiva sobre uma pincelada de verdade, tirada do cardápio impresso
+     (public/pinceladas/, geradas por scripts/pinceladas.mjs). A cor vem de --pincel-fundo / --pincel-letra,
+     então inverte sozinha nos blocos .tema-invertido.
+     Cada pincelada tem 3 partes, camadas da mesma máscara: as pontas (esq/dir) mantêm a proporção, só o miolo
+     estica com o comprimento do título; assim um título curto ou longo tem as mesmas pontas desfiadas.
+     Medidas (pixels reais): a tinta das letras da Aliya Ramsey ocupa 0,69em de altura; o miolo cheio das
+     pinceladas vai de 15% a 75% da altura. Caixa de 1,5em (linha de 1em + padding .14em em cima e .36em embaixo,
+     porque o miolo fica acima do centro): sobram ~0,09em de folga em cima e embaixo da letra.
+     Nas laterais, a folga é a largura de cada ponta (--pincel-pe/--pincel-pd × altura) mais a sobra dos traços.
+     width: fit-content + justify-self: start: a pincelada tem o tamanho do texto e nunca estica com a coluna.
+     Trocou a fonte? Meça de novo (pixels, não as métricas da fonte). */
+  .pincel {
+    --pincel-h: 1.5em;
+    --pincel-esq: url("/pinceladas/pincelada-2-esq.webp");
+    --pincel-meio: url("/pinceladas/pincelada-2-meio.webp");
+    --pincel-dir: url("/pinceladas/pincelada-2-dir.webp");
+    --pincel-pe: .709; --pincel-pd: .426;
+    position: relative; isolation: isolate; display: inline-block;
+    width: fit-content; max-width: 100%; justify-self: start; align-self: start;
+    padding: .14em calc(var(--pincel-pd) * var(--pincel-h) + .15em) .36em calc(var(--pincel-pe) * var(--pincel-h) + .1em);
+    /* uma linha só: a pincelada é uma faixa; título longo vira duas pinceladas (ex.: .eventos__titulo) */
+    white-space: nowrap;
+    font-family: var(--font-script); font-weight: 400; font-style: normal; line-height: 1;
+    text-transform: none; letter-spacing: 0; color: var(--pincel-letra);
+  }
+  .pincel::before {
+    content: ''; position: absolute; inset: 0; z-index: -1; background: var(--pincel-fundo);
+    -webkit-mask-image: var(--pincel-esq), var(--pincel-meio), var(--pincel-dir);
+    mask-image: var(--pincel-esq), var(--pincel-meio), var(--pincel-dir);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    /* miolo: começa 1px antes do fim da ponta esquerda e termina 1px depois do começo da direita (sem emenda) */
+    -webkit-mask-size: auto 100%, calc(100% - (var(--pincel-pe) + var(--pincel-pd)) * var(--pincel-h) + 2px) 100%, auto 100%;
+    mask-size: auto 100%, calc(100% - (var(--pincel-pe) + var(--pincel-pd)) * var(--pincel-h) + 2px) 100%, auto 100%;
+    -webkit-mask-position: left top, calc(var(--pincel-pe) * var(--pincel-h) - 1px) top, right top;
+    mask-position: left top, calc(var(--pincel-pe) * var(--pincel-h) - 1px) top, right top;
+  }
+  /* As 4 pinceladas do cardápio (Sucos, Coquetéis, Doses Premium, Doses). Sem classe, usa a 2. */
+  .pincel--1 { --pincel-esq: url("/pinceladas/pincelada-1-esq.webp"); --pincel-meio: url("/pinceladas/pincelada-1-meio.webp"); --pincel-dir: url("/pinceladas/pincelada-1-dir.webp"); --pincel-pe: .612; --pincel-pd: .388; }
+  .pincel--2 { --pincel-esq: url("/pinceladas/pincelada-2-esq.webp"); --pincel-meio: url("/pinceladas/pincelada-2-meio.webp"); --pincel-dir: url("/pinceladas/pincelada-2-dir.webp"); --pincel-pe: .709; --pincel-pd: .426; }
+  .pincel--3 { --pincel-esq: url("/pinceladas/pincelada-3-esq.webp"); --pincel-meio: url("/pinceladas/pincelada-3-meio.webp"); --pincel-dir: url("/pinceladas/pincelada-3-dir.webp"); --pincel-pe: .703; --pincel-pd: .413; }
+  .pincel--4 { --pincel-esq: url("/pinceladas/pincelada-4-esq.webp"); --pincel-meio: url("/pinceladas/pincelada-4-meio.webp"); --pincel-dir: url("/pinceladas/pincelada-4-dir.webp"); --pincel-pe: .712; --pincel-pd: .413; }
+  .pincel a { color: inherit; }
+
+  /* Bloco azul: inverte as cores (fundo azul, texto e pincel amarelos, letra do pincel azul) */
+  .tema-invertido {
+    --color-base: var(--amarelo);
+    --color-texto: var(--azul);
+    --color-ousada: var(--azul);
+    --texto-suave: rgb(62 99 119 / .9);
+    --texto-linha: rgb(62 99 119 / .3);
+    --pincel-fundo: var(--azul);
+    --pincel-letra: var(--amarelo);
+    background: var(--amarelo); color: var(--azul);
+  }
+  /* Página do cardápio: o bege do cardápio impresso no lugar do amarelo (texto, pinceladas, destaques e os
+     blocos alternados). Redefinir --amarelo aqui faz o .tema-invertido de dentro usar o bege também. */
+  .paleta-bege {
+    --amarelo: var(--bege);
+    --color-texto: var(--bege);
+    --color-ousada: var(--bege);
+    --texto-suave: rgb(240 222 197 / .88);
+    --texto-linha: rgb(240 222 197 / .3);
+    --pincel-fundo: var(--bege);
+    color: var(--color-texto);
+  }
+  .paleta-bege .tema-invertido { --color-base: var(--bege); --pincel-letra: var(--bege); background: var(--bege); }
+
+  .tema-invertido ::selection { background: var(--azul); color: var(--amarelo); }
+  .tema-invertido :focus-visible { outline-color: var(--azul); }
+
   /* Título de seção */
   .secao__cab { padding: 48px var(--gutter) 24px; }
   /* em telas muito estreitas diminui o suficiente para a palavra mais longa ("Avaliações", com folga para a fonte de títulos) caber */
-  .secao__titulo { font-size: min(clamp(30px, 4.5vw, 72px), calc((100vw - 2 * var(--gutter)) / 10.6)); }
+  /* Aliya Ramsey é estreita e tem minúsculas pequenas: títulos maiores. O limite pela largura da tela garante que
+     o título mais longo ("Da cozinha e do bar", 7,0em medidos com a pincelada) caiba numa linha no celular. */
+  .secao__titulo { font-size: min(clamp(52px, 6.4vw, 104px), calc((100vw - 2 * var(--gutter)) / 7.4)); }
 
   /* Legenda padronizada do cardápio: nome / porção / preço, empilhados à esquerda */
   .legenda { display: grid; gap: 0; padding: 16px 16px 24px 0; font-size: 16px; line-height: 1.4; text-align: left; }
@@ -134,10 +261,10 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
   .seta-lateral {
     position: absolute; top: 50%; z-index: 2; margin-top: -32px;
     width: 64px; height: 64px; display: grid; place-items: center; padding: 0;
-    background: var(--color-ousada); color: var(--color-texto); border: 2px solid var(--color-ousada); cursor: pointer;
+    background: var(--color-ousada); color: var(--color-base); border: 2px solid var(--color-ousada); cursor: pointer;
     transition: background-color var(--transicao), color var(--transicao), border-color var(--transicao), opacity var(--transicao), visibility var(--transicao);
   }
-  .seta-lateral:hover { background: var(--color-texto); color: var(--color-base); border-color: var(--color-texto); }
+  .seta-lateral:hover { background: var(--color-base); color: var(--color-ousada); border-color: var(--color-ousada); }
   .seta-lateral:focus-visible { outline: 3px solid var(--color-texto); outline-offset: 2px; }
   .seta-lateral svg { width: 32px; height: 32px; }
   .seta-lateral--esq { left: var(--gutter); }
