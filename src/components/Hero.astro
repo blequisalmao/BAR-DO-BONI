@@ -2,14 +2,13 @@
 // Hero: abertura da aba "A casa". Texto à esquerda (frase, chamada, botões) e, à direita, as 6 fotos do
 // Instagram numa grade 3x2, como no perfil (fotos em fotos.ts → instagram). Cada foto leva ao perfil, ou a um
 // post se tiver `link`. Feito à mão, sem widget nem API: não carrega nada de terceiros.
+// Embaixo das fotos, a chamada "o que rola no Boni" (música, jogo e data especial) e o botão para o Instagram,
+// onde o bar divulga a programação.
 import { Icon } from 'astro-icon/components';
 import Foto from './Foto.astro';
 import { instagram } from '../data/fotos';
 import site from '../data/site.json';
 import { linkWhatsapp } from '../lib/links';
-
-// "@bardoboni" a partir do endereço do perfil
-const usuario = '@' + (site.instagram.replace(/\/+$/, '').split('/').pop() ?? 'bardoboni');
 ---
 <section class="hero" aria-labelledby="titulo-hero">
   <div class="hero__texto">
@@ -41,9 +40,12 @@ const usuario = '@' + (site.instagram.replace(/\/+$/, '').split('/').pop() ?? 'b
         </li>
       ))}
     </ul>
-    <a class="hero__perfil" href={site.instagram} target="_blank" rel="noopener">
-      <Icon name="lucide:instagram" aria-hidden="true" />Siga {usuario} no Instagram
-    </a>
+    <div class="hero__rola">
+      <p><span>Música, jogo e data especial:</span> <span>o que rola no Boni.</span></p>
+      <a class="btn btn--linha" href={site.instagram} target="_blank" rel="noopener">
+        <Icon name="lucide:instagram" aria-hidden="true" />Acompanhe no Instagram
+      </a>
+    </div>
   </div>
 </section>
 
@@ -73,16 +75,13 @@ const usuario = '@' + (site.instagram.replace(/\/+$/, '').split('/').pop() ?? 'b
   }
   .hero__foto { display: block; }
   .hero__foto:focus-visible { outline-offset: -3px; }
-  .hero__perfil {
-    justify-self: end; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px;
-    text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 6px;
-    transition: text-decoration-color var(--transicao);
-  }
-  .hero__perfil:hover { text-decoration-color: var(--color-ousada); }
-  .hero__perfil :global(svg) { width: 20px; height: 20px; flex: none; }
+  /* "o que rola no Boni": frase à esquerda e botão à direita; quebra em duas linhas se faltar espaço */
+  .hero__rola { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-top: 8px; }
+  .hero__rola p { margin: 0; font: 700 20px/1.3 var(--font-display); text-transform: none; letter-spacing: 0; }
+  .hero__rola p span { display: block; } /* "o que rola no Boni." sempre na segunda linha */
+  .hero__rola :global(svg) { width: 18px; height: 18px; flex: none; }
 
   @media (max-width: 899px) {
     .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; padding: 48px var(--gutter) 56px; min-height: 0; }
-    .hero__perfil { justify-self: start; }
   }
 </style>

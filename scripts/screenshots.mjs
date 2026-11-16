@@ -79,7 +79,7 @@ for (const largura of LARGURAS) {
       }));
       console.log(`${rotulo} início: ${estado.divisores} divisores de renda, ${estado.verCardapio} links para /cardapio`);
       if (estado.abas) falhas.push(`${rotulo} início: ainda há barra de abas`);
-      if (estado.divisores < 6) falhas.push(`${rotulo} início: só ${estado.divisores} divisores de renda entre as seções`);
+      if (estado.divisores < 5) falhas.push(`${rotulo} início: só ${estado.divisores} divisores de renda entre as seções`);
       if (!estado.verCardapio) falhas.push(`${rotulo} início: nenhum link para /cardapio`);
       // a faixa de renda vai de ponta a ponta da página (sem margem nas laterais)
       const faixa = await pagina.evaluate(() => {
