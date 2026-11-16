@@ -7,7 +7,7 @@ import { mkdir, readFile } from 'node:fs/promises';
 
 const site = JSON.parse(await readFile(new URL('../src/data/site.json', import.meta.url), 'utf8'));
 const endereco = process.argv[2] ?? site.url;
-const opcoes = { errorCorrectionLevel: 'H', margin: 2, color: { dark: '#3E6377FF', light: '#F3B416FF' } };
+const opcoes = { errorCorrectionLevel: 'H', margin: 2, color: { dark: '#01418BFF', light: '#F3B416FF' } };
 
 await mkdir('qrcode', { recursive: true });
 await QRCode.toFile('qrcode/qrcode-mesa.svg', endereco, { ...opcoes, type: 'svg' });

@@ -60,6 +60,7 @@ O script salva capturas em `capturas/` (todas as páginas em 390px e 1440px, mai
 | Cardápio completo (categorias, itens, descrições, preços) | `src/data/cardapio.json` |
 | Endereço, telefone, WhatsApp, e-mail, redes, horário, domínio | `src/data/site.json` |
 | Cores e fontes | `src/styles/global.css` (bloco `@theme`) |
+| Padrão de fundo (âncoras, barcos e ondas um pouco mais escuros que o fundo, no azul e no bege do cardápio; cores, tamanho e posição dos desenhos) | `scripts/padrao-fundo.mjs` (gera `public/padrao-fundo.png` e `padrao-fundo-bege.png`; rode `node scripts/padrao-fundo.mjs`), a partir de `imagens/ancora-boni.png`, `barco-boni.png` e `mar-boni.png` |
 
 **Fotos:** coloque o arquivo novo em `imagens/` e troque o nome em `fotos.ts` (na galeria, escolha a categoria: lagoa, pratos, copos ou gente). As fotos são otimizadas no build (AVIF e WebP, 300px e 600px). Não use as páginas do cardápio impresso (`cardapio_*.png`, `vinhos*.png`) como fotos: elas ficam fora do site de propósito.
 
@@ -85,11 +86,11 @@ O site nunca inventa avaliações. Elas aparecem na aba "A casa". Hoje o site us
 
 - Tudo em caixa alta via CSS; nos arquivos de dados o texto fica em grafia normal.
 - Títulos de seção e categorias do cardápio: **Aliya Ramsey** (`public/fonts/AliyaRamsey.ttf`) sobre uma **pincelada de verdade, recortada do cardápio impresso** (classe `.pincel`, com 4 variações; cada pincelada tem ponta esquerda, miolo e ponta direita, e só o miolo estica com o título). No fundo creme, pincel azul e letra creme; nos blocos `.tema-invertido`, o contrário. A pincelada tem o tamanho do texto, cobre as letras inteiras e **nunca quebra linha**: título longo vira duas pinceladas empilhadas (ver "Reserve seu evento conosco." em `Casa.astro`). Textos grandes (frase do hero, frase da história, links do menu e do rodapé) em **Bricolage Grotesque 800**;
-- Cores: só duas, azul `#3E6377` e amarelo `#F3B416` (contraste 3,5:1). Fundo azul com texto, pinceladas, CTAs e destaques (palavra marcada, sublinhados) em amarelo; cabeçalho, rodapé e as categorias alternadas do cardápio (`.tema-invertido`) ao contrário, amarelos com texto azul, e ali CTAs e destaques ficam azuis. Tokens fixos `--azul`/`--amarelo` e papéis `--color-base`/`--color-texto`/`--color-ousada` em `global.css`.
+- Cores: azul `#01418B` e amarelo `#F3B416` (contraste 5,3:1), mais o bege `#F0DEC5` como terciária. Fundo azul com texto, CTAs e destaques (palavra marcada, sublinhados) em amarelo; pinceladas e renda em bege. Cabeçalho amarelo com texto azul; rodapé e categorias alternadas do cardápio (`.tema-invertido`) bege com texto azul, e ali CTAs, destaques e pinceladas ficam azuis. Tokens fixos `--azul`/`--amarelo` e papéis `--color-base`/`--color-texto`/`--color-ousada` em `global.css`.
 - Espaçamentos em múltiplos de 8px, inclusive os 8px entre todas as fotos (variável `--junta`).
 - Animações: tela de carregamento com a logo (só na 1ª visita da sessão), entrada das fotos ao rolar (os textos ficam sempre visíveis), foto ampliada com o site desfocado atrás, pinceladas dos títulos e destaques pintados da esquerda para a direita quando entram na tela (no cardápio, todas as pinceladas de uma vez ao abrir). Tudo respeita `prefers-reduced-motion`.
 - Setas: um padrão só (quadrado amarelo, flecha azul, uma de cada lado), classe `.seta-lateral` em `global.css`.
-- Ornamento: a faixa de **renda de bilro** (`Renda.astro`), na cor do texto (nunca amarela), só como divisor entre as seções da home, na largura toda da página.
+- Ornamento: a faixa de **renda de bilro** (`Renda.astro`), em bege, só como divisor entre as seções da home, na largura toda da página.
 - Sem degradê, sem emoji, sem sombra, cantos retos. Exceção: as 3 fotos da história, lado a lado com a do meio na frente (cantos de cima arredondados e contorno azul deslocado para cima e para a esquerda, `.pilha` em `Casa.astro`). O hover só muda cor e sublinhado; nas fotos clicáveis (todas abrem ampliadas, e as do Instagram são links) aparece um véu azul suave e o cursor vira a mãozinha (`.moldura::after` em `global.css`).
 - Fotos nunca distorcem: ficam numa moldura com proporção fixa e são cortadas (`object-fit: cover`), exceto na foto ampliada, que mostra a foto inteira.
 

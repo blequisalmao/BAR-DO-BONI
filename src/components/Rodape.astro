@@ -1,7 +1,7 @@
 ---
 // Rodapé: links grandes em Bricolage Grotesque (à esquerda) e o essencial para visitar (à direita):
 // chamada, endereço, horário, telefone, WhatsApp, e-mail e redes. Embaixo, o ano e "voltar ao topo".
-// Cores invertidas (.tema-invertido): fundo amarelo e texto azul.
+// Cores invertidas (.tema-invertido): fundo bege e texto azul.
 import { Icon } from 'astro-icon/components';
 import site from '../data/site.json';
 import { linkWhatsapp } from '../lib/links';
@@ -67,7 +67,7 @@ const ano = new Date().getFullYear();
 </footer>
 
 <style>
-  /* cores do .tema-invertido (global.css): fundo amarelo, texto, sublinhados e destaques azuis */
+  /* cores do .tema-invertido (global.css): fundo bege, texto e destaques azuis */
   .rodape { padding: 48px var(--gutter) 32px; }
   .rodape__grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
   .rodape__links { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; }
@@ -80,7 +80,7 @@ const ano = new Date().getFullYear();
   .rodape__visita { display: grid; gap: 24px; }
   .rodape__chamada { font-size: clamp(22px, 2.2vw, 32px); max-width: 22ch; }
   .rodape__info { margin: 0; border-top: 2px solid var(--color-base); text-transform: none; letter-spacing: 0; }
-  .rodape__info > div { display: grid; gap: 8px; padding: 16px 0; border-bottom: 2px solid rgb(62 99 119 / .3); }
+  .rodape__info > div { display: grid; gap: 8px; padding: 16px 0; border-bottom: 2px solid rgb(1 65 139 / .3); }
   .rodape__info dt { display: flex; align-items: center; gap: 16px; font-weight: 600; }
   .rodape__info dt :global(svg) { width: 20px; height: 20px; flex: none; }
   .rodape__info dd { margin: 0 0 0 36px; }
@@ -92,7 +92,7 @@ const ano = new Date().getFullYear();
 
   .rodape__base {
     display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
-    margin-top: 48px; padding-top: 24px; border-top: 2px solid rgb(62 99 119 / .3);
+    margin-top: 48px; padding-top: 24px; border-top: 2px solid rgb(1 65 139 / .3);
     font-size: 14px; text-transform: none; letter-spacing: 0;
   }
   .rodape__base p { margin: 0; }
