@@ -12,8 +12,8 @@
 
 /* ==========================================================================
    Tokens: paleta (amarelo da logo + azul do cardápio impresso + creme de destaque) e fontes.
-   Duas cores só: azul #3E6377 e amarelo #F3B416 (contraste 3,5:1: bom para títulos e texto grande,
-   abaixo do recomendado (4,5:1) para texto pequeno).
+   Duas cores só: azul #01418B e amarelo #F3B416 (contraste 5,3:1, acima do mínimo recomendado
+   de 4,5:1 também para texto pequeno).
    Fundo azul com texto, pinceladas, CTAs e destaques (palavra marcada, sublinhados) em amarelo.
    O cabeçalho e os blocos .tema-invertido (categorias alternadas do cardápio, rodapé) são o contrário:
    fundo amarelo com texto azul, e ali os CTAs e destaques ficam azuis (senão sumiriam no amarelo).
@@ -24,7 +24,7 @@
    Espaçamento: todo padding, margin e gap é múltiplo de 8.
    ========================================================================== */
 @theme {
-  --color-base: #3E6377;
+  --color-base: #01418B;
   --color-texto: #F3B416;
   --color-ousada: #F3B416;
   /* Textos grandes (frase do hero, frase da história, links do rodapé e do menu): Bricolage Grotesque.
@@ -40,17 +40,17 @@
 :root {
   /* Cores fixas (não invertem nos blocos azuis); use --color-base / --color-texto no dia a dia */
   --amarelo: #F3B416;
-  --bege: #F0DEC5; /* creme dos títulos do cardápio impresso: usado só na página do cardápio (.paleta-bege) */
-  --azul: #3E6377;
+  --bege: #F0DEC5; /* cor terciária (creme do cardápio impresso): pinceladas, renda, rodapé e a página do cardápio */
+  --azul: #01418B;
   --gutter: 16px;
   --junta: 8px; /* espaço entre todas as fotos */
   --topo-altura: 72px;
   --texto-suave: rgb(243 180 22 / .88);
   --texto-linha: rgb(243 180 22 / .3);
-  --veu: rgb(62 99 119 / .5);
+  --veu: rgb(1 65 139 / .5);
   --transicao: 200ms ease;
-  /* Pincelada: no fundo amarelo, pincel azul com letra amarela; nos blocos azuis, o contrário */
-  --pincel-fundo: var(--amarelo);
+  /* Pincelada: bege em todo lugar (letra azul); nos blocos bege (.tema-invertido), pincel azul com letra bege */
+  --pincel-fundo: var(--bege);
   --pincel-letra: var(--azul);
 }
 @media (min-width: 640px) { :root { --gutter: 32px; } }
@@ -61,7 +61,8 @@
   /* --abas-altura: altura da barra de abas fixa da página inicial (medida em Abas.astro; 0 nas outras páginas) */
   html { scroll-behavior: smooth; scroll-padding-top: calc(var(--topo-altura) + var(--abas-altura, 0px)); }
   body {
-    background: var(--color-base);
+    /* padrão de âncoras, barcos e ondas em azul mais escuro (public/padrao-fundo.png, gerado por scripts/padrao-fundo.mjs) */
+    background: var(--color-base) url("/padrao-fundo.png") 0 0 / 320px 320px repeat;
     color: var(--color-texto);
     font-family: var(--font-corpo);
     font-size: 17px;
@@ -152,7 +153,7 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
   .moldura { position: relative; }
   .moldura::after {
     content: ''; position: absolute; inset: 0; pointer-events: none;
-    background: rgb(62 99 119 / .45); opacity: 0; transition: opacity var(--transicao);
+    background: rgb(1 65 139 / .45); opacity: 0; transition: opacity var(--transicao);
   }
   .moldura:has(.ver):hover::after, .moldura:has(.ver:focus-visible)::after,
   a:hover > .moldura::after, a:focus-visible > .moldura::after { opacity: 1; }
@@ -239,16 +240,17 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
   .pincel--4 { --pincel-esq: url("/pinceladas/pincelada-4-esq.webp"); --pincel-meio: url("/pinceladas/pincelada-4-meio.webp"); --pincel-dir: url("/pinceladas/pincelada-4-dir.webp"); --pincel-pe: .712; --pincel-pd: .413; }
   .pincel a { color: inherit; }
 
-  /* Bloco azul: inverte as cores (fundo azul, texto e pincel amarelos, letra do pincel azul) */
+  /* Bloco bege (rodapé e categorias alternadas do cardápio): fundo bege, texto, CTAs e destaques azuis,
+     pincel azul com letra bege */
   .tema-invertido {
-    --color-base: var(--amarelo);
+    --color-base: var(--bege);
     --color-texto: var(--azul);
     --color-ousada: var(--azul);
-    --texto-suave: rgb(62 99 119 / .9);
-    --texto-linha: rgb(62 99 119 / .3);
+    --texto-suave: rgb(1 65 139 / .9);
+    --texto-linha: rgb(1 65 139 / .3);
     --pincel-fundo: var(--azul);
-    --pincel-letra: var(--amarelo);
-    background: var(--amarelo); color: var(--azul);
+    --pincel-letra: var(--bege);
+    background: var(--bege); color: var(--azul);
   }
   /* Página do cardápio: o bege do cardápio impresso no lugar do amarelo (texto, pinceladas, destaques e os
      blocos alternados). Redefinir --amarelo aqui faz o .tema-invertido de dentro usar o bege também. */
@@ -261,7 +263,6 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
     --pincel-fundo: var(--bege);
     color: var(--color-texto);
   }
-  .paleta-bege .tema-invertido { --color-base: var(--bege); --pincel-letra: var(--bege); background: var(--bege); }
 
   .tema-invertido ::selection { background: var(--azul); color: var(--amarelo); }
   .tema-invertido :focus-visible { outline-color: var(--azul); }

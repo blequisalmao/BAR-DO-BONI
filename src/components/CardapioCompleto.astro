@@ -35,9 +35,12 @@ const categorias = cardapio.categorias as Categoria[];
 </section>
 
 <style>
-  /* Categorias alternam fundo amarelo (.tema-invertido, pincel azul) e azul (pincel amarelo), sem linhas entre elas */
+  /* Categorias alternam fundo bege (.tema-invertido, pincel azul) e azul (pincel bege), sem linhas entre elas */
   .cardapio { padding-bottom: 0; }
   details { background: var(--color-base); color: var(--color-texto); }
+  /* o mesmo padrão de fundo do site (âncoras, barcos e ondas): azul nas categorias azuis, bege nas bege */
+  details:not(.tema-invertido) { background: var(--color-base) url("/padrao-fundo.png") 0 0 / 320px 320px repeat; }
+  details.tema-invertido { background: var(--color-base) url("/padrao-fundo-bege.png") 0 0 / 320px 320px repeat; }
   summary {
     list-style: none; cursor: pointer;
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
