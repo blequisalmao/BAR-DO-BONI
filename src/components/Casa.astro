@@ -1,21 +1,19 @@
 ---
 // Aba "A casa": página de apresentação do Bar do Boni.
-// 0) Hero: frase, botões e faixa de fotos em carrossel (Hero.astro)
+// 0) Hero: frase, botões e as 6 fotos do Instagram em grade 3x2 (Hero.astro, fotos em fotos.ts → instagram)
 // 1) História (texto do próprio cardápio, "Nossa história") com a arte "Venha conhecer o Bar do Boni"
 // 2) O lugar: mosaico de 8 fotos do espaço (fotos.ts → espaco), cada uma abre ampliada, e botão para a galeria
 // 3) Da cozinha e do bar: destaques com nome, porção e preço (fotos.ts → destaques) e botão para a aba Cardápio
 // 4) Agenda (Agenda.astro, dados em agenda.json)
 // 5) Avaliações reais do Google (Avaliacoes.astro)
-// 6) Instagram (Instagram.astro, fotos em fotos.ts → instagram)
 // Entre uma seção e outra: a faixa de renda de bilro (.divisor), o único lugar onde o ornamento aparece.
-// 7) Eventos e visita: "Reserve seu evento conosco", endereço, horário, WhatsApp e mapa
+// 6) Eventos e visita: "Reserve seu evento conosco", endereço, horário, WhatsApp e mapa
 import { Icon } from 'astro-icon/components';
 import Foto from './Foto.astro';
 import Legenda from './Legenda.astro';
 import Hero from './Hero.astro';
 import Agenda from './Agenda.astro';
 import Avaliacoes from './Avaliacoes.astro';
-import Instagram from './Instagram.astro';
 import Renda from './Renda.astro';
 import { historia, espaco, destaques } from '../data/fotos';
 import site from '../data/site.json';
@@ -78,7 +76,7 @@ const e = site.endereco;
   <div class="secao__cab bloco__cab">
     <div class="bloco__titulos">
       <h2 class="secao__titulo pincel pincel--3" id="titulo-destaques">Da cozinha e do bar</h2>
-      <p class="bloco__sub acento">Porção pra dividir, fruto do mar e caipira gelada.</p>
+      <p class="bloco__sub acento">Tudo que você encontra em nosso menu.</p>
     </div>
     <a class="btn btn--ousada" href="/cardapio">
       <Icon name="lucide:utensils" aria-hidden="true" />Ver cardápio
@@ -103,10 +101,6 @@ const e = site.endereco;
 <div class="divisor" aria-hidden="true"><Renda /></div>
 
 <Avaliacoes />
-
-<div class="divisor" aria-hidden="true"><Renda /></div>
-
-<Instagram />
 
 <div class="divisor" aria-hidden="true"><Renda /></div>
 
@@ -155,7 +149,7 @@ const e = site.endereco;
   .lugar__sub { max-width: none; }
   .lugar__sub span { display: block; }
   @media (min-width: 640px) { .lugar__sub span { white-space: nowrap; } }
-  .casa__frase mark { background: var(--color-ousada); color: var(--color-base); padding: 0 8px .16em; /* desce para cobrir as caudas (g, ç) */ margin-left: -8px; white-space: nowrap;
+  .casa__frase mark { /* cor e animação da faixa: global.css (mark) */ padding: 0 8px .16em; /* desce para cobrir as caudas (g, ç) */ margin-left: -8px; white-space: nowrap;
     /* o fundo amarelo fica só na altura da linha, sem invadir a linha de cima */
     display: inline-block; line-height: 1; }
   .casa__historia { display: grid; gap: 16px; max-width: 56ch; font-size: 18px; }

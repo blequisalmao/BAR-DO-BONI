@@ -105,7 +105,9 @@ const jsonLd = {
     <script>
       // Animação de entrada dos blocos ao rolar (src/lib/revelar.ts)
       import { iniciarRevelar } from '../lib/revelar';
+      import { iniciarDestaques } from '../lib/destaques';
       iniciarRevelar();
+      iniciarDestaques();
 
       // Vindo de outra página com âncora (ex.: /#agenda, /#avaliacoes): o script do <head> tirou o "#" do endereço
       // e guardou em data-ancora; aqui rola até a seção (de novo quando a tela de carregamento sai)

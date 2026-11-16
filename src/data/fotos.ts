@@ -90,18 +90,6 @@ const daGaleria = (arquivo: string): Foto => {
   return f;
 };
 
-/** Hero (abertura da aba "A casa"): faixa de fotos em carrossel. A primeira aparece já ao abrir. */
-export const hero: Foto[] = [
-  'sunset_bar_do_boni.png',
-  'caipirinha_foto_drink.jpg',
-  'vista_da_lagoa_para_o_bar.png',
-  'camarao_a_milanesa.png',
-  'celebrando_com_cerveja.png',
-  'deck_externo.jpg',
-  'clientes.png',
-  'foto_drink2.jpg',
-].map(daGaleria);
-
 /** "O lugar": mosaico de 8 fotos. Posições 1, 4, 5 e 8 são as altas (ocupam 2 linhas no desktop):
  *  coloque ali as fotos verticais; nas outras, as que aguentam corte (as horizontais ficam ótimas). */
 export const espaco: Foto[] = [
@@ -115,7 +103,7 @@ export const espaco: Foto[] = [
   'deck_externo.jpg', // alta
 ].map(daGaleria);
 
-/** Instagram: 6 fotos quadradas. Sem `link`, a foto leva ao perfil (site.json → instagram).
+/** Instagram: 6 fotos quadradas, em grade 3x2 no hero. Sem `link`, a foto leva ao perfil (site.json → instagram).
  *  Para apontar para um post, use { ...daGaleria('arquivo'), link: 'https://www.instagram.com/p/...' }. */
 export const instagram: (Foto & { link?: string })[] = [
   'clientes23.png',

@@ -88,6 +88,30 @@
 }
 .pular:focus { transform: none; }
 
+/* Destaque (<mark>: "ao vivo", "Lagoa da Conceição", "O resto"): faixa amarela atrás do texto azul.
+   Ao entrar na tela (src/lib/destaques.ts), a faixa passa da esquerda para a direita como um marca-texto e vai
+   revelando o texto (azul sobre o fundo azul fica invisível até a faixa chegar). Vários destaques na mesma frase
+   entram em sequência. Sem JS ou com movimento reduzido (sem html.js-revelar), o destaque já aparece pronto.
+   Feito só com background-size: funciona em qualquer navegador. */
+mark {
+  color: var(--color-base);
+  background: linear-gradient(var(--color-ousada), var(--color-ousada)) no-repeat 0 0 / 100% 100%;
+  background-color: transparent; /* sem o amarelo padrão do navegador para <mark> */
+}
+html.js-revelar mark {
+  background-size: 0% 100%;
+  transition: background-size 750ms cubic-bezier(.65, 0, .35, 1) var(--atraso-marca, 0ms);
+}
+html.js-revelar mark.marcado { background-size: 100% 100%; }
+
+/* Pincelada animada: a tinta é pintada da esquerda para a direita quando o título entra na tela (uma vez só) e vai
+   revelando o título, que tem a cor do fundo da seção e só aparece onde já tem tinta. Mesmo gatilho dos destaques. */
+html.js-revelar .pincel::before {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 900ms cubic-bezier(.65, 0, .35, 1) var(--atraso-marca, 0ms);
+}
+html.js-revelar .pincel.marcado::before { clip-path: inset(0 0 0 0); }
+
 /* Animação de entrada (src/lib/revelar.ts). Sem JS ou com movimento reduzido, nada fica escondido. */
 html.js-revelar .revelar {
   opacity: 0; transform: translateY(32px);

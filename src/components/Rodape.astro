@@ -75,10 +75,7 @@ const ano = new Date().getFullYear();
   .rodape__link {
     display: inline-block; padding: 8px 0;
     font-size: clamp(24px, 2.8vw, 40px); line-height: 1; white-space: nowrap;
-    text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 4px; text-underline-offset: 8px;
-    transition: text-decoration-color var(--transicao);
   }
-  .rodape__link:hover, .rodape__link[aria-current="page"] { text-decoration-color: var(--color-ousada); }
 
   .rodape__visita { display: grid; gap: 24px; }
   .rodape__chamada { font-size: clamp(22px, 2.2vw, 32px); max-width: 22ch; }
@@ -89,8 +86,9 @@ const ano = new Date().getFullYear();
   .rodape__info dd { margin: 0 0 0 36px; }
   .rodape__contatos { display: flex; flex-wrap: wrap; gap: 8px 24px; }
   .rodape__email { overflow-wrap: anywhere; }
-  /* no fundo azul, o sublinhado amarelo continua; o hover vai para a cor base */
-  .rodape .link:hover { text-decoration-color: var(--color-texto); }
+  /* links do rodapé sem sublinhado; no hover (e na página atual, no menu) ficam mais claros */
+  .rodape a { text-decoration: none; transition: opacity var(--transicao); }
+  .rodape a:hover, .rodape__link[aria-current="page"] { opacity: .65; }
 
   .rodape__base {
     display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
