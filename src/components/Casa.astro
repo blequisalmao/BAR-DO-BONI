@@ -50,7 +50,7 @@ const e = site.endereco;
 <section class="bloco espaco" id="o-lugar" aria-labelledby="titulo-lugar">
   <div class="secao__cab bloco__cab">
     <div class="bloco__titulos">
-      <h2 class="secao__titulo pincel pincel--1" id="titulo-lugar">O lugar</h2>
+      <h2 class="secao__titulo pincel pincel--1" id="titulo-lugar">Nossa casa</h2>
       <p class="bloco__sub acento lugar__sub">
         <span>Deck de madeira, barco atracado e o pôr do sol na frente.</span>
         <span>Escolhe a mesa e vem!</span>
@@ -74,7 +74,7 @@ const e = site.endereco;
 <section class="bloco destaques" id="destaques" aria-labelledby="titulo-destaques">
   <div class="secao__cab bloco__cab">
     <div class="bloco__titulos">
-      <h2 class="secao__titulo pincel pincel--3" id="titulo-destaques">O menu</h2>
+      <h2 class="secao__titulo pincel pincel--3 destaques__titulo" id="titulo-destaques">Delícias da casa</h2>
       <p class="bloco__sub acento">Tudo que você encontra em nosso menu.</p>
     </div>
     <a class="btn btn--ousada" href="/cardapio">
@@ -112,7 +112,7 @@ const e = site.endereco;
       </a>
     </div>
   </div>
-  <dl class="eventos__info">
+  <dl class="eventos__info infos">
     <div>
       <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
       <dd>{e.rua}. {e.bairro}, {e.cidade}/{e.uf}</dd>
@@ -223,6 +223,8 @@ const e = site.endereco;
   .espaco__grade > li:nth-child(6) { grid-area: 3 / 3 / 4 / 4; }
   .espaco__grade > li:nth-child(7) { grid-area: 1 / 4 / 2 / 5; }
   .espaco__grade > li:nth-child(8) { grid-area: 2 / 4 / span 2 / 5; }
+  /* "Delícias da casa" com a pincelada mede 5,6em: no celular a letra diminui para caber entre as margens */
+  .destaques__titulo { font-size: min(clamp(68px, 6.4vw, 104px), calc((100vw - 2 * var(--gutter)) / 5.8)); }
   /* Destaques: 6 itens (6 colunas no desktop, 3 no tablet, 2 no celular), legenda embaixo de cada foto */
   .destaques__grade { grid-template-columns: repeat(6, minmax(0, 1fr)); padding: 0 var(--gutter); gap: 24px; }
   @media (max-width: 1023px) { .destaques__grade { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -248,11 +250,7 @@ const e = site.endereco;
   .eventos__texto { max-width: 46ch; text-transform: none; letter-spacing: 0; font-size: 18px; }
   .eventos__acoes { display: flex; flex-wrap: wrap; gap: 16px; }
   /* endereço, horário e telefone em grafia normal (sem caixa alta) */
-  .eventos__info { margin: 0; border-top: 2px solid var(--color-texto); text-transform: none; letter-spacing: 0; }
-  .eventos__info > div { display: grid; gap: 8px; padding: 24px 0; border-bottom: 2px solid var(--texto-linha); }
-  .eventos__info dt { display: flex; align-items: center; gap: 16px; font-weight: 600; }
-  .eventos__info dt :global(svg) { width: 24px; height: 24px; flex: none; }
-  .eventos__info dd { margin: 0 0 0 40px; }
+  /* informações: estilo .infos em global.css (sem linhas, ícone no círculo) */
   .btn :global(svg) { width: 18px; height: 18px; flex: none; }
   @media (max-width: 767px) { .eventos { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 48px; } }
   @media (max-width: 639px) { .eventos { padding-top: 16px; } } /* pincelada perto da renda, como nas outras seções */

@@ -31,7 +31,7 @@ const ano = new Date().getFullYear();
 
     <div class="rodape__visita">
       <p class="rodape__chamada acento"><span>Tá combinado então?</span> <span>A gente te espera no final da Av. das Rendeiras.</span></p>
-      <dl class="rodape__info">
+      <dl class="rodape__info infos">
         <div>
           <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
           <dd><a class="link" href={site.mapa} target="_blank" rel="noopener">{e.rua}. {e.bairro}, {e.cidade}/{e.uf}</a></dd>
@@ -48,14 +48,11 @@ const ano = new Date().getFullYear();
             <a class="link rodape__email" href={`mailto:${site.email}`}>{site.email}</a>
           </dd>
         </div>
-        <div>
-          <dt><Icon name="lucide:at-sign" aria-hidden="true" /><span>Redes</span></dt>
-          <dd class="rodape__contatos">
-            <a class="link" href={site.instagram} target="_blank" rel="noopener">Instagram</a>
-            <a class="link" href={site.facebook} target="_blank" rel="noopener">Facebook</a>
-          </dd>
-        </div>
       </dl>
+      <ul class="rodape__redes" aria-label="Redes sociais">
+        <li><a href={site.instagram} target="_blank" rel="noopener" aria-label="Instagram do Bar do Boni"><Icon name="lucide:instagram" aria-hidden="true" /></a></li>
+        <li><a href={site.facebook} target="_blank" rel="noopener" aria-label="Facebook do Bar do Boni"><Icon name="lucide:facebook" aria-hidden="true" /></a></li>
+      </ul>
     </div>
   </div>
 
@@ -82,20 +79,19 @@ const ano = new Date().getFullYear();
   .rodape__visita { container-type: inline-size; }
   .rodape__chamada { font-size: min(clamp(22px, 2.2vw, 32px), 100cqi / 21); }
   .rodape__chamada span { display: block; white-space: nowrap; }
-  .rodape__info { margin: 0; border-top: 2px solid var(--color-base); text-transform: none; letter-spacing: 0; }
-  .rodape__info > div { display: grid; gap: 8px; padding: 16px 0; border-bottom: 2px solid rgb(1 65 139 / .3); }
-  .rodape__info dt { display: flex; align-items: center; gap: 16px; font-weight: 600; }
-  .rodape__info dt :global(svg) { width: 20px; height: 20px; flex: none; }
-  .rodape__info dd { margin: 0 0 0 36px; }
-  .rodape__contatos { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  /* informações: estilo .infos em global.css (sem linhas, ícone no círculo) */
   .rodape__email { overflow-wrap: anywhere; }
+  /* redes: só os ícones, lado a lado */
+  .rodape__redes { display: flex; gap: 16px; list-style: none; margin: 0; padding: 0; }
+  .rodape__redes a { display: grid; place-items: center; width: 40px; height: 40px; margin-left: -8px; }
+  .rodape__redes :global(svg) { width: 26px; height: 26px; }
   /* links do rodapé sem sublinhado; no hover (e na página atual, no menu) ficam mais claros */
   .rodape a { text-decoration: none; transition: opacity var(--transicao); }
   .rodape a:hover, .rodape__link[aria-current="page"] { opacity: .65; }
 
   .rodape__base {
     display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
-    margin-top: 48px; padding-top: 24px; border-top: 2px solid rgb(1 65 139 / .3);
+    margin-top: 64px; /* separado só pelo espaço, sem linha */
     font-size: 14px; text-transform: none; letter-spacing: 0;
   }
   .rodape__base p { margin: 0; }

@@ -58,18 +58,28 @@ const linkAvaliar = placeId ? `https://search.google.com/local/writereview?place
   </div>
 
   {lista.length > 0 && (
-    <ul class="avaliacoes__lista">
-      {lista.map((a) => (
-        <li>
-          <Estrelas nota={a.nota} />
-          <blockquote class="avaliacoes__texto">{a.texto}</blockquote>
-          <p class="avaliacoes__autor">
-            {a.link ? <a class="link" href={a.link} target="_blank" rel="noopener">{a.autor}</a> : a.autor}
-            {a.quando && <span>, {a.quando}</span>}
-          </p>
-        </li>
-      ))}
-    </ul>
+    <div class="carrossel" data-carrossel>
+      <button class="seta-lateral seta-lateral--esq carrossel__seta" type="button" data-anterior aria-label="Avaliações anteriores" aria-controls="avaliacoes-trilho">
+        <Icon name="lucide:arrow-left" aria-hidden="true" />
+      </button>
+      <ul class="carrossel__trilho" id="avaliacoes-trilho" data-trilho aria-label="Avaliações de clientes no Google" tabindex="0">
+        {lista.map((a, i) => (
+          <li class="carrossel__cartao tema-invertido" aria-label={`Avaliação ${i + 1} de ${lista.length}`}>
+            <Estrelas nota={a.nota} />
+            <blockquote class="avaliacoes__texto" id={`avaliacao-${i}`} data-texto>{a.texto}</blockquote>
+            <button class="avaliacoes__mais" type="button" aria-expanded="false" aria-controls={`avaliacao-${i}`} data-mais hidden>Ler mais</button>
+            <p class="avaliacoes__autor">
+              {a.link ? <a class="link" href={a.link} target="_blank" rel="noopener">{a.autor}</a> : a.autor}
+              {a.quando && <span>{a.quando}</span>}
+            </p>
+          </li>
+        ))}
+      </ul>
+      <button class="seta-lateral seta-lateral--dir carrossel__seta" type="button" data-proxima aria-label="Próximas avaliações" aria-controls="avaliacoes-trilho">
+        <Icon name="lucide:arrow-right" aria-hidden="true" />
+      </button>
+      <div class="carrossel__pontos" data-pontos aria-hidden="true"></div>
+    </div>
   )}
 
   <div class="avaliacoes__acoes">
@@ -89,15 +99,100 @@ const linkAvaliar = placeId ? `https://search.google.com/local/writereview?place
   .avaliacoes__nota > span:last-child { display: grid; gap: 8px; }
   .avaliacoes__total { font-size: 16px; color: var(--texto-suave); }
 
-  .avaliacoes__lista {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 32px;
-    list-style: none; margin: 0; padding: 0 var(--gutter);
+  /* Carrossel: 3 cartões por vez no desktop, 2 no tablet e 1 (com a ponta do próximo aparecendo) no celular.
+     Rola de lado com encaixe (scroll-snap): arrasta com o dedo, e as setas amarelas (.seta-lateral, global.css)
+     andam uma "página". Bolinhas embaixo mostram a página atual. Se todos cabem, setas e bolinhas somem. */
+  .carrossel { position: relative; padding: 0 calc(var(--gutter) + 80px); }
+  .carrossel__trilho {
+    --por-vez: 3; --vao: 24px;
+    display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - (var(--por-vez) - 1) * var(--vao)) / var(--por-vez));
+    gap: var(--vao); list-style: none; margin: 0; padding: 0;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+    scrollbar-width: none;
   }
-  .avaliacoes__lista li { display: grid; align-content: start; gap: 16px; padding-top: 24px; border-top: 2px solid var(--color-texto); }
+  .carrossel__trilho::-webkit-scrollbar { display: none; }
+  .carrossel__trilho:focus-visible { outline-offset: 4px; }
+  /* cartão limpo: bege com texto e estrelas azuis (.tema-invertido), cantos de 4px, sem linhas */
+  .carrossel__cartao {
+    scroll-snap-align: start; display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+    padding: 32px; border-radius: var(--canto);
+  }
+  .carrossel__seta { top: 50%; }
+  .carrossel__seta[hidden] { display: none; }
+  .carrossel__pontos { display: flex; justify-content: center; gap: 8px; padding-top: 24px; }
+  .carrossel__pontos:empty { display: none; }
+  /* as bolinhas são criadas pelo script, por isso :global (não recebem o escopo do Astro) */
+  .carrossel__pontos :global(span) { width: 10px; height: 10px; border-radius: 50%; background: var(--texto-linha); transition: background-color var(--transicao); }
+  .carrossel__pontos :global(span.ativo) { background: var(--color-ousada); }
+  @media (max-width: 1023px) { .carrossel__trilho { --por-vez: 2; } }
+  /* celular: sem setas (arrasta com o dedo), cartão quase da largura toda com a ponta do próximo aparecendo */
+  @media (max-width: 639px) {
+    .carrossel { padding: 0 var(--gutter); }
+    .carrossel__trilho { grid-auto-columns: 86%; --vao: 16px; }
+    .carrossel__cartao { padding: 24px; }
+    .carrossel__seta { display: none; }
+  }
   /* texto da avaliação em grafia normal: é a fala do cliente */
-  .avaliacoes__texto { margin: 0; text-transform: none; letter-spacing: 0; font-size: 17px; line-height: 1.55; }
-  .avaliacoes__autor { font-size: 16px; font-weight: 600; }
-  .avaliacoes__autor span { font-weight: 400; color: var(--texto-suave); }
+  /* textos longos mostram 7 linhas e o botão "Ler mais" abre o resto */
+  .avaliacoes__texto {
+    margin: 0; text-transform: none; letter-spacing: 0; font-size: 17px; line-height: 1.55;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 7; line-clamp: 7; overflow: hidden;
+  }
+  .avaliacoes__texto.aberto { display: block; -webkit-line-clamp: unset; line-clamp: none; }
+  .avaliacoes__mais {
+    padding: 0; border: 0; background: none; color: inherit; cursor: pointer;
+    font: 600 15px/1.4 var(--font-corpo); text-decoration: underline; text-underline-offset: 4px;
+  }
+  .avaliacoes__mais[hidden] { display: none; }
+  /* nome e data sempre no pé do cartão */
+  .avaliacoes__autor { margin-top: auto; }
+  .avaliacoes__autor { display: grid; gap: 2px; font-size: 16px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+  .avaliacoes__autor span { font-weight: 400; font-size: 14px; color: var(--texto-suave); }
 
-  .avaliacoes__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; padding: 48px var(--gutter) 0; }
+  .avaliacoes__acoes { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px 24px; padding: 48px var(--gutter) 0; }
 </style>
+
+<script>
+  // Carrossel das avaliações: setas andam uma página (os cartões visíveis), bolinhas acompanham a rolagem.
+  // Sem JS, o trilho continua rolando de lado com o dedo, o mouse ou o teclado.
+  document.querySelectorAll<HTMLElement>('[data-carrossel]').forEach((c) => {
+    const trilho = c.querySelector<HTMLElement>('[data-trilho]')!;
+    const ant = c.querySelector<HTMLButtonElement>('[data-anterior]')!;
+    const prox = c.querySelector<HTMLButtonElement>('[data-proxima]')!;
+    const pontos = c.querySelector<HTMLElement>('[data-pontos]')!;
+
+    const paginas = () => Math.max(1, Math.round(trilho.scrollWidth / trilho.clientWidth));
+    const atual = () => Math.round(trilho.scrollLeft / trilho.clientWidth);
+
+    const atualizar = () => {
+      const total = paginas();
+      const fim = trilho.scrollLeft + trilho.clientWidth >= trilho.scrollWidth - 2;
+      ant.hidden = total <= 1 || trilho.scrollLeft <= 2;
+      prox.hidden = total <= 1 || fim;
+      if (pontos.childElementCount !== (total > 1 ? total : 0)) {
+        pontos.replaceChildren(...(total > 1 ? Array.from({ length: total }, () => document.createElement('span')) : []));
+      }
+      const pag = fim ? total - 1 : atual();
+      [...pontos.children].forEach((p, i) => p.classList.toggle('ativo', i === pag));
+    };
+
+    // uma página = largura visível + o vão entre cartões, para parar sempre no começo de um cartão
+    const passo = () => trilho.clientWidth + parseFloat(getComputedStyle(trilho).columnGap || '0');
+    ant.addEventListener('click', () => trilho.scrollBy({ left: -passo() }));
+    prox.addEventListener('click', () => trilho.scrollBy({ left: passo() }));
+
+    // "Ler mais": só aparece quando o texto passa das 7 linhas
+    c.querySelectorAll<HTMLElement>('[data-texto]').forEach((texto) => {
+      const botao = texto.nextElementSibling as HTMLButtonElement;
+      botao.hidden = texto.scrollHeight <= texto.clientHeight + 2;
+      botao.addEventListener('click', () => {
+        const aberto = texto.classList.toggle('aberto');
+        botao.setAttribute('aria-expanded', String(aberto));
+        botao.textContent = aberto ? 'Ler menos' : 'Ler mais';
+      });
+    });
+    trilho.addEventListener('scroll', atualizar, { passive: true });
+    addEventListener('resize', atualizar);
+    atualizar();
+  });
+</script>
