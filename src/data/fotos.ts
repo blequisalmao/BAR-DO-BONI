@@ -121,7 +121,7 @@ export const historia: Foto[] = [
   daGaleria('entrada.jpg'),      // meio, na frente
 ];
 
-/** "Da cozinha e do bar": destaques com nome, porção e preço (6: 4 pratos e 2 drinks). */
+/** "O menu": destaques com nome, porção e preço (6: 4 pratos e 2 drinks). */
 export const destaques: Foto[] = [
   'camarao_a_milanesa.png',
   'pastel_de_camarao.png',

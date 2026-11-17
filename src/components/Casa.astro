@@ -3,7 +3,7 @@
 // 0) Hero: frase, botões e as 6 fotos do Instagram em grade 3x2 (Hero.astro, fotos em fotos.ts → instagram)
 // 1) História (texto do próprio cardápio, "Nossa história") com a arte "Venha conhecer o Bar do Boni"
 // 2) O lugar: mosaico de 8 fotos do espaço (fotos.ts → espaco), cada uma abre ampliada, e botão para a galeria
-// 3) Da cozinha e do bar: destaques com nome, porção e preço (fotos.ts → destaques) e botão para a aba Cardápio
+// 3) O menu: destaques com nome, porção e preço (fotos.ts → destaques) e botão para a aba Cardápio
 // 4) Avaliações reais do Google (Avaliacoes.astro)
 // Entre uma seção e outra: a faixa de renda de bilro (.divisor), o único lugar onde o ornamento aparece.
 // 6) Eventos e visita: "Reserve seu evento conosco", endereço, horário, WhatsApp e mapa
@@ -73,7 +73,7 @@ const e = site.endereco;
 <section class="bloco destaques" id="destaques" aria-labelledby="titulo-destaques">
   <div class="secao__cab bloco__cab">
     <div class="bloco__titulos">
-      <h2 class="secao__titulo pincel pincel--3" id="titulo-destaques">Da cozinha e do bar</h2>
+      <h2 class="secao__titulo pincel pincel--3" id="titulo-destaques">O menu</h2>
       <p class="bloco__sub acento">Tudo que você encontra em nosso menu.</p>
     </div>
     <a class="btn btn--ousada" href="/cardapio">
@@ -172,7 +172,7 @@ const e = site.endereco;
   /* tablet: a imagem fica com ~1/3 da largura, para a frase respirar */
   @media (max-width: 1023px) { .casa { gap: 32px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   @media (max-width: 719px) {
-    .casa { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 32px 64px; }
+    .casa { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 16px 64px; }
     /* no celular a imagem vem logo depois do título "Nossa história" */
     .casa__texto { display: contents; }
     .casa__titulo { margin-bottom: 0; }
@@ -243,4 +243,5 @@ const e = site.endereco;
   .eventos__info dd { margin: 0 0 0 40px; }
   .btn :global(svg) { width: 18px; height: 18px; flex: none; }
   @media (max-width: 767px) { .eventos { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 48px; } }
+  @media (max-width: 639px) { .eventos { padding-top: 16px; } } /* pincelada perto da renda, como nas outras seções */
 </style>

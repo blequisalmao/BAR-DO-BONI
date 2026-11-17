@@ -269,10 +269,11 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
 
   /* Título de seção */
   .secao__cab { padding: 48px var(--gutter) 24px; }
-  /* em telas muito estreitas diminui o suficiente para a palavra mais longa ("Avaliações", com folga para a fonte de títulos) caber */
+  /* no celular, a pincelada fica mais perto da renda de bilro que separa as seções */
+  @media (max-width: 639px) { .secao__cab { padding-top: 16px; } }
   /* Aliya Ramsey é estreita e tem minúsculas pequenas: títulos maiores. O limite pela largura da tela garante que
-     o título mais longo ("Da cozinha e do bar", 7,0em medidos com a pincelada) caiba numa linha no celular. */
-  .secao__titulo { font-size: min(clamp(52px, 6.4vw, 104px), calc((100vw - 2 * var(--gutter)) / 7.4)); }
+     o título mais longo ("Nossa história", 4,7em medidos com a pincelada) caiba numa linha no celular. */
+  .secao__titulo { font-size: min(clamp(68px, 6.4vw, 104px), calc((100vw - 2 * var(--gutter)) / 5)); }
 
   /* Legenda padronizada do cardápio: nome / porção / preço, empilhados à esquerda */
   .legenda { display: grid; gap: 0; padding: 16px 16px 24px 0; font-size: 16px; line-height: 1.4; text-align: left; }
