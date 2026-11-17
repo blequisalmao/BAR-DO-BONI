@@ -30,14 +30,14 @@ import { Icon } from 'astro-icon/components';
   .ver-foto__palco { height: 100%; display: grid; place-items: center; padding: 72px 104px; overflow: auto; }
   .ver-foto__figura { margin: 0; display: grid; gap: 16px; justify-items: start; max-width: 600px; }
   /* Foto inteira, nunca maior que o arquivo (600px), sempre na proporção natural */
-  .ver-foto__figura img { display: block; width: auto; height: auto; max-width: min(600px, 100%); max-height: calc(100svh - 240px); }
+  .ver-foto__figura img { display: block; width: auto; height: auto; max-width: min(600px, 100%); max-height: calc(100svh - 240px); border-radius: var(--canto); }
   .ver-foto__legenda { display: grid; gap: 0; font-size: 16px; line-height: 1.4; max-width: 48ch; }
   .ver-foto__legenda :global(.legenda__nome), .ver-foto__legenda :global(.legenda__preco) { font-weight: 600; }
   .ver-foto__legenda :global(.legenda__porcao) { color: rgb(243 180 22 / .85); }
   .ver-foto__fechar {
     position: absolute; top: 16px; right: var(--gutter); z-index: 3;
     width: 48px; height: 48px; display: grid; place-items: center; padding: 0;
-    background: transparent; color: var(--amarelo); border: 2px solid var(--amarelo); cursor: pointer;
+    background: transparent; color: var(--amarelo); border: 2px solid var(--amarelo); border-radius: var(--canto); cursor: pointer;
     transition: background-color var(--transicao), color var(--transicao);
   }
   .ver-foto__fechar:hover { background: var(--amarelo); color: var(--azul); }

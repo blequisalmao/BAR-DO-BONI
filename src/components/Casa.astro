@@ -19,6 +19,8 @@ import { linkWhatsapp } from '../lib/links';
 
 const e = site.endereco;
 ---
+<div class="divisor divisor--topo" aria-hidden="true"><Renda /></div>
+
 <Hero />
 
 <div class="divisor" aria-hidden="true"><Renda /></div>
@@ -39,6 +41,7 @@ const e = site.endereco;
     {historia.map((foto, i) => (
       <figure class={`pilha__item pilha__item--${i + 1}`}>
         <Foto foto={foto} moldura="livre" ver="historia" sizes="(max-width: 719px) 40vw, (max-width: 1023px) 20vw, 290px" />
+        <Renda class="pilha__renda" escala={0.9} />
       </figure>
     ))}
   </div>
@@ -155,16 +158,27 @@ const e = site.endereco;
      um pouco mais baixa e cobrindo parte das outras duas. Posições em % da caixa (tiradas do esboço).
      Cada foto: cantos de cima bem arredondados, os de baixo quase retos, e um contorno na cor do texto
      atrás dela, aparecendo dos dois lados e embaixo (em cima, nada sobra). */
-  .pilha { position: relative; aspect-ratio: 1.62 / 1; --raio: clamp(20px, 3.4vw, 44px); --contorno: clamp(6px, 1vw, 12px); }
-  .pilha__item { position: absolute; margin: 0; }
-  .pilha__item::before {
-    content: ''; position: absolute; inset: 0; z-index: -1;
-    background: var(--color-texto);
-    /* os cantos de cima do contorno acompanham os da foto, um pouco maiores; embaixo, quase retos */
-    border-radius: calc(var(--raio) + var(--contorno)) calc(var(--raio) + var(--contorno)) 12px 12px;
-    inset: 0 calc(-1 * var(--contorno)) calc(-1 * var(--contorno));
+  .pilha {
+    position: relative; aspect-ratio: 1.62 / 1; --raio: clamp(20px, 3.4vw, 44px); --contorno: 3px;
+    margin-bottom: 36px; /* espaço para a renda pendurada embaixo da foto da frente */
   }
-  .pilha__item :global(.moldura) { position: relative; border-radius: var(--raio) var(--raio) 10px 10px; }
+  .pilha__item { position: absolute; margin: 0; }
+  /* Borda branca de 3px em cima e dos lados (embaixo não: ali a foto se liga direto na renda);
+     os cantos de cima acompanham os da foto, um pouco maiores */
+  .pilha__item::before {
+    content: ''; position: absolute; z-index: -1;
+    inset: calc(-1 * var(--contorno)) calc(-1 * var(--contorno)) 0;
+    background: #fff;
+    border-radius: calc(var(--raio) + var(--contorno)) calc(var(--raio) + var(--contorno)) 0 0;
+  }
+  /* Embaixo, colada na foto e na largura da borda, a mesma renda de bilro dos divisores (Renda.astro), em branco */
+  .pilha__item :global(.pilha__renda) {
+    /* sobe 3px: a fileira de pontinhos de cima da renda (a 3,6px do topo, raio 0,7px) encosta na foto */
+    position: absolute; top: calc(100% - 3px); left: calc(-1 * var(--contorno));
+    width: calc(100% + 2 * var(--contorno)); color: #fff;
+  }
+  /* cantos de baixo retos: a foto encosta na renda */
+  .pilha__item :global(.moldura) { position: relative; border-radius: var(--raio) var(--raio) 0 0; }
   /* esquerda, direita e, na frente, a do meio (ordem de fotos.ts → historia) */
   .pilha__item--1 { left: 1.5%; top: 2%; width: 33%; height: 84%; z-index: 1; }
   .pilha__item--2 { left: 60%; top: 1.5%; width: 39.5%; height: 88%; z-index: 2; }
@@ -186,6 +200,9 @@ const e = site.endereco;
   /* Divisor entre seções: a faixa de renda na largura toda da página, com o mesmo respiro em cima e embaixo */
   .divisor { padding: 0; margin: -32px 0 16px; color: var(--bege); } /* de ponta a ponta, sem margem lateral */
   @media (max-width: 639px) { .divisor { margin: -16px 0 8px; } }
+  /* Renda também no topo do hero, logo abaixo do cabeçalho: o hero fica entre duas faixas, com o mesmo
+     respiro entre a renda e o conteúdo em cima e embaixo */
+  .divisor--topo { margin: 16px 0 -16px; }
 
   /* .bloco, .bloco__cab, .bloco__titulos e .bloco__sub ficam em global.css (usados também em Avaliações) */
 

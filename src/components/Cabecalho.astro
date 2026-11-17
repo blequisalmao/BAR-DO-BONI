@@ -93,14 +93,14 @@ const redes = [
   .topo__redes { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; }
   .topo__rede {
     width: 40px; height: 40px; display: grid; place-items: center; color: var(--color-texto);
-    border: 2px solid transparent; transition: border-color var(--transicao);
+    border: 2px solid transparent; border-radius: var(--canto); transition: border-color var(--transicao);
   }
   .topo__rede:hover { border-color: var(--color-texto); }
   .topo__rede :global(svg) { width: 22px; height: 22px; }
 
   .topo__menu {
     width: 48px; height: 48px; display: grid; place-items: center; padding: 0;
-    background: transparent; color: var(--color-texto); border: 2px solid var(--color-texto); cursor: pointer;
+    background: transparent; color: var(--color-texto); border: 2px solid var(--color-texto); border-radius: var(--canto); cursor: pointer;
     transition: background-color var(--transicao), color var(--transicao);
   }
   .topo__menu:hover { background: var(--color-texto); color: var(--color-base); }
