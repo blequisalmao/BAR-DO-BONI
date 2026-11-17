@@ -4,81 +4,50 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contrato — Site do Bar do Boni</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
 <style>
-  /* Contrato em A4, para imprimir e assinar. Mesmas cores e letras do site, com fundo branco para a impressão. */
-  @page { size: A4; margin: 18mm 18mm 20mm; }
-  :root { --azul: #01418B; --amarelo: #F3B416; --bege: #F0DEC5; --tinta: #1d2b40; }
+  /* Contrato em A4, para imprimir e assinar: só texto em Calibri, preto e branco, e linhas onde se escreve à mão. */
+  @page { size: A4; margin: 20mm; }
   * { box-sizing: border-box; }
-  html { background: #e9e4da; }
+  html { background: #fff; }
   body {
-    margin: 0 auto; max-width: 210mm; padding: 18mm; background: #fff; color: var(--tinta);
-    font: 400 10.5pt/1.55 "DM Sans", Arial, sans-serif;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    margin: 0 auto; max-width: 210mm; padding: 20mm; background: #fff; color: #000;
+    font: 400 11pt/1.5 Calibri, Carlito, "Segoe UI", Arial, sans-serif;
   }
-  @media print { html { background: none; } body { padding: 0; max-width: none; } }
-
-  .topo { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 14px; border-bottom: 3px solid var(--amarelo); margin-bottom: 22px; }
-  .topo img { height: 52px; width: auto; background: var(--amarelo); padding: 6px 10px; border-radius: 4px; }
-  .topo p { margin: 0; text-align: right; font-size: 9pt; color: #5a6475; }
-  h1 { font: 800 19pt/1.15 "Bricolage Grotesque", Arial, sans-serif; color: var(--azul); margin: 0 0 6px; }
-  .sub { margin: 0 0 22px; color: #5a6475; }
-  h2 { font: 800 11.5pt/1.3 "Bricolage Grotesque", Arial, sans-serif; color: var(--azul); margin: 20px 0 6px; break-after: avoid; }
+  @media print { body { padding: 0; max-width: none; } }
+  h1 { font-size: 14pt; font-weight: 700; text-align: center; text-transform: uppercase; margin: 0 0 18px; }
+  h2 { font-size: 11pt; font-weight: 700; margin: 18px 0 6px; break-after: avoid; }
   p { margin: 0 0 8px; text-align: justify; }
-  ol, ul { margin: 0 0 8px; padding-left: 20px; }
+  ol, ul { margin: 0 0 8px; padding-left: 22px; }
   li { margin-bottom: 4px; }
-  .partes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
-  .parte { border: 1.5px solid var(--bege); border-radius: 4px; padding: 12px 14px; background: #fcf8f1; }
-  .parte b.rotulo { display: block; font: 800 9pt/1 "Bricolage Grotesque", Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--azul); margin-bottom: 8px; }
-  .parte p { text-align: left; margin: 0 0 3px; font-size: 9.5pt; }
-  .campo { display: inline-block; min-width: 150px; border-bottom: 1px solid #9aa3b2; }
-  table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 9.5pt; }
-  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e3dccf; vertical-align: top; }
-  th { color: var(--azul); font-weight: 700; }
-  td.valor, th.valor { text-align: right; white-space: nowrap; }
-  tr.total td { font-weight: 700; color: var(--azul); border-bottom: 2px solid var(--azul); }
-  .opcao { display: flex; gap: 28px; margin: 6px 0 10px; }
-  .caixa { display: inline-block; width: 12px; height: 12px; border: 1.5px solid var(--azul); border-radius: 2px; vertical-align: -1px; margin-right: 6px; }
-  .assinaturas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 36px; margin-top: 46px; break-inside: avoid; }
-  .assinatura { border-top: 1.5px solid var(--tinta); padding-top: 6px; font-size: 9.5pt; text-align: center; }
-  .assinatura b { display: block; color: var(--azul); }
-  .local { margin-top: 30px; text-align: left; }
-  .nota { margin-top: 26px; font-size: 8.5pt; color: #6b7383; text-align: left; }
-  .rodape-doc { margin-top: 20px; padding-top: 10px; border-top: 1px solid #e3dccf; font-size: 8.5pt; color: #6b7383; text-align: center; }
+  .partes p { text-align: left; margin: 0 0 4px; }
+  /* linha para preencher à mão */
+  .campo { display: inline-block; min-width: 260px; border-bottom: 1px solid #000; }
+  .valores p { text-align: left; margin: 0 0 2px; }
+  .local { margin-top: 26px; text-align: left; }
+  .assinaturas { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 40px; margin-top: 64px; break-inside: avoid; }
+  .assinatura { border-top: 1px solid #000; padding-top: 4px; text-align: center; }
 </style>
 </head>
 <body>
 
-<div class="topo">
-  <img src="assets/logo_bar_do_boni.png" alt="Bar do Boni">
-  <p>Contrato de prestação de serviços<br>Site do Bar do Boni</p>
-</div>
-
 <h1>Contrato de prestação de serviços de criação de site e manutenção</h1>
-<p class="sub">Pelo presente instrumento particular, as partes abaixo identificadas ajustam o seguinte:</p>
+<p>Pelo presente instrumento particular, as partes abaixo identificadas ajustam o seguinte:</p>
 
 <h2>1. As partes</h2>
 <div class="partes">
-  <div class="parte">
-    <b class="rotulo">Contratante</b>
-    <p>Razão social: <span class="campo"></span></p>
-    <p>Nome fantasia: Bar do Boni</p>
-    <p>CNPJ: <span class="campo"></span></p>
-    <p>Endereço: Av. das Rendeiras, 2232, Lagoa da Conceição, Florianópolis/SC, CEP 88062-400</p>
-    <p>Representante: <span class="campo"></span></p>
-    <p>CPF do representante: <span class="campo"></span></p>
-  </div>
-  <div class="parte">
-    <b class="rotulo">Contratado</b>
-    <p>Nome: Gabriel Lima</p>
-    <p>CPF/CNPJ: <span class="campo"></span></p>
-    <p>Telefone/WhatsApp: (48) 99900-1560</p>
-    <p>E-mail: gabrielcunhalima@gmail.com</p>
-    <p>Site: gabrielcunhalima.dev</p>
-    <p>Endereço: <span class="campo"></span></p>
-  </div>
+  <p><b>CONTRATANTE</b></p>
+  <p>Razão social: <span class="campo"></span></p>
+  <p>Nome fantasia: Bar do Boni</p>
+  <p>CNPJ: <span class="campo"></span></p>
+  <p>Endereço: Av. das Rendeiras, 2232, Lagoa da Conceição, Florianópolis/SC, CEP 88062-400</p>
+  <p>Representante: <span class="campo"></span></p>
+  <p>CPF do representante: <span class="campo"></span></p>
+  <p style="margin-top:12px;"><b>CONTRATADO</b></p>
+  <p>Nome: Gabriel Lima</p>
+  <p>CPF/CNPJ: <span class="campo"></span></p>
+  <p>Endereço: <span class="campo"></span></p>
+  <p>Telefone/WhatsApp: (48) 99900-1560</p>
+  <p>E-mail: gabrielcunhalima@gmail.com</p>
 </div>
 
 <h2>2. Objeto</h2>
@@ -93,43 +62,34 @@
 <p>Não fazem parte deste contrato: impressão de materiais, produção de fotos, registro de marca, gestão de redes sociais e anúncios pagos.</p>
 
 <h2>3. Valor e forma de pagamento</h2>
-<table>
-  <tr><th>Item</th><th class="valor">Valor</th></tr>
-  <tr><td>Identidade visual, site e QR Code (pacote completo)</td><td class="valor">R$ 4.900,00</td></tr>
-  <tr><td>Página comemorativa do Réveillon</td><td class="valor">Cortesia</td></tr>
-  <tr><td>1º ano de domínio e hospedagem (item 5)</td><td class="valor">Por conta do contratado</td></tr>
-  <tr class="total"><td>Total</td><td class="valor">R$ 4.900,00</td></tr>
-</table>
-<p>O pagamento será feito por Pix ou transferência bancária, na opção marcada abaixo:</p>
-<div class="opcao">
-  <span><span class="caixa"></span>50% (R$ 2.450,00) na assinatura e 50% (R$ 2.450,00) na publicação do site</span>
+<div class="valores">
+  <p>Identidade visual, site e QR Code (pacote completo): R$ 4.900,00</p>
+  <p>Página comemorativa do Réveillon: cortesia</p>
+  <p>1º ano de domínio e hospedagem (cláusula 5): por conta do CONTRATADO</p>
+  <p><b>Total: R$ 4.900,00 (quatro mil e novecentos reais)</b></p>
 </div>
-<div class="opcao">
-  <span><span class="caixa"></span>3 parcelas mensais de R$ 1.633,33, sem juros, a primeira na assinatura</span>
-</div>
+<p style="margin-top:8px;">O pagamento será feito por Pix ou transferência bancária, na opção marcada abaixo:</p>
+<p>(&nbsp;&nbsp;&nbsp;) 50% (R$ 2.450,00) na assinatura e 50% (R$ 2.450,00) na publicação do site.</p>
+<p>(&nbsp;&nbsp;&nbsp;) 3 parcelas mensais de R$ 1.633,33, sem juros, a primeira na assinatura.</p>
 
 <h2>4. Prazo e entrega</h2>
-<p>O site já está desenvolvido e foi apresentado ao CONTRATANTE. A publicação no domínio do bar ocorrerá em até <b>5 (cinco) dias úteis</b> após a assinatura deste contrato, o pagamento da primeira parcela e o envio, pelo CONTRATANTE, dos dados necessários ao registro do domínio.</p>
-<p>Após a publicação, o CONTRATADO fará, sem custo, durante <b>30 (trinta) dias</b>, os ajustes de textos, fotos, preços e pequenas correções que o CONTRATANTE solicitar. Novas páginas ou funcionalidades serão orçadas à parte.</p>
+<p>O site já está desenvolvido e foi apresentado ao CONTRATANTE. A publicação no domínio do bar ocorrerá em até 5 (cinco) dias úteis após a assinatura deste contrato, o pagamento da primeira parcela e o envio, pelo CONTRATANTE, dos dados necessários ao registro do domínio.</p>
+<p>Após a publicação, o CONTRATADO fará, sem custo, durante 30 (trinta) dias, os ajustes de textos, fotos, preços e pequenas correções que o CONTRATANTE solicitar. Novas páginas ou funcionalidades serão orçadas à parte.</p>
 
 <h2>5. Domínio e hospedagem</h2>
-<p>O domínio <b>bardoboni.com.br</b> será registrado no Registro.br em nome e CNPJ do CONTRATANTE, e a hospedagem será contratada na Hostinger. O <b>primeiro ano</b> de domínio (R$ 40,00) e de hospedagem (R$ 30,00 por mês, R$ 360,00 no ano) será pago pelo CONTRATADO.</p>
+<p>O domínio bardoboni.com.br será registrado no Registro.br em nome e CNPJ do CONTRATANTE, e a hospedagem será contratada na Hostinger. O primeiro ano de domínio (R$ 40,00) e de hospedagem (R$ 30,00 por mês, R$ 360,00 no ano) será pago pelo CONTRATADO.</p>
 <p>A partir do segundo ano, esses custos serão pagos pelo CONTRATANTE diretamente aos fornecedores. Os valores de terceiros podem ser reajustados por eles. O CONTRATADO entregará ao CONTRATANTE todos os acessos (domínio e hospedagem), que pertencem ao bar.</p>
 
 <h2>6. Manutenção mensal (opcional)</h2>
-<p>O CONTRATANTE pode contratar a manutenção mensal do site, no valor de <b>R$ 280,00 por mês</b>, que inclui:</p>
+<p>O CONTRATANTE pode contratar a manutenção mensal do site, no valor de R$ 280,00 (duzentos e oitenta reais) por mês, que inclui:</p>
 <ul>
-  <li>até <b>7 (sete) atualizações por mês</b>: preços, itens do cardápio, fotos, cartazes da agenda musical e avisos;</li>
-  <li><b>1 (uma) página comemorativa por mês</b> (por exemplo: Carnaval, festas temáticas, shows);</li>
+  <li>até 7 (sete) atualizações por mês: preços, itens do cardápio, fotos, cartazes da agenda musical e avisos;</li>
+  <li>1 (uma) página comemorativa por mês (por exemplo: Carnaval, festas temáticas, shows);</li>
   <li>cópia de segurança e acompanhamento do funcionamento do site.</li>
 </ul>
 <p>Atualizações e páginas não usadas no mês não acumulam para os meses seguintes. Sem a manutenção, cada página comemorativa custa R$ 300,00 e as atualizações são orçadas quando pedidas. A forma de pagamento da manutenção será combinada entre as partes. A manutenção vale por mês e pode ser cancelada por qualquer das partes com aviso de 30 (trinta) dias.</p>
-<div class="opcao">
-  <span><span class="caixa"></span>O CONTRATANTE contrata a manutenção mensal, a partir de ____/____/________, com pagamento: ______________________</span>
-</div>
-<div class="opcao">
-  <span><span class="caixa"></span>O CONTRATANTE não contrata a manutenção neste momento</span>
-</div>
+<p>(&nbsp;&nbsp;&nbsp;) O CONTRATANTE contrata a manutenção mensal, a partir de ____/____/________, com pagamento: <span class="campo" style="min-width:200px;"></span></p>
+<p>(&nbsp;&nbsp;&nbsp;) O CONTRATANTE não contrata a manutenção neste momento.</p>
 
 <h2>7. Responsabilidades do contratante</h2>
 <ol>
@@ -139,7 +99,7 @@
 </ol>
 
 <h2>8. Propriedade e uso</h2>
-<p>Após a quitação dos valores do item 3, o site, a identidade visual aplicada e os arquivos entregues passam a ser de uso do CONTRATANTE, para os fins do bar. O CONTRATADO pode citar o projeto em seu portfólio, sem divulgar dados internos do CONTRATANTE.</p>
+<p>Após a quitação dos valores da cláusula 3, o site, a identidade visual aplicada e os arquivos entregues passam a ser de uso do CONTRATANTE, para os fins do bar. O CONTRATADO pode citar o projeto em seu portfólio, sem divulgar dados internos do CONTRATANTE.</p>
 
 <h2>9. Dados pessoais e confidencialidade</h2>
 <p>As partes tratarão os dados pessoais a que tiverem acesso conforme a Lei Geral de Proteção de Dados (Lei nº 13.709/2018) e manterão sigilo sobre informações internas uma da outra.</p>
@@ -154,14 +114,11 @@
 <p class="local">Florianópolis/SC, ______ de ______________________ de ________.</p>
 
 <div class="assinaturas">
-  <div class="assinatura"><b>Contratante</b>Bar do Boni, por seu representante</div>
-  <div class="assinatura"><b>Contratado</b>Gabriel Lima</div>
-  <div class="assinatura"><b>Testemunha 1</b>Nome:<br>CPF:</div>
-  <div class="assinatura"><b>Testemunha 2</b>Nome:<br>CPF:</div>
+  <div class="assinatura">CONTRATANTE<br>Bar do Boni, por seu representante</div>
+  <div class="assinatura">CONTRATADO<br>Gabriel Lima</div>
+  <div class="assinatura">Testemunha 1<br>Nome:<br>CPF:</div>
+  <div class="assinatura">Testemunha 2<br>Nome:<br>CPF:</div>
 </div>
-
-<p class="nota">Modelo preparado para este projeto. Recomenda-se que as partes revisem o texto antes de assinar e, se quiserem, consultem um advogado.</p>
-<div class="rodape-doc">Bar do Boni · O novo site · Contrato de prestação de serviços</div>
 
 </body>
 </html>
