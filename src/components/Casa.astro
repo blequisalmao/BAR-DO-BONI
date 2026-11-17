@@ -19,8 +19,6 @@ import { linkWhatsapp } from '../lib/links';
 
 const e = site.endereco;
 ---
-<div class="divisor divisor--topo" aria-hidden="true"><Renda /></div>
-
 <Hero />
 
 <div class="divisor" aria-hidden="true"><Renda /></div>
@@ -200,9 +198,6 @@ const e = site.endereco;
   /* Divisor entre seções: a faixa de renda na largura toda da página, com o mesmo respiro em cima e embaixo */
   .divisor { padding: 0; margin: -32px 0 16px; color: var(--bege); } /* de ponta a ponta, sem margem lateral */
   @media (max-width: 639px) { .divisor { margin: -16px 0 8px; } }
-  /* Renda também no topo do hero, logo abaixo do cabeçalho: o hero fica entre duas faixas, com o mesmo
-     respiro entre a renda e o conteúdo em cima e embaixo */
-  .divisor--topo { margin: 16px 0 -16px; }
 
   /* .bloco, .bloco__cab, .bloco__titulos e .bloco__sub ficam em global.css (usados também em Avaliações) */
 
