@@ -277,7 +277,7 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
 
   /* Legenda padronizada do cardápio: nome / porção / preço, empilhados à esquerda */
   .legenda { display: grid; gap: 0; padding: 16px 16px 24px 0; font-size: 16px; line-height: 1.4; text-align: left; }
-  .legenda__nome { font-weight: 600; }
+  .legenda__nome { font-family: var(--font-display); font-weight: 700; }
   .legenda__porcao { color: var(--texto-suave); min-height: 1.4em; }
   .legenda__preco { font-weight: 600; }
 }

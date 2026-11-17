@@ -10,6 +10,18 @@ import { formatarPreco } from '../lib/imagens';
 interface Item { nome: string; descricao?: string; preco: string }
 interface Categoria { titulo: string; nota?: string; itens: Item[] }
 const categorias = cardapio.categorias as Categoria[];
+
+// Porção no fim da descrição ("250g / 500g", "1 pessoa / 2 pessoas", "3 un. / 5 un.", "300ml", "Com pães e farofa. 350g"):
+// sai da descrição e vai para baixo do preço, alinhada à direita. Só conta quando é a descrição inteira
+// ou vem depois de um ponto (assim "tiras de bacon 100g" continua na descrição).
+const MEDIDA = String.raw`\d+(?:g|ml| pessoas?| un\.)`;
+const PORCAO = new RegExp(String.raw`(?:^|\.\s+)(${MEDIDA}(?: \/ ${MEDIDA})*)$`);
+const separarPorcao = (descricao?: string) => {
+  const m = descricao?.match(PORCAO);
+  if (!descricao || !m) return { desc: descricao, porcao: undefined };
+  const resto = descricao.slice(0, m.index).trim();
+  return { desc: resto ? `${resto}.` : undefined, porcao: m[1] };
+};
 ---
 <section class="cardapio" id="cardapio" aria-labelledby="titulo-cardapio">
   {categorias.map((cat, i) => (
@@ -21,13 +33,17 @@ const categorias = cardapio.categorias as Categoria[];
       <div class="cardapio__conteudo" data-conteudo>
         {cat.nota && <p class="cardapio__nota">{cat.nota}</p>}
         <ul class="cardapio__itens">
-          {cat.itens.map((item) => (
-            <li>
-              <span class="cardapio__nome">{item.nome}</span>
-              <span class="cardapio__preco">{formatarPreco(item.preco)}</span>
-              {item.descricao && <span class="cardapio__desc">{item.descricao}</span>}
-            </li>
-          ))}
+          {cat.itens.map((item) => {
+            const { desc, porcao } = separarPorcao(item.descricao);
+            return (
+              <li>
+                <span class="cardapio__nome">{item.nome}</span>
+                <span class="cardapio__preco">{formatarPreco(item.preco)}</span>
+                {desc && <span class:list={['cardapio__desc', { 'cardapio__desc--lado': porcao }]}>{desc}</span>}
+                {porcao && <span class="cardapio__porcao">{porcao}</span>}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </details>
@@ -62,9 +78,13 @@ const categorias = cardapio.categorias as Categoria[];
     break-inside: avoid; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 16px;
     padding: 16px 0; border-bottom: 2px solid var(--texto-linha);
   }
-  .cardapio__nome { font-weight: 600; }
-  .cardapio__preco { font-weight: 600; text-align: right; white-space: nowrap; }
+  /* nome e preço em Bricolage Grotesque; a descrição continua no texto corrido */
+  .cardapio__nome { font-family: var(--font-display); font-weight: 700; }
+  .cardapio__preco { font-family: var(--font-display); font-weight: 700; text-align: right; white-space: nowrap; }
   .cardapio__desc { grid-column: 1 / -1; font-size: 16px; color: var(--texto-suave); padding-top: 8px; }
+  /* com porção, a descrição fica só na coluna do nome e a porção vai embaixo do preço, alinhada à direita */
+  .cardapio__desc--lado { grid-column: 1; grid-row: 2; }
+  .cardapio__porcao { grid-column: 2; grid-row: 2; font-size: 16px; color: var(--texto-suave); padding-top: 8px; text-align: right; white-space: nowrap; }
 </style>
 
 <script>
