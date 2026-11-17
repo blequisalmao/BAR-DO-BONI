@@ -1,31 +1,76 @@
 ---
 // Ornamento da casa: faixa de renda de bilro, a renda das rendeiras da Lagoa (o bar fica na Av. das Rendeiras).
-// Losangos ligados por um fio, com o "pico" (pontinho) em cada encontro e uma flor no centro.
-// Desenho em linha, na cor do elemento (currentColor): nos divisores da home, bege (.divisor em Casa.astro).
-// Decorativo: escondido de leitores de tela.
-interface Props { class?: string; altura?: number }
-const { class: classe, altura = 24 } = Astro.props;
+// Desenho inspirado na renda de bilro tradicional: rosetas de raios (roda com aro duplo, folhinhas e picôs),
+// e estrelas de 4 folhas entre elas sobre uma grade de losangos, um fio no meio e uma fileira de picôs (pontinhos) em cima e embaixo, sem linha.
+// O módulo (64 x 40) se repete na largura toda; em linha, na cor do elemento (currentColor):
+// nos divisores da home, bege (.divisor em Casa.astro). Decorativo: escondido de leitores de tela.
+interface Props { class?: string; escala?: number }
+// escala: tamanho do desenho (1 = módulo de 64 x 40px; o traço engrossa junto)
+const { class: classe, escala = 1.4 } = Astro.props;
 // id único por instância (o padrão SVG precisa de um id próprio em cada uso)
 const id = `renda-${Math.random().toString(36).slice(2, 8)}`;
+
+const L = 64; // largura do módulo
+const H = 40; // altura do módulo
+const altura = H * escala;
+const cx = 32, cy = 20; // centro da roseta
+const r = (n: number) => Math.round(n * 100) / 100;
+const pol = (raio: number, graus: number, x = cx, y = cy) => {
+  const a = (graus * Math.PI) / 180;
+  return [r(x + raio * Math.cos(a)), r(y + raio * Math.sin(a))];
+};
+// roseta: 8 raios em folhinha (entre o miolo e o aro), 16 picôs no aro de fora
+const folhas = Array.from({ length: 8 }, (_, i) => i * 45);
+const picos = Array.from({ length: 16 }, (_, i) => pol(13.5, i * 22.5));
+// fileira de picôs: um a cada 8px, em cima e embaixo (sem linha)
+const barra = Array.from({ length: L / 8 }, (_, i) => i * 8 + 4);
+// grade de losangos (a "rede" da renda): diagonais a cada 8px, com os cruzamentos nos pontinhos das fileiras.
+// 8 divide 64 e 40, então a grade emenda sem costura entre um módulo e outro.
+const diagonais = Array.from({ length: (L + H) / 8 + 1 }, (_, i) => i * 8 - H);
+const mascara = `-m`;
+// estrela de 4 folhas (na emenda dos módulos: desenhada em x = 0 e x = 64)
+const estrelas = [0, L];
 ---
 <svg class:list={['renda', classe]} aria-hidden="true" focusable="false" width="100%" height={altura}>
   <defs>
-    <pattern id={id} width="32" height="24" patternUnits="userSpaceOnUse"
-      patternTransform={`translate(0 ${(altura - 24) / 2})`}>
-      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-        <!-- fio que liga os losangos -->
-        <path d="M0 12H6M26 12H32" />
-        <!-- losango externo e interno -->
-        <path d="M16 2L26 12L16 22L6 12Z" />
-        <path d="M16 7L21 12L16 17L11 12Z" />
+    <pattern id={id} width={L} height={H} patternUnits="userSpaceOnUse"
+      patternTransform={`scale(${escala})`}>
+      <!-- a grade só aparece entre as fileiras de pontinhos e some dentro das rosetas e das estrelas -->
+      <mask id={mascara} maskUnits="userSpaceOnUse" x="0" y="0" width={L} height={H}>
+        <rect x="0" y="4" width={L} height={H - 8} fill="#fff" />
+        <circle cx={cx} cy={cy} r="14.5" fill="#000" />
+        {estrelas.map((x) => <circle cx={x} cy={cy} r="9.5" fill="#000" />)}
+      </mask>
+      <g mask={`url(#${mascara})`} fill="none" stroke="currentColor" stroke-width=".55">
+        {diagonais.map((c) => <path d={`M${c} 0L${c + H} ${H}M${c} ${H}L${c + H} 0`} />)}
+      </g>
+      <g fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round" stroke-linecap="round">
+        <!-- roseta: aro duplo, miolo com cruz e as folhinhas dos raios -->
+        <circle cx={cx} cy={cy} r="13.5" />
+        <circle cx={cx} cy={cy} r="11" />
+        <circle cx={cx} cy={cy} r="3" />
+        <path d={`M${cx - 3} ${cy}H${cx + 3}M${cx} ${cy - 3}V${cy + 3}`} />
+        {folhas.map((g) => (
+          <ellipse cx={cx + 7} cy={cy} rx="3.4" ry="1.3" transform={`rotate(${g} ${cx} ${cy})`} />
+        ))}
+        <!-- fio: da roseta à estrela vizinha (no meio); o resto da ligação é a grade de losangos -->
+        <path d={`M${cx - 13.5} ${cy}H9M${cx + 13.5} ${cy}H${L - 9}`} />
+        <!-- estrelas de 4 folhas entre as rosetas -->
+        {estrelas.map((x) => (
+          <g>
+            <circle cx={x} cy={cy} r="1.8" />
+            {[0, 90, 180, 270].map((g) => (
+              <ellipse cx={x + 5} cy={cy} rx="3.2" ry="1.5" transform={`rotate(${g} ${x} ${cy})`} />
+            ))}
+          </g>
+        ))}
       </g>
       <g fill="currentColor">
-        <!-- flor do centro e os picos nos encontros do fio -->
-        <circle cx="16" cy="12" r="1.75" />
-        <circle cx="0" cy="12" r="2" />
-        <circle cx="32" cy="12" r="2" />
-        <circle cx="16" cy="2" r="1.25" />
-        <circle cx="16" cy="22" r="1.25" />
+        <!-- picôs: fileiras de cima e de baixo, aro da roseta e o centro -->
+        {barra.map((x) => <circle cx={x} cy="4" r=".8" />)}
+        {barra.map((x) => <circle cx={x} cy={H - 4} r=".8" />)}
+        {picos.map(([x, y]) => <circle cx={x} cy={y} r=".85" />)}
+        <circle cx={cx} cy={cy} r=".9" />
       </g>
     </pattern>
   </defs>

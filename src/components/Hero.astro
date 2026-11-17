@@ -64,7 +64,8 @@ import { linkWhatsapp } from '../lib/links';
   .hero__titulo mark { /* cor e animação da faixa: global.css (mark) */ padding: 0 8px .16em; /* desce para cobrir as caudas (g, ç) */ white-space: nowrap; display: inline-block; line-height: 1; }
   .hero__chamada { max-width: 40ch; font-size: 20px; text-transform: none; letter-spacing: 0; }
   .hero__acoes { display: flex; flex-wrap: wrap; gap: 16px; }
-  .hero__horario { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; }
+  /* horário em grafia normal, como escrito em site.json (sem caixa alta, para "11h" não virar "11H") */
+  .hero__horario { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; text-transform: none; letter-spacing: 0; }
   .hero__horario :global(svg) { width: 20px; height: 20px; flex: none; }
 
   /* Grade 3x2 do Instagram, com a mesma junta das outras fotos */

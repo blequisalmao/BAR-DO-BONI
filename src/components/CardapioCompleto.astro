@@ -9,10 +9,35 @@ import { formatarPreco } from '../lib/imagens';
 
 interface Item { nome: string; descricao?: string; preco: string }
 interface Categoria { titulo: string; nota?: string; itens: Item[] }
-const categorias = cardapio.categorias as Categoria[];
+interface Setor { id: string; titulo: string; categorias: Categoria[] }
+// Setores (Pratos, Bebidas) viram abas: um setor visível por vez, abre no primeiro (ou no do endereço, ex. /cardapio#bebidas)
+const setores = cardapio.setores as Setor[];
+
+// Porção no fim da descrição ("250g / 500g", "1 pessoa / 2 pessoas", "3 un. / 5 un.", "300ml", "Com pães e farofa. 350g"):
+// sai da descrição e vai para baixo do preço, alinhada à direita. Só conta quando é a descrição inteira
+// ou vem depois de um ponto (assim "tiras de bacon 100g" continua na descrição).
+const MEDIDA = String.raw`\d+(?:g|ml| pessoas?| un\.)`;
+const PORCAO = new RegExp(String.raw`(?:^|\.\s+)(${MEDIDA}(?: \/ ${MEDIDA})*)$`);
+const separarPorcao = (descricao?: string) => {
+  const m = descricao?.match(PORCAO);
+  if (!descricao || !m) return { desc: descricao, porcao: undefined };
+  const resto = descricao.slice(0, m.index).trim();
+  return { desc: resto ? `${resto}.` : undefined, porcao: m[1] };
+};
 ---
 <section class="cardapio" id="cardapio" aria-labelledby="titulo-cardapio">
-  {categorias.map((cat, i) => (
+  <div class="cardapio__abas" role="tablist" aria-label="Setores do cardápio">
+    {setores.map((s, n) => (
+      <button
+        type="button" role="tab" id={`aba-${s.id}`} aria-controls={`setor-${s.id}`}
+        aria-selected={n === 0 ? 'true' : 'false'} tabindex={n === 0 ? 0 : -1}
+        class:list={['btn', n === 0 ? 'btn--ousada' : 'btn--linha']} data-aba={s.id}
+      >{s.titulo}</button>
+    ))}
+  </div>
+  {setores.map((s, n) => (
+  <div class="cardapio__setor" role="tabpanel" id={`setor-${s.id}`} aria-labelledby={`aba-${s.id}`} hidden={n !== 0} data-setor={s.id}>
+  {s.categorias.map((cat, i) => (
     <details class:list={{ 'tema-invertido': i % 2 === 0 }} data-categoria>
       <summary>
         <h3 class={`cardapio__categoria pincel pincel--${(i % 4) + 1}`}>{cat.titulo}</h3>
@@ -21,22 +46,32 @@ const categorias = cardapio.categorias as Categoria[];
       <div class="cardapio__conteudo" data-conteudo>
         {cat.nota && <p class="cardapio__nota">{cat.nota}</p>}
         <ul class="cardapio__itens">
-          {cat.itens.map((item) => (
-            <li>
-              <span class="cardapio__nome">{item.nome}</span>
-              <span class="cardapio__preco">{formatarPreco(item.preco)}</span>
-              {item.descricao && <span class="cardapio__desc">{item.descricao}</span>}
-            </li>
-          ))}
+          {cat.itens.map((item) => {
+            const { desc, porcao } = separarPorcao(item.descricao);
+            return (
+              <li>
+                <span class="cardapio__nome">{item.nome}</span>
+                <span class="cardapio__preco">{formatarPreco(item.preco)}</span>
+                {desc && <span class:list={['cardapio__desc', { 'cardapio__desc--lado': porcao }]}>{desc}</span>}
+                {porcao && <span class="cardapio__porcao">{porcao}</span>}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </details>
+  ))}
+  </div>
   ))}
 </section>
 
 <style>
   /* Categorias alternam fundo bege (.tema-invertido, pincel azul) e azul (pincel bege), sem linhas entre elas */
   .cardapio { padding-bottom: 0; }
+  /* Abas Pratos / Bebidas: a ativa no estilo do botão de destaque, a outra só com contorno */
+  .cardapio__abas { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; padding: 0 var(--gutter) 40px; }
+  .cardapio__abas .btn { min-width: 160px; justify-content: center; }
+  .cardapio__setor[hidden] { display: none; }
   details { background: var(--color-base); color: var(--color-texto); }
   /* o mesmo padrão de fundo do site (âncoras, barcos e ondas): azul nas categorias azuis, bege nas bege */
   details:not(.tema-invertido) { background: var(--color-base) url("/padrao-fundo.png") 0 0 / 320px 320px repeat; }
@@ -62,12 +97,43 @@ const categorias = cardapio.categorias as Categoria[];
     break-inside: avoid; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 16px;
     padding: 16px 0; border-bottom: 2px solid var(--texto-linha);
   }
-  .cardapio__nome { font-weight: 600; }
-  .cardapio__preco { font-weight: 600; text-align: right; white-space: nowrap; }
+  /* nome e preço em Bricolage Grotesque; a descrição continua no texto corrido */
+  .cardapio__nome { font-family: var(--font-display); font-weight: 700; }
+  .cardapio__preco { font-family: var(--font-display); font-weight: 700; text-align: right; white-space: nowrap; }
   .cardapio__desc { grid-column: 1 / -1; font-size: 16px; color: var(--texto-suave); padding-top: 8px; }
+  /* com porção, a descrição fica só na coluna do nome e a porção vai embaixo do preço, alinhada à direita */
+  .cardapio__desc--lado { grid-column: 1; grid-row: 2; }
+  .cardapio__porcao { grid-column: 2; grid-row: 2; font-size: 16px; color: var(--texto-suave); padding-top: 8px; text-align: right; white-space: nowrap; }
 </style>
 
 <script>
+  // Abas dos setores: clique, setas esquerda/direita, Home/End; o setor escolhido fica no endereço (#pratos, #bebidas)
+  const abas = [...document.querySelectorAll<HTMLButtonElement>('[data-aba]')];
+  const mostrar = (id: string, foco = false) => {
+    abas.forEach((aba) => {
+      const ativa = aba.dataset.aba === id;
+      aba.setAttribute('aria-selected', String(ativa));
+      aba.tabIndex = ativa ? 0 : -1;
+      aba.classList.toggle('btn--ousada', ativa);
+      aba.classList.toggle('btn--linha', !ativa);
+      document.getElementById(`setor-${aba.dataset.aba}`)!.hidden = !ativa;
+      if (ativa && foco) aba.focus();
+    });
+  };
+  abas.forEach((aba, n) => {
+    aba.addEventListener('click', () => { mostrar(aba.dataset.aba!); history.replaceState(null, '', `#${aba.dataset.aba}`); });
+    aba.addEventListener('keydown', (e) => {
+      const alvo = { ArrowRight: n + 1, ArrowLeft: n - 1, Home: 0, End: abas.length - 1 }[e.key];
+      if (alvo === undefined) return;
+      e.preventDefault();
+      const prox = abas[(alvo + abas.length) % abas.length];
+      mostrar(prox.dataset.aba!, true);
+      history.replaceState(null, '', `#${prox.dataset.aba}`);
+    });
+  });
+  const doEndereco = location.hash.slice(1);
+  if (abas.some((a) => a.dataset.aba === doEndereco)) mostrar(doEndereco);
+
   // Abre e fecha cada categoria deslizando a altura do conteúdo (Web Animations API, funciona em todos os navegadores).
   // Clicar de novo no meio da animação inverte o movimento a partir da altura atual, sem pulo.
   const DURACAO = 400;

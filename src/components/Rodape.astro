@@ -30,7 +30,7 @@ const ano = new Date().getFullYear();
     </nav>
 
     <div class="rodape__visita">
-      <p class="rodape__chamada acento">Tá combinado? A gente te espera na beira da Lagoa.</p>
+      <p class="rodape__chamada acento"><span>Tá combinado então?</span> <span>A gente te espera no final da Av. das Rendeiras.</span></p>
       <dl class="rodape__info">
         <div>
           <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
@@ -77,7 +77,11 @@ const ano = new Date().getFullYear();
   }
 
   .rodape__visita { display: grid; gap: 24px; }
-  .rodape__chamada { font-size: clamp(22px, 2.2vw, 32px); max-width: 22ch; }
+  /* Duas frases, cada uma numa linha só. A mais longa ("A gente te espera no final da Av. das Rendeiras.")
+     mede 20,6em: a letra diminui o quanto for preciso para ela caber na coluna (100cqi = largura da coluna). */
+  .rodape__visita { container-type: inline-size; }
+  .rodape__chamada { font-size: min(clamp(22px, 2.2vw, 32px), 100cqi / 21); }
+  .rodape__chamada span { display: block; white-space: nowrap; }
   .rodape__info { margin: 0; border-top: 2px solid var(--color-base); text-transform: none; letter-spacing: 0; }
   .rodape__info > div { display: grid; gap: 8px; padding: 16px 0; border-bottom: 2px solid rgb(1 65 139 / .3); }
   .rodape__info dt { display: flex; align-items: center; gap: 16px; font-weight: 600; }
