@@ -5,7 +5,7 @@ Feito com Astro, Tailwind CSS v4 e TypeScript. Saída estática, sem framework d
 
 **Páginas:**
 
-- `/` (início): a apresentação do bar, uma seção atrás da outra, separadas pela faixa de renda de bilro (de ponta a ponta da página): hero ("Música ao vivo / de quinta a domingo / na Lagoa da Conceição", botões e as 6 fotos do Instagram em grade 3x2, como no perfil, com a chamada "o que rola no Boni" e o botão para o Instagram), "Nossa história", "O lugar" (mosaico e botão para a galeria), "Da cozinha e do bar" (6 destaques com preço e o botão "Ver cardápio"), avaliações reais do Google e "Reserve seu evento conosco" (endereço, horário, WhatsApp e mapa).
+- `/` (início): a apresentação do bar, uma seção atrás da outra, separadas pela faixa de renda de bilro (de ponta a ponta da página): hero ("Música ao vivo / de quinta a domingo / na Lagoa da Conceição", botões e as 6 fotos do Instagram em grade 3x2, como no perfil, com a chamada "o que rola no Boni" e o botão para o Instagram), "Nossa história", "O lugar" (mosaico e botão para a galeria), "O menu" (6 destaques com preço e o botão "Ver cardápio"), avaliações reais do Google e "Reserve seu evento conosco" (endereço, horário, WhatsApp e mapa).
 - `/cardapio`: o cardápio completo, com as categorias alternando fundo azul e amarelo, como as páginas do cardápio impresso.
 - `/galeria` e `/contato`: uma página para cada. Links com âncora (`/#avaliacoes`) levam direto à seção da página inicial (o antigo `/avaliacoes` redireciona para lá). O contato reúne a chamada "Reserve seu evento conosco", os contatos, o endereço, o horário e o mapa (o antigo `/como-chegar` redireciona para `/contato`).
 
@@ -44,7 +44,7 @@ O script salva capturas em `capturas/` (todas as páginas em 390px e 1440px, mai
 
 | O quê | Arquivo |
 |---|---|
-| Fotos da aba "A casa" (`historia` = as 3 fotos da história, `espaco` = mosaico de "O lugar", `destaques` = "Da cozinha e do bar", `instagram`) e da galeria (categoria, texto alternativo e legenda do cardápio: nome, porção, preço) | `src/data/fotos.ts` |
+| Fotos da aba "A casa" (`historia` = as 3 fotos da história, `espaco` = mosaico de "O lugar", `destaques` = "O menu", `instagram`) e da galeria (categoria, texto alternativo e legenda do cardápio: nome, porção, preço) | `src/data/fotos.ts` |
 | Frase e botões do hero | `src/components/Hero.astro` |
 | Texto da introdução "A casa" e chamadas das seções | `src/components/Casa.astro` |
 | Instagram (as 6 fotos da grade do hero; com `link`, a foto aponta para um post) | `src/data/fotos.ts` → `instagram` |
