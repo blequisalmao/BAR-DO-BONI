@@ -28,7 +28,7 @@ const e = site.endereco;
   <div class="casa__texto">
     <p class="casa__frase display">
       Há 60 anos, seu Murlio, o vô do Boni, abriu uma venda na beira da Lagoa para atender a comunidade.
-      <span class="casa__fim"><mark>O resto</mark> a Lagoa fez.</span>
+      <span class="casa__fim">O resto a <mark>Lagoa fez.</mark></span>
     </p>
     <div class="casa__historia">
       <p>Era um legítimo botequim ilhéu, frequentado principalmente pelos pescadores nativos. O que mais saía era cerveja, cachacinha, pastel e as almôndegas da dona Marisa, mãe do Boni. Foi dessa venda que veio a inspiração para o Boni abrir o bar no mesmo lugar.</p>
@@ -50,7 +50,7 @@ const e = site.endereco;
 <section class="bloco espaco" id="o-lugar" aria-labelledby="titulo-lugar">
   <div class="secao__cab bloco__cab">
     <div class="bloco__titulos">
-      <h2 class="secao__titulo pincel pincel--1" id="titulo-lugar">O lugar</h2>
+      <h2 class="secao__titulo pincel pincel--1" id="titulo-lugar">Nossa casa</h2>
       <p class="bloco__sub acento lugar__sub">
         <span>Deck de madeira, barco atracado e o pôr do sol na frente.</span>
         <span>Escolhe a mesa e vem!</span>
@@ -74,7 +74,7 @@ const e = site.endereco;
 <section class="bloco destaques" id="destaques" aria-labelledby="titulo-destaques">
   <div class="secao__cab bloco__cab">
     <div class="bloco__titulos">
-      <h2 class="secao__titulo pincel pincel--3" id="titulo-destaques">O menu</h2>
+      <h2 class="secao__titulo pincel pincel--3 destaques__titulo" id="titulo-destaques">Delícias da casa</h2>
       <p class="bloco__sub acento">Tudo que você encontra em nosso menu.</p>
     </div>
     <a class="btn btn--ousada" href="/cardapio">
@@ -112,14 +112,14 @@ const e = site.endereco;
       </a>
     </div>
   </div>
-  <dl class="eventos__info">
+  <dl class="eventos__info infos">
     <div>
       <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
       <dd>{e.rua}. {e.bairro}, {e.cidade}/{e.uf}</dd>
     </div>
     <div>
       <dt><Icon name="lucide:clock" aria-hidden="true" /><span>Horário</span></dt>
-      <dd>{site.horario.texto}</dd>
+      <dd class="horario">{site.horario.linhas.map((l) => <span>{l}</span>)}</dd>
     </div>
     <div>
       <dt><Icon name="lucide:phone" aria-hidden="true" /><span>Telefone</span></dt>
@@ -140,13 +140,13 @@ const e = site.endereco;
   .casa .display, .casa__historia { text-transform: none; }
   .casa__historia { letter-spacing: 0; }
   .casa__frase { font-size: clamp(24px, 2.8vw, 44px); line-height: 1.05; max-width: 28ch; }
-  /* "O resto a Lagoa fez." começa numa linha própria, alinhado à esquerda com as outras; "O resto" nunca quebra */
+  /* "O resto a Lagoa fez." começa numa linha própria, alinhado à esquerda com as outras; o destaque fica em "Lagoa fez." e nunca quebra */
   .casa__fim { display: block; margin-top: .45em; } /* respiro antes de "O resto a Lagoa fez." */
   /* "O lugar": duas frases, cada uma na sua linha (no celular a primeira pode quebrar) */
   .lugar__sub { max-width: none; }
   .lugar__sub span { display: block; }
   @media (min-width: 640px) { .lugar__sub span { white-space: nowrap; } }
-  .casa__frase mark { /* cor e animação da faixa: global.css (mark) */ padding: 0 8px .16em; /* desce para cobrir as caudas (g, ç) */ margin-left: -8px; white-space: nowrap;
+  .casa__frase mark { /* cor e animação da faixa: global.css (mark) */ padding: 0 8px .16em; /* desce para cobrir as caudas (g, ç) */ white-space: nowrap;
     /* o fundo amarelo fica só na altura da linha, sem invadir a linha de cima */
     display: inline-block; line-height: 1; }
   .casa__historia { display: grid; gap: 16px; max-width: 56ch; font-size: 18px; }
@@ -223,6 +223,8 @@ const e = site.endereco;
   .espaco__grade > li:nth-child(6) { grid-area: 3 / 3 / 4 / 4; }
   .espaco__grade > li:nth-child(7) { grid-area: 1 / 4 / 2 / 5; }
   .espaco__grade > li:nth-child(8) { grid-area: 2 / 4 / span 2 / 5; }
+  /* "Delícias da casa" com a pincelada mede 5,6em: no celular a letra diminui para caber entre as margens */
+  .destaques__titulo { font-size: min(clamp(68px, 6.4vw, 104px), calc((100vw - 2 * var(--gutter)) / 5.8)); }
   /* Destaques: 6 itens (6 colunas no desktop, 3 no tablet, 2 no celular), legenda embaixo de cada foto */
   .destaques__grade { grid-template-columns: repeat(6, minmax(0, 1fr)); padding: 0 var(--gutter); gap: 24px; }
   @media (max-width: 1023px) { .destaques__grade { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -248,11 +250,7 @@ const e = site.endereco;
   .eventos__texto { max-width: 46ch; text-transform: none; letter-spacing: 0; font-size: 18px; }
   .eventos__acoes { display: flex; flex-wrap: wrap; gap: 16px; }
   /* endereço, horário e telefone em grafia normal (sem caixa alta) */
-  .eventos__info { margin: 0; border-top: 2px solid var(--color-texto); text-transform: none; letter-spacing: 0; }
-  .eventos__info > div { display: grid; gap: 8px; padding: 24px 0; border-bottom: 2px solid var(--texto-linha); }
-  .eventos__info dt { display: flex; align-items: center; gap: 16px; font-weight: 600; }
-  .eventos__info dt :global(svg) { width: 24px; height: 24px; flex: none; }
-  .eventos__info dd { margin: 0 0 0 40px; }
+  /* informações: estilo .infos em global.css (sem linhas, ícone no círculo) */
   .btn :global(svg) { width: 18px; height: 18px; flex: none; }
   @media (max-width: 767px) { .eventos { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 48px; } }
   @media (max-width: 639px) { .eventos { padding-top: 16px; } } /* pincelada perto da renda, como nas outras seções */

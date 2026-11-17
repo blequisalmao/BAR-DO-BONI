@@ -12,24 +12,20 @@ const temExtra = Astro.slots.has('extra');
       {chamada && <p class="info__chamada display">{chamada}</p>}
     </div>
     <div class="info__acao"><slot name="acao" /></div>
-    <dl class="info__lista"><slot /></dl>
+    <dl class="info__lista infos"><slot /></dl>
   </div>
   {temExtra && <div class="info__extra"><slot name="extra" /></div>}
 </section>
 
 <style>
-  .info { display: grid; gap: 32px; padding: 48px var(--gutter) 96px; }
-  .info__texto { display: grid; justify-items: start; align-content: start; gap: 32px; min-width: 0; }
+  .info { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 48px var(--gutter) 96px; }
+  .info__texto { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; align-content: start; gap: 32px; min-width: 0; }
   .info__cab { display: grid; gap: 16px; }
   /* chamada em destaque logo abaixo do título (ex.: "Reserve seu evento conosco"), sem caixa alta */
   .info__chamada { margin: 0; max-width: 18ch; font-size: clamp(26px, 3.2vw, 48px); line-height: 1.05; text-transform: none; }
   .info__acao { display: flex; flex-wrap: wrap; gap: 16px; }
-  /* itens da lista (telefone, e-mail, endereço...) em grafia normal, sem caixa alta */
-  .info__lista { margin: 0; width: 100%; max-width: 960px; border-top: 2px solid var(--color-texto); text-transform: none; letter-spacing: 0; }
-  .info__lista :global(> div) { display: grid; gap: 8px; padding: 24px 0; border-bottom: 2px solid var(--texto-linha); }
-  .info__lista :global(dt) { display: flex; align-items: center; gap: 16px; font-weight: 600; }
-  .info__lista :global(dt svg) { width: 24px; height: 24px; flex: none; }
-  .info__lista :global(dd) { margin: 0 0 0 40px; display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  /* itens da lista (telefone, e-mail, endereço...): estilo .infos em global.css, sem linhas */
+  .info__lista { width: 100%; max-width: 960px; padding-top: 8px; }
   .info__extra { width: 100%; min-width: 0; }
   /* com bloco extra: texto à esquerda e extra à direita, metade cada, a partir de 768px */
   @media (min-width: 768px) {

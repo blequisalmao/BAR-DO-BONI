@@ -25,10 +25,11 @@
   "instagram": "https://www.instagram.com/bardoboni/",
   "facebook": "https://www.facebook.com/bardobonilagoa/",
   "horario": {
-    "texto": "Todos os dias, 11h às 2h",
-    "curto": "Todos os dias, das 11h às 2h.",
-    "abre": "11:00",
-    "fecha": "02:00"
+    "linhas": ["Dom a Qui: 11h às 01h", "Sex e Sab: 11h às 02h", "Almoço todos os dias"],
+    "turnos": [
+      { "dias": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"], "abre": "11:00", "fecha": "01:00" },
+      { "dias": ["Friday", "Saturday"], "abre": "11:00", "fecha": "02:00" }
+    ]
   },
   "pendencias": [
     "url: domínio definitivo do site (placeholder)",

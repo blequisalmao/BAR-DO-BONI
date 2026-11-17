@@ -103,16 +103,17 @@ export const espaco: Foto[] = [
   'deck_externo.jpg', // alta
 ].map(daGaleria);
 
-/** Instagram: 6 fotos quadradas, em grade 3x2 no hero. Sem `link`, a foto leva ao perfil (site.json → instagram).
- *  Para apontar para um post, use { ...daGaleria('arquivo'), link: 'https://www.instagram.com/p/...' }. */
-export const instagram: (Foto & { link?: string })[] = [
-  'clientes23.png',
-  'foto_drink8.jpg',
-  'prato_completo_barco_do_bar_do_boni_ao_fundo.jpg',
-  'ostra_gratinada.png',
-  'celebrando_com_cerveja.png',
-  'foto_drink.jpg',
-].map(daGaleria);
+/** Agenda musical: os 5 destaques do carrossel do hero (cartazes dos próximos eventos), na proporção 4:5
+ *  (o tamanho de um post do Instagram, ex.: 1080 x 1350). Cada um leva ao `link`; sem `link`, ao Instagram do bar.
+ *  Para trocar: coloque o cartaz em /imagens e troque a linha. */
+export const agenda: (Foto & { link?: string })[] = [
+  { arquivo: 'reveillon_2026.png', alt: 'Cartaz do Réveillon do Bar do Boni: 31 de dezembro de 2026, às 21h, com open bar, open food, queima de fogos e shows', link: '/reveillon' },
+  // provisórias, até chegarem os cartazes dos próximos eventos
+  daGaleria('celebrando_com_cerveja.png'),
+  daGaleria('clientes23.png'),
+  daGaleria('sunset_bar_do_boni.png'),
+  daGaleria('foto_drink8.jpg'),
+];
 
 /** História ("A casa"): 3 fotos lado a lado. Ordem: esquerda, direita e, na frente, a do meio. */
 export const historia: Foto[] = [

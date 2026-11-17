@@ -34,6 +34,12 @@ const redes = [
           <a class="topo__link" href={l.href} aria-current={atual === l.href ? 'page' : undefined}>{l.texto}</a>
         </li>
       ))}
+      <!-- no celular o destaque aparece aqui, dentro do menu; no desktop, ao lado do Instagram (abaixo) -->
+      <li class="topo__destaque-menu">
+        <a class="topo__destaque" href="/reveillon" aria-current={atual === '/reveillon' ? 'page' : undefined}>
+          <Icon name="lucide:sparkles" aria-hidden="true" />Réveillon no Boni!
+        </a>
+      </li>
       <li class="topo__redes-menu">
         {redes.map((r) => (
           <a class="link" href={r.href} target="_blank" rel="noopener">{r.nome}</a>
@@ -43,6 +49,9 @@ const redes = [
   </nav>
 
   <div class="topo__acoes">
+    <a class="topo__destaque topo__destaque--acoes" href="/reveillon" aria-current={atual === '/reveillon' ? 'page' : undefined}>
+      <Icon name="lucide:sparkles" aria-hidden="true" />Réveillon no Boni!
+    </a>
     <ul class="topo__redes">
       {redes.map((r) => (
         <li>
@@ -88,8 +97,40 @@ const redes = [
   }
   .topo__link:hover, .topo__link[aria-current="page"] { text-decoration-color: var(--color-ousada); }
   .topo__redes-menu { display: none; }
+  /* Destaque do momento (Réveillon): botão azul com letra bege (no hover inverte). No desktop fica à esquerda do Instagram
+     (.topo__destaque--acoes); no celular, dentro do menu (.topo__destaque-menu). Para tirar, apague os dois. */
+  .topo__destaque-menu { display: none; }
+  /* botão Reservar do cabeçalho em Bricolage Grotesque, como os links e o destaque */
+  .topo .btn { font-family: var(--font-display); font-weight: 800; letter-spacing: .04em; }
+  .topo__destaque {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px;
+    font: 800 17px/1 var(--font-display); letter-spacing: .01em; text-transform: none; text-decoration: none; white-space: nowrap;
+    background: var(--azul); color: var(--bege); border: 2px solid var(--azul); border-radius: var(--canto);
+    transition: background-color var(--transicao), color var(--transicao);
+  }
+  .topo__destaque:hover, .topo__destaque[aria-current="page"] { background: var(--bege); color: var(--azul); }
+  .topo__destaque :global(svg) { width: 18px; height: 18px; flex: none; }
+  /* abaixo de 1600px os ícones das redes saem do cabeçalho (ficam no rodapé e no menu do celular): sobra espaço
+     para o menu ficar no centro da tela */
+  @media (min-width: 1024px) and (max-width: 1599px) { .topo .topo__redes { display: none; } }
+  @media (min-width: 1024px) and (max-width: 1279px) { .topo__links { gap: 24px; } }
+  /* 1024 a 1199px: tudo um pouco mais compacto para caber numa linha */
+  @media (min-width: 1024px) and (max-width: 1199px) {
+    .topo { gap: 16px; } .topo__links { gap: 18px; } .topo__link { font-size: 16px; }
+    .topo__destaque { padding: 8px 10px; font-size: 15px; } .topo__destaque :global(svg) { display: none; }
+    .topo .btn { padding-inline: 14px; }
+  }
+  /* abaixo de 1024px o destaque sai da barra e vai para o menu */
+  @media (max-width: 1023px) { .topo__destaque--acoes { display: none; } .topo__links[data-aberto] .topo__destaque-menu { display: block; } }
 
   .topo__acoes { display: flex; align-items: center; gap: 16px; flex: none; }
+  /* desktop: três colunas (logo | menu | ações) com as laterais do mesmo tamanho, para o menu ficar no centro da tela;
+     se as ações não couberem na metade, a coluna delas cresce e o menu desloca um pouco, sem encostar */
+  @media (min-width: 1024px) {
+    .topo { display: grid; grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr); }
+    .topo__marca { justify-self: start; }
+    .topo__acoes { justify-self: end; }
+  }
   .topo__redes { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; }
   .topo__rede {
     width: 40px; height: 40px; display: grid; place-items: center; color: var(--color-texto);
@@ -120,6 +161,7 @@ const redes = [
       padding: 16px var(--gutter) 32px; background: var(--color-base); border-bottom: 2px solid var(--color-texto);
     }
     .topo__links[data-aberto] .topo__link { display: inline-block; padding: 16px 0; font-size: clamp(28px, 7vw, 48px); text-transform: none; }
+    .topo__links[data-aberto] .topo__destaque { margin: 16px 0 8px; padding: 14px 20px; font-size: clamp(22px, 5vw, 32px); }
     .topo__links[data-aberto] .topo__redes-menu { display: flex; gap: 24px; padding-top: 16px; text-transform: none; letter-spacing: 0; font-weight: 600; }
   }
   @media (max-width: 599px) { .topo :global(.topo__logo) { height: 48px; } .topo { gap: 8px; } .topo__acoes { gap: 8px; } }

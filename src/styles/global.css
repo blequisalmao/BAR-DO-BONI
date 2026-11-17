@@ -200,6 +200,27 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
   .bloco__sub { max-width: 40ch; color: var(--texto-suave); }
   .bloco__sub.acento { font-size: clamp(18px, 1.6vw, 24px); color: var(--color-texto); max-width: 44ch; }
 
+  /* Informações de contato (endereço, horário, telefone, e-mail, redes): sem linhas, em grade.
+     Cada item: ícone (sem fundo) ao lado do rótulo pequeno e o valor embaixo, alinhado com o rótulo.
+     Usado no Contato (Lista.astro), no rodapé e na seção de eventos da home. Cores do tema: inverte sozinho. */
+  .infos {
+    margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 32px 24px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .infos > div { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 16px; row-gap: 4px; align-content: start; }
+  .infos dt { display: contents; }
+  /* ícone entre o rótulo e a primeira linha do valor (desce 10px a partir do topo do rótulo) */
+  .infos dt svg { grid-row: 1 / 3; align-self: start; margin-top: 10px; width: 22px; height: 22px; color: var(--color-texto); }
+  .infos dt span { align-self: end; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--texto-suave); }
+  .infos dd { grid-column: 2; margin: 0; font-size: 17px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 4px 16px; min-width: 0; }
+  /* e-mail e endereço longos quebram em vez de empurrar a página para o lado no celular */
+  .infos dd > * { min-width: 0; overflow-wrap: anywhere; }
+  /* horário: uma linha por turno (site.json → horario.linhas) */
+  .infos dd.horario { display: grid; gap: 0; }
+  /* links (telefone, e-mail, redes) sem sublinhado; ele só aparece no hover */
+  .infos .link { text-decoration-color: transparent; }
+  .infos .link:hover { text-decoration-color: currentColor; }
+
   /* Pincelada: título em letra cursiva sobre uma pincelada de verdade, tirada do cardápio impresso
      (public/pinceladas/, geradas por scripts/pinceladas.mjs). A cor vem de --pincel-fundo / --pincel-letra,
      então inverte sozinha nos blocos .tema-invertido.

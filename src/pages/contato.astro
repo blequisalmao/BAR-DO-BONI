@@ -41,7 +41,7 @@ const e = site.endereco;
     </div>
     <div>
       <dt><Icon name="lucide:clock" aria-hidden="true" /><span>Horário</span></dt>
-      <dd>{site.horario.texto}</dd>
+      <dd class="horario">{site.horario.linhas.map((l) => <span>{l}</span>)}</dd>
     </div>
     <iframe slot="extra" class="mapa" src={site.mapaEmbed} title="Mapa com a localização do Bar do Boni na Lagoa da Conceição"
       loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
@@ -50,6 +50,6 @@ const e = site.endereco;
 
 <style>
   /* Mapa do Google com a localização do bar: ocupa a coluna da direita (metade da página no desktop);
-     cantos retos, linha de 2px como o resto da página */
-  .mapa { display: block; width: 100%; aspect-ratio: 4 / 3; border: 2px solid var(--color-texto); border-radius: var(--canto); }
+     sem borda, só os cantos de 4px */
+  .mapa { display: block; width: 100%; aspect-ratio: 4 / 3; border: 0; border-radius: var(--canto); }
 </style>
