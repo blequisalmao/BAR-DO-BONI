@@ -1,0 +1,209 @@
+---
+// Réveillon do Boni (5ª edição): página de divulgação da virada 2026 → 2027.
+// Textos enviados pelo bar. Ingressos vendidos fora do site, na Pensa no Evento (INGRESSOS).
+// Depois da festa, tire o botão do cabeçalho (Cabecalho.astro) e o cartaz da agenda (fotos.ts).
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import Renda from '../components/Renda.astro';
+import site from '../data/site.json';
+import { agenda } from '../data/fotos';
+import { linkWhatsapp } from '../lib/links';
+
+const INGRESSOS = 'https://www.pensanoevento.com.br/eventos/113104/5o-reveillon-do-bar-do-boni';
+const INICIO = '2026-12-31T21:00:00-03:00';
+const VIRADA = '2027-01-01T00:00:00-03:00';
+const cartaz = agenda.find((f) => f.link === '/reveillon')!;
+const e = site.endereco;
+
+const inclui = [
+  { icone: 'lucide:wine', titulo: 'Open bar', texto: 'Bebida liberada a noite toda.' },
+  { icone: 'lucide:utensils', titulo: 'Open food', texto: 'Comida à vontade para curtir até a virada.' },
+  { icone: 'lucide:sparkles', titulo: 'Queima de fogos', texto: 'A chegada de 2027 com fogos sobre a Lagoa.' },
+  { icone: 'lucide:music', titulo: 'Shows e muita música', texto: 'Música ao vivo para dançar até o ano novo.' },
+  { icone: 'lucide:star', titulo: 'Estrutura especial', texto: 'Tudo preparado para celebrar até a virada.' },
+];
+
+// dados estruturados de evento: o Google pode mostrar a festa nas buscas
+const evento = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: 'Réveillon do Boni 2027',
+  description: 'Virada do ano à beira da Lagoa da Conceição, com open bar, open food, queima de fogos e shows.',
+  startDate: INICIO,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: {
+    '@type': 'Place',
+    name: site.nome,
+    address: { '@type': 'PostalAddress', streetAddress: e.rua, addressLocality: e.cidade, addressRegion: e.uf, postalCode: e.cep, addressCountry: e.pais },
+  },
+  organizer: { '@type': 'Organization', name: site.nome, url: site.url },
+  offers: { '@type': 'Offer', url: INGRESSOS, availability: 'https://schema.org/InStock' },
+};
+---
+<Base titulo="Réveillon 2027" descricao="Réveillon do Boni, 5ª edição: 31 de dezembro de 2026, a partir das 21h, à beira da Lagoa da Conceição. Open bar, open food, queima de fogos e shows.">
+  <script type="application/ld+json" set:html={JSON.stringify(evento)} />
+
+  <section class="rev-topo" aria-labelledby="titulo-reveillon">
+    <div class="rev-topo__texto">
+      <p class="rev-selo"><Icon name="lucide:party-popper" aria-hidden="true" />5ª edição</p>
+      <h1 class="secao__titulo pincel pincel--2 rev-titulo" id="titulo-reveillon">Réveillon do Boni</h1>
+      <p class="rev-frase display">A virada do ano merece um cenário especial. <span class="rev-frase__fim"><mark>E o seu lugar é aqui!</mark></span></p>
+      <p class="rev-texto">Prepare-se para receber 2027 em grande estilo, com uma noite incrível no Bar do Boni.</p>
+      <dl class="infos rev-infos">
+        <div>
+          <dt><Icon name="lucide:calendar" aria-hidden="true" /><span>Data</span></dt>
+          <dd>31 de dezembro de 2026</dd>
+        </div>
+        <div>
+          <dt><Icon name="lucide:clock" aria-hidden="true" /><span>Horário</span></dt>
+          <dd>A partir das 21h</dd>
+        </div>
+        <div>
+          <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Local</span></dt>
+          <dd><a class="link" href={site.mapa} target="_blank" rel="noopener">Bar do Boni, {e.bairro}, {e.cidade}/{e.uf}</a></dd>
+        </div>
+      </dl>
+      <div class="rev-acoes">
+        <a class="btn btn--ousada" href={INGRESSOS} target="_blank" rel="noopener"><Icon name="lucide:ticket" aria-hidden="true" />Comprar ingresso</a>
+        <a class="btn btn--linha" href={linkWhatsapp('Olá! Quero saber mais sobre o Réveillon do Boni.')} target="_blank" rel="noopener"><Icon name="lucide:message-circle" aria-hidden="true" />Tirar dúvidas</a>
+      </div>
+    </div>
+    <figure class="rev-cartaz">
+      <Foto foto={cartaz} moldura="4/5" ver="reveillon" carregamento="eager" sizes="(max-width: 899px) 90vw, 520px" />
+    </figure>
+  </section>
+
+  <div class="divisor" aria-hidden="true"><Renda /></div>
+
+  <section class="rev-inclui" aria-labelledby="titulo-inclui">
+    <div class="bloco__titulos">
+      <h2 class="secao__titulo pincel pincel--3" id="titulo-inclui">Tudo incluso</h2>
+      <p class="bloco__sub acento">Uma celebração completa, à beira da Lagoa, com tudo para brindar a chegada de um novo ano.</p>
+    </div>
+    <ul class="rev-cartoes">
+      {inclui.map((i) => (
+        <li class="tema-invertido">
+          <Icon name={i.icone} aria-hidden="true" />
+          <h3>{i.titulo}</h3>
+          <p>{i.texto}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <div class="divisor" aria-hidden="true"><Renda /></div>
+
+  <section class="rev-contagem" aria-labelledby="titulo-contagem">
+    <div class="bloco__titulos">
+      <h2 class="secao__titulo pincel pincel--1" id="titulo-contagem">Contagem regressiva</h2>
+      <p class="bloco__sub acento">A contagem já começou! E a virada de ano tem destino certo: Bar do Boni.</p>
+    </div>
+    <div class="rev-relogio" data-contagem={VIRADA} role="timer" aria-live="off">
+      <div class="tema-invertido"><span class="display" data-dias>--</span><small>dias</small></div>
+      <div class="tema-invertido"><span class="display" data-horas>--</span><small>horas</small></div>
+      <div class="tema-invertido"><span class="display" data-minutos>--</span><small>minutos</small></div>
+      <div class="tema-invertido"><span class="display" data-segundos>--</span><small>segundos</small></div>
+    </div>
+    <p class="rev-feliz display" data-feliz hidden>Feliz 2027! <mark>Obrigado por virar com a gente.</mark></p>
+  </section>
+
+  <div class="divisor" aria-hidden="true"><Renda /></div>
+
+  <section class="rev-final" aria-labelledby="titulo-final">
+    <h2 class="rev-final__titulo display" id="titulo-final">Garanta seu ingresso e venha viver essa virada <mark>com a gente!</mark></h2>
+    <a class="btn btn--ousada" href={INGRESSOS} target="_blank" rel="noopener"><Icon name="lucide:ticket" aria-hidden="true" />Comprar ingresso</a>
+    <p class="rev-final__assinatura acento">Bar do Boni. A melhor virada de Florianópolis!</p>
+  </section>
+</Base>
+
+<style>
+  .divisor { margin: 0 0 16px; color: var(--bege); }
+
+  /* Abertura: texto à esquerda, cartaz à direita (cartaz em cima no celular) */
+  .rev-topo {
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 64px; align-items: center;
+    padding: 64px var(--gutter) 80px;
+  }
+  .rev-topo__texto { display: grid; gap: 24px; justify-items: start; min-width: 0; }
+  .rev-selo {
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: var(--canto);
+    background: var(--bege); color: var(--azul); font: 800 16px/1 var(--font-display); letter-spacing: .04em;
+  }
+  .rev-selo :global(svg) { width: 18px; height: 18px; }
+  .rev-titulo { margin: 0; }
+  .rev-frase { margin: 0; max-width: 22ch; font-size: min(clamp(30px, 3.4vw, 52px), (100vw - 2 * var(--gutter)) / 12); line-height: 1.1; text-transform: none; }
+  /* "E o seu lugar é aqui!" numa linha só, embaixo da primeira frase */
+  .rev-frase__fim { display: block; margin-top: .2em; }
+  .rev-frase mark { padding: 0 6px .1em; white-space: nowrap; }
+  .rev-texto { margin: 0; max-width: 46ch; font-size: 20px; text-transform: none; letter-spacing: 0; }
+  /* data, horário e local lado a lado (empilham no celular) */
+  .rev-infos { width: 100%; grid-template-columns: auto auto minmax(0, 1fr); gap: 24px 40px; }
+  @media (max-width: 639px) { .rev-infos { grid-template-columns: minmax(0, 1fr); } }
+  .rev-acoes { display: flex; flex-wrap: wrap; gap: 16px; }
+  .rev-cartaz { margin: 0; width: 100%; max-width: 520px; justify-self: center; }
+
+  /* O que está incluso: 5 cartões bege, sem linhas */
+  .rev-inclui, .rev-contagem { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; padding: 48px var(--gutter) 80px; }
+  /* "Contagem regressiva" com a pincelada mede ~6,8em: no celular a letra diminui para caber */
+  .rev-contagem .secao__titulo { font-size: min(clamp(68px, 6.4vw, 104px), calc((100vw - 2 * var(--gutter)) / 7)); }
+  .rev-inclui .bloco__titulos, .rev-contagem .bloco__titulos { text-align: center; }
+  .rev-cartoes { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; list-style: none; margin: 0; padding: 0; }
+  .rev-cartoes li { display: grid; align-content: start; gap: 12px; padding: 28px 24px; border-radius: var(--canto); text-transform: none; letter-spacing: 0; }
+  .rev-cartoes :global(svg) { width: 36px; height: 36px; }
+  .rev-cartoes h3 { margin: 0; font: 800 24px/1.15 var(--font-display); }
+  .rev-cartoes p { margin: 0; font-size: 17px; line-height: 1.45; }
+
+  /* Contagem regressiva até a virada (meia-noite de Brasília) */
+  .rev-relogio { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; width: 100%; max-width: 880px; justify-self: center; }
+  .rev-relogio div { display: grid; justify-items: center; gap: 4px; padding: 24px 8px; border-radius: var(--canto); }
+  .rev-relogio span { font-size: clamp(44px, 6vw, 88px); line-height: 1; font-variant-numeric: tabular-nums; }
+  .rev-relogio small { font: 600 14px/1 var(--font-corpo); letter-spacing: .12em; text-transform: uppercase; }
+  .rev-feliz { justify-self: center; text-align: center; font-size: clamp(28px, 3vw, 44px); text-transform: none; }
+
+  /* Fechamento */
+  .rev-final { display: grid; justify-items: center; gap: 32px; padding: 48px var(--gutter) 112px; text-align: center; }
+  .rev-final__titulo { margin: 0; max-width: 20ch; font-size: clamp(32px, 4vw, 60px); line-height: 1.1; text-transform: none; }
+  .rev-final__titulo mark { padding: 0 8px .1em; }
+  .rev-final__assinatura { margin: 0; font-size: clamp(20px, 2vw, 28px); }
+
+  @media (max-width: 1023px) { .rev-cartoes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 899px) {
+    .rev-topo { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 32px; }
+    .rev-cartaz { order: -1; max-width: 420px; }
+  }
+  @media (max-width: 639px) {
+    .rev-cartoes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rev-cartoes li:last-child { grid-column: 1 / -1; }
+    .rev-relogio { gap: 8px; }
+    .rev-relogio div { padding: 16px 4px; }
+    .rev-relogio small { font-size: 11px; letter-spacing: .06em; }
+  }
+</style>
+
+<script>
+  // Contagem regressiva até a meia-noite de 1º de janeiro de 2027 (horário de Brasília)
+  const relogio = document.querySelector<HTMLElement>('[data-contagem]');
+  if (relogio) {
+    const alvo = new Date(relogio.dataset.contagem!).getTime();
+    const campo = (n: string) => relogio.querySelector<HTMLElement>(`[data-${n}]`)!;
+    const [dias, horas, minutos, segundos] = ['dias', 'horas', 'minutos', 'segundos'].map(campo);
+    const dois = (n: number) => String(n).padStart(2, '0');
+    const atualizar = () => {
+      const falta = Math.max(0, alvo - Date.now());
+      const s = Math.floor(falta / 1000);
+      dias.textContent = String(Math.floor(s / 86400));
+      horas.textContent = dois(Math.floor((s % 86400) / 3600));
+      minutos.textContent = dois(Math.floor((s % 3600) / 60));
+      segundos.textContent = dois(s % 60);
+      if (falta === 0) {
+        relogio.hidden = true;
+        document.querySelector<HTMLElement>('[data-feliz]')!.hidden = false;
+        clearInterval(timer);
+      }
+    };
+    const timer = setInterval(atualizar, 1000);
+    atualizar();
+  }
+</script>

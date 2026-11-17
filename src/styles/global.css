@@ -215,6 +215,8 @@ html.js-revelar .revelar.visivel { opacity: 1; transform: none; }
   .infos dd { grid-column: 2; margin: 0; font-size: 17px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 4px 16px; min-width: 0; }
   /* e-mail e endereço longos quebram em vez de empurrar a página para o lado no celular */
   .infos dd > * { min-width: 0; overflow-wrap: anywhere; }
+  /* horário: uma linha por turno (site.json → horario.linhas) */
+  .infos dd.horario { display: grid; gap: 0; }
   /* links (telefone, e-mail, redes) sem sublinhado; ele só aparece no hover */
   .infos .link { text-decoration-color: transparent; }
   .infos .link:hover { text-decoration-color: currentColor; }

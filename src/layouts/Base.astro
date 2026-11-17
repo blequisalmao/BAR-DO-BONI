@@ -42,12 +42,13 @@ const jsonLd = {
     postalCode: site.endereco.cep,
     addressCountry: site.endereco.pais,
   },
-  openingHoursSpecification: [{
+  // horário por turno (site.json → horario.turnos): domingo a quinta até 1h, sexta e sábado até 2h
+  openingHoursSpecification: site.horario.turnos.map((t) => ({
     '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    opens: site.horario.abre,
-    closes: site.horario.fecha,
-  }],
+    dayOfWeek: t.dias,
+    opens: t.abre,
+    closes: t.fecha,
+  })),
   sameAs: [site.instagram, site.facebook],
 };
 ---

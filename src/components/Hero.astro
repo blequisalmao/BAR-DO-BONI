@@ -1,12 +1,12 @@
 ---
-// Hero: abertura da aba "A casa". Texto à esquerda (frase, chamada, botões) e, à direita, as 6 fotos do
-// Instagram numa grade 3x2, como no perfil (fotos em fotos.ts → instagram). Cada foto leva ao perfil, ou a um
-// post se tiver `link`. Feito à mão, sem widget nem API: não carrega nada de terceiros.
-// Embaixo das fotos, a chamada "o que rola no Boni" (música, jogo e data especial) e o botão para o Instagram,
+// Hero: abertura da aba "A casa". Texto à esquerda (frase, chamada, botões) e, à direita, a "Agenda musical":
+// carrossel com os 5 cartazes dos próximos eventos (fotos.ts → agenda), um por vez, com 5 bolinhas embaixo.
+// Cada cartaz leva ao seu `link` (ex.: /reveillon) ou ao Instagram. Feito à mão, sem widget nem API.
+// Embaixo, a chamada "o que rola no Boni" (música, jogo e data especial) e o botão para o Instagram,
 // onde o bar divulga a programação.
 import { Icon } from 'astro-icon/components';
 import Foto from './Foto.astro';
-import { instagram } from '../data/fotos';
+import { agenda } from '../data/fotos';
 import site from '../data/site.json';
 import { linkWhatsapp } from '../lib/links';
 ---
@@ -26,20 +26,32 @@ import { linkWhatsapp } from '../lib/links';
         <Icon name="lucide:utensils" aria-hidden="true" />Ver o cardápio
       </a>
     </div>
-    <p class="hero__horario"><Icon name="lucide:clock" aria-hidden="true" />{site.horario.curto}</p>
+    <div class="hero__horario">
+      <Icon name="lucide:clock" aria-hidden="true" />
+      <p>{site.horario.linhas.map((linha) => <span>{linha}</span>)}</p>
+    </div>
   </div>
 
-  <div class="hero__insta">
-    <ul class="hero__grade" aria-label="Fotos do Instagram do Bar do Boni">
-      {instagram.map((foto) => (
-        <li>
-          <a class="hero__foto" href={foto.link ?? site.instagram} target="_blank" rel="noopener"
-            aria-label={`${foto.alt} (abre o Instagram)`}>
-            <Foto foto={foto} moldura="1/1" carregamento="eager" sizes="(max-width: 899px) 33vw, 16vw" />
-          </a>
-        </li>
-      ))}
+  <div class="hero__insta agenda" data-agenda>
+    <h2 class="agenda__titulo pincel pincel--1" id="titulo-agenda">Agenda musical</h2>
+    <ul class="agenda__trilho" data-trilho tabindex="0" aria-labelledby="titulo-agenda">
+      {agenda.map((foto, i) => {
+        const externo = !foto.link || /^https?:/.test(foto.link);
+        return (
+          <li class="agenda__item" aria-label={`Destaque ${i + 1} de ${agenda.length}`}>
+            <a class="hero__foto" href={foto.link ?? site.instagram} {...(externo ? { target: '_blank', rel: 'noopener' } : {})}
+              aria-label={externo ? `${foto.alt} (abre o Instagram)` : foto.alt}>
+              <Foto foto={foto} moldura="4/5" carregamento={i === 0 ? 'eager' : 'lazy'} sizes="(max-width: 899px) 90vw, 480px" />
+            </a>
+          </li>
+        );
+      })}
     </ul>
+    <div class="agenda__pontos" role="group" aria-label="Escolher destaque da agenda">
+      {agenda.map((_, i) => (
+        <button type="button" data-ponto={i} aria-label={`Ver destaque ${i + 1}`} aria-current={i === 0 ? 'true' : undefined}></button>
+      ))}
+    </div>
     <div class="hero__rola">
       <p><span>Música, jogo e data especial:</span> <span>o que rola no Boni.</span></p>
       <a class="btn btn--linha" href={site.instagram} target="_blank" rel="noopener">
@@ -52,7 +64,11 @@ import { linkWhatsapp } from '../lib/links';
 <style>
   .hero {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center;
-    padding: 80px var(--gutter) 96px; min-height: min(calc(100svh - 80px), 900px);
+    /* quase nada de espaço em cima: a pincelada "Agenda musical" fica colada no cabeçalho amarelo */
+    padding: 8px var(--gutter) 40px;
+    /* ocupa a tela menos o cabeçalho e os 24px da renda que ficam fora do hero (o divisor sobe 32px sobre ele):
+       assim a faixa de renda aparece inteira bem no fim da tela ao abrir o site */
+    min-height: calc(100svh - var(--topo-altura) - 24px);
   }
   .hero__texto { display: grid; gap: 32px; justify-items: start; container-type: inline-size; }
   /* Três linhas fixas, para ler melhor: "Música ao vivo" / "de quinta a domingo" / "na Lagoa da Conceição".
@@ -64,16 +80,38 @@ import { linkWhatsapp } from '../lib/links';
   .hero__titulo mark { /* cor e animação da faixa: global.css (mark) */ padding: 0 8px .16em; /* desce para cobrir as caudas (g, ç) */ white-space: nowrap; display: inline-block; line-height: 1; }
   .hero__chamada { max-width: 40ch; font-size: 20px; text-transform: none; letter-spacing: 0; }
   .hero__acoes { display: flex; flex-wrap: wrap; gap: 16px; }
-  /* horário em grafia normal, como escrito em site.json (sem caixa alta, para "11h" não virar "11H") */
-  .hero__horario { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; text-transform: none; letter-spacing: 0; }
-  .hero__horario :global(svg) { width: 20px; height: 20px; flex: none; }
+  /* horário em três linhas (site.json → horario.linhas), com o relógio alinhado à primeira */
+  .hero__horario { display: flex; align-items: flex-start; gap: 8px; font-weight: 600; font-size: 16px; line-height: 1.5; text-transform: none; letter-spacing: 0; }
+  .hero__horario p { margin: 0; }
+  .hero__horario span { display: block; }
+  .hero__horario :global(svg) { width: 20px; height: 20px; flex: none; margin-top: 2px; }
 
-  /* Grade 3x2 do Instagram, com a mesma junta das outras fotos */
-  .hero__insta { display: grid; gap: 16px; min-width: 0; }
-  .hero__grade {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--junta);
+  /* Agenda musical: carrossel de 5 cartazes (4:5), um por vez. Arrasta de lado (scroll-snap) e as 5 bolinhas
+     embaixo levam a cada um. A largura cabe na altura da tela, para o cartaz inteiro aparecer junto com o texto. */
+  .hero__insta { display: grid; gap: 16px; min-width: 0; justify-items: center; }
+  /* o cartaz (4:5) encolhe com a altura da tela para título, cartaz, bolinhas e Instagram caberem no hero */
+  .agenda { --largura: min(100%, 560px, (100svh - 372px) * .8); }
+  /* telas baixas (notebook 1366x768, 1280x720): cartaz menor, para a renda ainda caber no fim da tela */
+  @media (min-width: 900px) and (max-height: 820px) { .agenda { --largura: max(200px, min(100%, (100svh - 440px) * .8)); } .agenda .agenda__trilho { width: var(--largura); } }
+  .agenda__titulo { justify-self: center; font-size: clamp(40px, 3.6vw, 56px); }
+  .agenda__trilho {
+    width: max(var(--largura), 260px); max-width: 100%;
+    display: grid; grid-auto-flow: column; grid-auto-columns: 100%;
     list-style: none; margin: 0; padding: 0;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+    scrollbar-width: none; border-radius: var(--canto);
   }
+  .agenda__trilho::-webkit-scrollbar { display: none; }
+  .agenda__trilho:focus-visible { outline-offset: 4px; }
+  .agenda__item { scroll-snap-align: start; }
+  .agenda__pontos { display: flex; justify-content: center; gap: 4px; }
+  /* área de toque de 32px, bolinha de 12px */
+  .agenda__pontos button { width: 32px; height: 32px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+  .agenda__pontos button::before {
+    content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--texto-linha);
+    transition: background-color var(--transicao), transform var(--transicao);
+  }
+  .agenda__pontos button[aria-current="true"]::before { background: var(--color-ousada); transform: scale(1.15); }
   .hero__foto { display: block; }
   .hero__foto:focus-visible { outline-offset: -3px; }
   /* "o que rola no Boni": frase à esquerda e botão à direita; quebra em duas linhas se faltar espaço */
@@ -83,6 +121,22 @@ import { linkWhatsapp } from '../lib/links';
   .hero__rola :global(svg) { width: 18px; height: 18px; flex: none; }
 
   @media (max-width: 899px) {
-    .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; padding: 48px var(--gutter) 56px; min-height: 0; }
+    .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; padding: 32px var(--gutter) 56px; min-height: 0; }
+    .agenda { --largura: min(100%, 480px); }
   }
 </style>
+
+<script>
+  // Agenda musical: as bolinhas levam ao cartaz e acompanham a rolagem (arrastar com o dedo também troca).
+  document.querySelectorAll<HTMLElement>('[data-agenda]').forEach((agenda) => {
+    const trilho = agenda.querySelector<HTMLElement>('[data-trilho]')!;
+    const pontos = [...agenda.querySelectorAll<HTMLButtonElement>('[data-ponto]')];
+    const marcar = () => {
+      const atual = Math.round(trilho.scrollLeft / trilho.clientWidth);
+      pontos.forEach((p, i) => (i === atual ? p.setAttribute('aria-current', 'true') : p.removeAttribute('aria-current')));
+    };
+    pontos.forEach((p, i) => p.addEventListener('click', () => trilho.scrollTo({ left: i * trilho.clientWidth })));
+    trilho.addEventListener('scroll', marcar, { passive: true });
+    addEventListener('resize', marcar);
+  });
+</script>

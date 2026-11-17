@@ -38,7 +38,7 @@ const ano = new Date().getFullYear();
         </div>
         <div>
           <dt><Icon name="lucide:clock" aria-hidden="true" /><span>Horário</span></dt>
-          <dd>{site.horario.texto}</dd>
+          <dd class="horario">{site.horario.linhas.map((l) => <span>{l}</span>)}</dd>
         </div>
         <div>
           <dt><Icon name="lucide:phone" aria-hidden="true" /><span>Contato</span></dt>
@@ -82,9 +82,10 @@ const ano = new Date().getFullYear();
   /* informações: estilo .infos em global.css (sem linhas, ícone no círculo) */
   .rodape__email { overflow-wrap: anywhere; }
   /* redes: só os ícones, lado a lado */
-  .rodape__redes { display: flex; gap: 16px; list-style: none; margin: 0; padding: 0; }
-  .rodape__redes a { display: grid; place-items: center; width: 40px; height: 40px; margin-left: -8px; }
-  .rodape__redes :global(svg) { width: 26px; height: 26px; }
+  .rodape__redes { display: flex; flex-direction: row; align-items: center; gap: 12px; list-style: none; margin: 0; padding: 0; }
+  .rodape__redes li { display: block; }
+  .rodape__redes a { display: grid; place-items: center; width: 48px; height: 48px; margin-left: -8px; }
+  .rodape__redes :global(svg) { width: 34px; height: 34px; }
   /* links do rodapé sem sublinhado; no hover (e na página atual, no menu) ficam mais claros */
   .rodape a { text-decoration: none; transition: opacity var(--transicao); }
   .rodape a:hover, .rodape__link[aria-current="page"] { opacity: .65; }
