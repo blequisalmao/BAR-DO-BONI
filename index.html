@@ -646,7 +646,7 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
     /* rodapé do slide e renda */
     .rodape { position: static; margin-top: 32px; font-size: 12px; }
     .com-renda .rodape { position: static; }
-    .renda { height: 40px; }
+    /* a renda mantém os 56px do desenho (módulo de 40px × escala 1,4): menos que isso corta a faixa embaixo */
     .renda--base { bottom: 24px; }
 
     /* molduras de print */
