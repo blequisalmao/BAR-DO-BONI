@@ -71,6 +71,11 @@ const separarPorcao = (descricao?: string) => {
   /* Abas Pratos / Bebidas: a ativa no estilo do botão de destaque, a outra só com contorno */
   .cardapio__abas { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; padding: 0 var(--gutter) 40px; }
   .cardapio__abas .btn { min-width: 160px; justify-content: center; }
+  /* celular: Pratos e Bebidas sempre lado a lado, dividindo a largura */
+  @media (max-width: 639px) {
+    .cardapio__abas { flex-wrap: nowrap; gap: 12px; }
+    .cardapio__abas .btn { flex: 1 1 0; min-width: 0; max-width: 200px; padding-inline: 12px; }
+  }
   .cardapio__setor[hidden] { display: none; }
   details { background: var(--color-base); color: var(--color-texto); }
   /* o mesmo padrão de fundo do site (âncoras, barcos e ondas): azul nas categorias azuis, bege nas bege */
