@@ -545,6 +545,17 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
   addEventListener('beforeprint', () => definirZoom(1));
   addEventListener('afterprint', ajustar);
 
+  // Log de aberturas: avisa o servidor (registrar.php) uma vez ao abrir. Não conta quando aberta do computador
+  // (arquivo local ou localhost), nem no navegador de quem abriu uma vez com ?nao-registrar no endereço.
+  (() => {
+    try {
+      if (new URLSearchParams(location.search).has('nao-registrar')) localStorage.setItem('apresentacao-nao-registrar', '1');
+      if (localStorage.getItem('apresentacao-nao-registrar')) return;
+    } catch { /* sem armazenamento: registra normalmente */ }
+    if (!/^https?:$/.test(location.protocol) || /^(localhost|127\.)/.test(location.hostname)) return;
+    navigator.sendBeacon?.('registrar.php');
+  })();
+
   // setas do teclado / espaço passam de slide
   addEventListener('keydown', (e) => {
     const dir = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, ' ': 1, ArrowLeft: -1, ArrowUp: -1, PageUp: -1 }[e.key];
