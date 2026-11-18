@@ -120,6 +120,13 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
 .tabela__soma td:first-child { padding-left: 20px; border-radius: 4px 0 0 4px; } .tabela__soma td:last-child { padding-right: 20px; border-radius: 0 4px 4px 0; }
 .cartao--app { display: flex; flex-direction: column; gap: 12px; padding: 26px; }
 .cartao--app h3 { margin: 6px 0 0; font-size: 34px; }
+/* capa: texto e prints lado a lado; o celular fica por cima do canto do computador */
+.capa__grade { flex: 1; display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 64px; align-items: center; padding-bottom: 40px; }
+.capa__texto { display: flex; flex-direction: column; align-items: flex-start; gap: 30px; }
+.capa__prints { position: relative; padding: 0 0 70px 0; }
+.capa__pc { width: 100%; }
+.capa__cel { position: absolute; right: -24px; bottom: 0; width: 210px; padding: 10px; border-radius: 34px; }
+.capa__cel img { height: 420px; border-radius: 26px; }
 </style>
 </head>
 <body>
@@ -127,11 +134,18 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
 
 <!-- 1. Capa -->
 <section class="slide com-renda" id="capa">
-  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:36px;">
-    <span class="selo"><img src="assets/logo_bar_do_boni.png" alt="Logo do Bar do Boni" style="width:280px; height:auto; display:block;"></span>
-    <span class="pincel" style="font-size:150px;">O novo site</span>
-    <h1 style="font-size:96px; max-width:1300px;">Bar do Boni<br>com a <mark>cara da Lagoa</mark>.</h1>
-    <p class="acento" style="font-size:40px; color:var(--bege);">Cardápio, fotos, avaliações e reservas num lugar só, no celular de quem está chegando.</p>
+  <!-- texto à esquerda; à direita, o site no computador com o celular sobreposto (no celular, embaixo do texto) -->
+  <div class="capa__grade">
+    <div class="capa__texto">
+      <span class="selo"><img src="assets/logo_bar_do_boni.png" alt="Logo do Bar do Boni" style="width:240px; height:auto; display:block;"></span>
+      <span class="pincel" style="font-size:132px;">O novo site</span>
+      <h1 style="font-size:80px;">Bar do Boni<br>com a <mark>cara da Lagoa</mark>.</h1>
+      <p class="acento" style="font-size:34px; color:var(--bege);">Cardápio, fotos, avaliações e reservas num lugar só, no celular de quem está chegando.</p>
+    </div>
+    <div class="capa__prints">
+      <div class="nav capa__pc"><div class="nav__barra"><i></i><i></i><i></i><span>bardoboni.com.br</span></div><img src="img/home-hero.jpg" alt="Página inicial do site do Bar do Boni no computador"></div>
+      <div class="cel capa__cel"><img src="img/cel-home.jpg" alt="Página inicial do site do Bar do Boni no celular"></div>
+    </div>
   </div>
   <svg class="renda renda--base" aria-hidden="true"><rect width="100%" height="100%" fill="url(#renda)"/></svg>
 </section>
@@ -339,7 +353,7 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
         <li>Réveillon, Carnaval, festas temáticas e shows grandes, cada um com <b>a sua página</b>.</li>
         <li>Cartaz, programação, contagem regressiva, <b>fogos de artifício</b> ao abrir a página e o botão para <b>comprar ingresso</b>.</li>
         <li>Botão em destaque no topo do site enquanto a data estiver chegando.</li>
-        <li>A primeira, a do <b>Réveillon</b>, já está pronta e no pacote.</li>
+        <li>A primeira, a do <b>Réveillon</b>, já está pronta.</li>
       </ul>
     </div>
     <div style="position:relative; height:640px;">
@@ -356,7 +370,7 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
       <p class="eyebrow">QR Code na mesa</p>
       <h2>Apontou a câmera, abriu o cardápio.</h2>
       <ul class="lista">
-        <li>Um QR Code nas cores do Boni, já pronto para a gráfica (arquivo vetorial). <b>A impressão fica por conta do bar</b>; se quiserem, passo o contato da gráfica.</li>
+        <li>Um QR Code nas cores do Boni, já pronto para a gráfica (arquivo vetorial).</li>
         <li>Leva direto para o site: cardápio, fotos e reserva.</li>
         <li>Menos cardápio impresso para trocar a cada mudança de preço.</li>
         <li>O garçom ganha tempo: o cliente já escolhe enquanto espera.</li>
@@ -434,98 +448,29 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
     <div class="cartao"><h3>Abre rápido</h3><p>Site leve, sem plataforma pesada por trás. Carrega bem até com sinal fraco.</p></div>
     <div class="cartao"><h3>Aparece no Google</h3><p>O Google recebe nome, endereço, horário e tipo do negócio (bar), além de um mapa das páginas.</p></div>
     <div class="cartao"><h3>Bonito no WhatsApp</h3><p>Quem manda o link recebe uma prévia com título, descrição e imagem.</p></div>
-    <div class="cartao"><h3>Sem mensalidade de plataforma</h3><p>Não depende de Wix nem de site pronto pago por mês. Paga só domínio e hospedagem.</p></div>
+    <div class="cartao"><h3>Sem depender de plataforma</h3><p>Não fica preso a Wix nem a site pronto de terceiros: o site é feito sob medida para o Boni.</p></div>
     <div class="cartao"><h3>Seguro e estável</h3><p>Sem banco de dados nem painel exposto: quase nada para invadir ou quebrar.</p></div>
     <div class="cartao"><h3>Seu de verdade</h3><p>Domínio e hospedagem no nome do bar. O site e as fotos são do Boni.</p></div>
   </div>
   <div class="rodape"><span>Bar do Boni · O novo site</span><span>18</span></div>
 </section>
 
-<!-- 19. Levantamento: quanto custa cada parte -->
-<section class="slide bege liso" id="levantamento">
-  <p class="eyebrow">Levantamento de preços</p>
-  <h2 class="topo-titulo" style="margin-bottom:16px;">Quanto custa cada parte do projeto.</h2>
-  <table class="tabela">
-    <tr><th style="width:24%;">Item</th><th style="width:40%;">O que inclui</th><th style="width:20%;">No mercado</th><th style="width:16%; text-align:right;">Proposta</th></tr>
-    <tr><td><b>Identidade visual</b></td><td>Paleta, 4 fontes, pinceladas do cardápio, renda de bilro, padrão de fundo e marca-texto (a logo já existia)</td><td>R$ 1.500 a 3.500</td><td class="valor">R$ 1.500</td></tr>
-    <tr><td><b>Site</b></td><td>5 páginas (Início, Cardápio, Galeria, Contato e Página comemorativa), cardápio com 159 itens, galeria com 47 fotos, agenda musical, avaliações, WhatsApp, mapa e Google</td><td>R$ 5.000 a 12.000</td><td class="valor">R$ 5.000</td></tr>
-    <tr><td><b>Páginas comemorativas</b><br>(inclusas na manutenção)</td><td>Cartaz, contagem regressiva e ingressos. Réveillon de cortesia; na manutenção, 1 por mês inclusa</td><td>R$ 500 a 3.000</td><td class="valor">R$ 200 cada</td></tr>
-    <tr><td><b>QR Code e placa de mesa</b></td><td>Arte pronta para a gráfica. Impressão por conta do bar (passo o contato)</td><td>R$ 200 a 1.180</td><td class="valor">R$ 250</td></tr>
-    <tr class="tabela__soma"><td><b>Criação · soma</b></td><td>Pagamento único</td><td></td><td class="valor">R$ 6.750</td></tr>
-    <tr><td><b>Domínio</b></td><td>bardoboni.com.br no Registro.br, no CNPJ do bar · 1º ano por minha conta</td><td>R$ 40/ano</td><td class="valor">R$ 40/ano</td></tr>
-    <tr><td><b>Hospedagem</b></td><td>Hostinger · 1º ano por minha conta</td><td>R$ 30/mês</td><td class="valor">R$ 360/ano</td></tr>
-    <tr><td><b>Manutenção</b> · opcional</td><td>Até 10 atualizações e 1 página comemorativa por mês, cópia de segurança e acompanhamento</td><td>R$ 500 a 2.000/ano + páginas à parte</td><td class="valor">R$ 280/mês</td></tr>
-  </table>
-  <!-- <p class="peq" style="margin-top:20px; opacity:.8;">Faixas de mercado para freelancer no Brasil, consultadas em novembro de 2026. Do 2º ano em diante, o bar paga domínio e hospedagem direto.</p> -->
-  <div class="rodape"><span>Bar do Boni · O novo site</span><span>19</span></div>
-</section>
-
-<!-- 20. Investimento -->
-<section class="slide" id="investimento">
-  <p class="eyebrow" style="color:var(--bege);">Investimento</p>
-  <h2 class="topo-titulo">Um preço justo, sem surpresa.</h2>
-  <div style="display:grid; grid-template-columns:1.25fr 1fr; gap:40px; flex:1;">
-    <div class="cartao cartao--cheio" style="display:flex; flex-direction:column; gap:22px; padding:48px;">
-      <p style="font:600 24px/1 var(--f-corpo); letter-spacing:.14em; text-transform:uppercase;">Pacote completo · pagamento único</p>
-      <p style="font:600 34px/1 var(--f-display); text-decoration:line-through; opacity:.6;">R$ 6.750</p>
-      <p style="font:800 136px/1 var(--f-display); letter-spacing:-.02em;">R$ 3.900</p>
-      <p style="font-size:28px;">Identidade visual, site e QR Code. 50% na aprovação e 50% na publicação, podendo ser negociado.</p>
-      <ul class="lista" style="gap:12px; margin-top:8px;">
-        <li class="peq"><b>Página do Réveillon de cortesia</b>; as próximas entram na manutenção ou saem por R$ 200 cada</li>
-        <li class="peq"><b>1º ano de domínio e hospedagem por minha conta</b> (R$ 400)</li>
-        <li class="peq">30 dias de ajustes depois de publicado</li>
-        <li class="peq">Arquivos prontos para a gráfica. <b>Impressão não inclusa</b>; passo o contato da gráfica</li>
-      </ul>
-    </div>
-    <div style="display:flex; flex-direction:column; gap:28px;">
-      <div class="cartao" style="padding:40px;">
-        <p style="font:600 22px/1 var(--f-corpo); letter-spacing:.14em; text-transform:uppercase; color:var(--bege);">Manutenção mensal · opcional</p>
-        <p style="font:800 88px/1.1 var(--f-display); margin-top:14px;">R$ 280<span style="font-size:36px;">/mês</span></p>
-        <p style="font-size:26px; color:var(--bege); margin-top:10px;"><b>Até 10 atualizações por mês</b> (preços, itens, fotos e avisos) e <b>1 página comemorativa por mês inclusa</b>. Com cópia de segurança e acompanhamento do site.</p>
-      </div>
-      <div class="cartao" style="padding:40px;">
-        <p style="font:600 22px/1 var(--f-corpo); letter-spacing:.14em; text-transform:uppercase; color:var(--bege);">Custos fixos · a partir do 2º ano</p>
-        <p style="font:800 64px/1.1 var(--f-display); margin-top:14px;">R$ 400<span style="font-size:32px;">/ano</span></p>
-        <p style="font-size:26px; color:var(--bege); margin-top:10px;">Domínio (R$ 40/ano) e hospedagem (R$ 30/mês), pagos direto pelo bar, no nome dele. O 1º ano vai por minha conta.</p>
-      </div>
-    </div>
-  </div>
-  <div class="rodape" style="color:var(--bege);"><span>Bar do Boni · O novo site</span><span>20</span></div>
-</section>
-<!-- 21. Por que a manutenção vale a pena -->
-<section class="slide bege" id="manutencao">
-  <p class="eyebrow">Manutenção</p>
-  <h2 class="topo-titulo">Um bar de eventos precisa de um site que acompanhe a agenda.</h2>
-  <div class="cartoes" style="grid-template-columns:repeat(3,1fr); align-content:start;">
-    <div class="cartao"><h3>A agenda muda toda semana</h3><p>Música ao vivo, festas temáticas, jogos e datas especiais. Cada evento novo merece aparecer no site, não só no Instagram.</p></div>
-    <div class="cartao"><h3>Divulgar no site vende</h3><p>O site aparece no Google, tem o link certo para mandar no WhatsApp e leva direto à reserva ou ao ingresso.</p></div>
-    <div class="cartao"><h3>Informação sempre certa</h3><p>Cartazes da Agenda musical, preços do cardápio e horários em dia. Site desatualizado afasta o cliente.</p></div>
-  </div>
-  <div class="cartao" style="margin-top:28px; background:var(--azul); color:var(--amarelo); display:grid; grid-template-columns:1fr auto; gap:40px; align-items:center;">
-    <div>
-      <h3>Por R$ 280/mês, tudo isso sem se preocupar</h3>
-      <p style="color:var(--bege);"><b>Até 10 atualizações e 1 página comemorativa por mês.</b> Só uma página avulsa já custaria R$ 200.</p>
-    </div>
-    <p class="acento" style="font-size:34px; max-width:560px; color:var(--bege);">A forma de pagamento da manutenção pode ser negociada: do jeito que ficar melhor para o bar.</p>
-  </div>
-  <div class="rodape"><span>Bar do Boni · O novo site</span><span>21</span></div>
-</section>
-<!-- 22. Próximos passos -->
+<!-- 19. Próximos passos -->
 <section class="slide" id="passos">
   <p class="eyebrow" style="color:var(--bege);">Próximos passos</p>
   <h2 class="topo-titulo">Do sim ao site no ar.</h2>
   <div class="cartoes" style="grid-template-columns:repeat(5,1fr); flex:1; align-content:start;">
     <div class="cartao"><p class="num" style="font-size:96px;">1</p><h3 style="margin-top:18px; color:var(--bege);">Aprovação</h3><p style="color:var(--bege);">Ajustes finais de textos, fotos e preços.</p></div>
     <div class="cartao"><p class="num" style="font-size:96px;">2</p><h3 style="margin-top:18px; color:var(--bege);">Domínio</h3><p style="color:var(--bege);">Registro de bardoboni.com.br no nome do bar.</p></div>
-    <div class="cartao"><p class="num" style="font-size:96px;">3</p><h3 style="margin-top:18px; color:var(--bege);">Hospedagem</h3><p style="color:var(--bege);">Contratação do plano e publicação do site.</p></div>
-    <div class="cartao"><p class="num" style="font-size:96px;">4</p><h3 style="margin-top:18px; color:var(--bege);">QR Code</h3><p style="color:var(--bege);">Arte final para a gráfica. Impressão por conta do bar; passo o contato.</p></div>
+    <div class="cartao"><p class="num" style="font-size:96px;">3</p><h3 style="margin-top:18px; color:var(--bege);">Hospedagem</h3><p style="color:var(--bege);">Publicação do site no endereço do bar.</p></div>
+    <div class="cartao"><p class="num" style="font-size:96px;">4</p><h3 style="margin-top:18px; color:var(--bege);">QR Code</h3><p style="color:var(--bege);">Arte final pronta para a gráfica.</p></div>
     <div class="cartao"><p class="num" style="font-size:96px;">5</p><h3 style="margin-top:18px; color:var(--bege);">Divulgação</h3><p style="color:var(--bege);">Link no Instagram, no Google e no WhatsApp.</p></div>
   </div>
   <p class="acento" style="font-size:44px; color:var(--bege);">O site já está pronto: com domínio e hospedagem, ele entra no ar em poucos dias.</p>
-  <div class="rodape" style="color:var(--bege);"><span>Bar do Boni · O novo site</span><span>22</span></div>
+  <div class="rodape" style="color:var(--bege);"><span>Bar do Boni · O novo site</span><span>19</span></div>
 </section>
 
-<!-- 23. Encerramento -->
+<!-- 20. Encerramento -->
 <section class="slide amarelo com-renda" id="fim">
   <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:40px;">
     <span class="pincel pincel--azul" style="font-size:160px;">Tá combinado então?</span>
@@ -661,7 +606,11 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
     /* 1. capa */
     #capa .selo { padding: 10px 16px; }
     #capa .selo img { width: 150px !important; }
-    #capa > div { gap: 24px !important; }
+    #capa .capa__texto { gap: 24px; }
+    .capa__grade { grid-template-columns: minmax(0, 1fr); gap: 40px !important; padding-bottom: 0; }
+    .capa__prints { padding: 0 0 48px; }
+    .capa__cel { right: 4px; width: 34%; padding: 5px; border-radius: 18px; }
+    .capa__cel img { height: auto; border-radius: 14px; }
 
     /* 4. abertura da identidade */
     #identidade > div { gap: 24px !important; }
