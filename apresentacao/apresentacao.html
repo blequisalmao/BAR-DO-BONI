@@ -74,7 +74,7 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
 
 /* renda de bilro (desenhada pelo script, igual à do site) */
 .renda { display: block; width: 100%; height: 56px; color: var(--bege); }
-.renda--base { position: absolute; left: 0; right: 0; bottom: 40px; }
+.renda--base { position: absolute; left: 0; right: 0; bottom: 40px; height: calc(56px / var(--z)); } /* 56px reais na tela (ver definirZoom) */
 .renda--topo { position: absolute; left: 0; right: 0; top: 40px; }
 /* a cor da renda vem do padrão: #renda (bege) nos fundos azuis, #renda-azul nos claros */
 
@@ -508,8 +508,19 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
         <g fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round" stroke-linecap="round">${roseta}</g>
         <g fill="currentColor">${pontos}</g>
       </pattern>`;
-    document.getElementById('renda-defs').innerHTML = padrao('renda', '#F0DEC5') + padrao('renda-azul', '#01418B');
+    // "-g": cópias para as faixas das bordas dos slides (.renda--base), que acompanham o zoom (definirZoom)
+    document.getElementById('renda-defs').innerHTML = padrao('renda', '#F0DEC5') + padrao('renda-azul', '#01418B')
+      + padrao('renda-g', '#F0DEC5') + padrao('renda-azul-g', '#01418B');
+    document.querySelectorAll('.renda--base rect').forEach((r) => r.setAttribute('fill', r.getAttribute('fill').replace(')', '-g)')));
   })();
+
+  // Zoom: com o slide reduzido (computador), a faixa de renda encolheria junto e as linhas ficariam com menos de
+  // meio pixel (chuvisco). As faixas das bordas mantêm 56px reais na tela: a altura (CSS) e a escala do desenho
+  // são divididas pelo zoom. No celular e no PDF o zoom é 1, então nada muda.
+  const definirZoom = (z) => {
+    document.documentElement.style.setProperty('--z', z);
+    for (const id of ['renda-g', 'renda-azul-g']) document.getElementById(id)?.setAttribute('patternTransform', `scale(${1.4 / z})`);
+  };
 
   // zoom dos slides no computador: ~70% da largura da janela (em telas menores, até 1100px, com 48px de
   // margem de cada lado) e nunca mais alto que a janela, para o slide aparecer inteiro com margem em volta.
@@ -518,10 +529,10 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
   const celular = matchMedia('(max-width: 899px)');
   const ajustar = () => {
     const largura = Math.max(innerWidth * 0.7, Math.min(innerWidth - 96, 1100));
-    document.documentElement.style.setProperty('--z', celular.matches ? 1 : Math.min(1, largura / 1920, (innerHeight - 120) / 1080));
+    definirZoom(celular.matches ? 1 : Math.min(1, largura / 1920, (innerHeight - 120) / 1080));
   };
   ajustar(); addEventListener('resize', ajustar);
-  addEventListener('beforeprint', () => document.documentElement.style.setProperty('--z', 1));
+  addEventListener('beforeprint', () => definirZoom(1));
   addEventListener('afterprint', ajustar);
 
   // setas do teclado / espaço passam de slide
