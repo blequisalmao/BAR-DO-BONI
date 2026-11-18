@@ -9,6 +9,9 @@ export default defineConfig({
   // Endereço público do site (usado no sitemap, no canonical e no Open Graph). Troque em src/data/site.json.
   site: site.url,
   output: 'static',
+  // Pré-carrega as páginas internas quando o link aparece na tela (ex.: ao abrir o menu do celular):
+  // ao tocar, a página já está baixada e a troca é imediata, sem cara de "recarregar"
+  prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
   // Páginas que viraram parte de outras; os endereços antigos continuam funcionando
   redirects: {
     '/como-chegar': '/contato', // "Como chegar" agora está no Contato
