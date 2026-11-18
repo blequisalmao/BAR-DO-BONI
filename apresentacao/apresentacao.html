@@ -508,19 +508,29 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
         <g fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round" stroke-linecap="round">${roseta}</g>
         <g fill="currentColor">${pontos}</g>
       </pattern>`;
-    // "-g": cópias para as faixas das bordas dos slides (.renda--base), que acompanham o zoom (definirZoom)
-    document.getElementById('renda-defs').innerHTML = padrao('renda', '#F0DEC5') + padrao('renda-azul', '#01418B')
-      + padrao('renda-g', '#F0DEC5') + padrao('renda-azul-g', '#01418B');
-    document.querySelectorAll('.renda--base rect').forEach((r) => r.setAttribute('fill', r.getAttribute('fill').replace(')', '-g)')));
+    document.getElementById('renda-defs').innerHTML = padrao('renda', '#F0DEC5') + padrao('renda-azul', '#01418B');
+
+    // Faixas das bordas dos slides (.renda--base): estáticas. Em vez do padrão SVG (que depende do zoom do slide e
+    // da escala da tela, e cortava embaixo), o módulo vira uma imagem de fundo repetida de lado e sempre com a altura
+    // exata da faixa (background-size: auto 100%): nunca corta, em qualquer zoom ou tela.
+    const modulo = (cor) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${L} ${H}" width="${L}" height="${H}">
+      <defs><mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="${L}" height="${H}">
+        <rect x="0" y="4" width="${L}" height="${H - 8}" fill="#fff"/><circle cx="${cx}" cy="${cy}" r="14.5" fill="#000"/>
+        <circle cx="0" cy="${cy}" r="9.5" fill="#000"/><circle cx="${L}" cy="${cy}" r="9.5" fill="#000"/>
+      </mask></defs>
+      <g mask="url(#m)" fill="none" stroke="${cor}" stroke-width=".55">${linhas}</g>
+      <g fill="none" stroke="${cor}" stroke-width="1" stroke-linejoin="round" stroke-linecap="round">${roseta}</g>
+      <g fill="${cor}">${pontos}</g></svg>`;
+    document.querySelectorAll('.renda--base').forEach((faixa) => {
+      const rect = faixa.querySelector('rect');
+      const cor = rect.getAttribute('fill').includes('azul') ? '#01418B' : '#F0DEC5';
+      rect.remove();
+      faixa.style.background = `url("data:image/svg+xml,${encodeURIComponent(modulo(cor))}") 0 50% / auto 100% repeat-x`;
+    });
   })();
 
-  // Zoom: com o slide reduzido (computador), a faixa de renda encolheria junto e as linhas ficariam com menos de
-  // meio pixel (chuvisco). As faixas das bordas mantêm 56px reais na tela: a altura (CSS) e a escala do desenho
-  // são divididas pelo zoom. No celular e no PDF o zoom é 1, então nada muda.
-  const definirZoom = (z) => {
-    document.documentElement.style.setProperty('--z', z);
-    for (const id of ['renda-g', 'renda-azul-g']) document.getElementById(id)?.setAttribute('patternTransform', `scale(${1.4 / z})`);
-  };
+  // A faixa da borda tem 56px reais na tela em qualquer zoom (altura dividida pelo zoom no CSS de .renda--base)
+  const definirZoom = (z) => document.documentElement.style.setProperty('--z', z);
 
   // zoom dos slides no computador: ~70% da largura da janela (em telas menores, até 1100px, com 48px de
   // margem de cada lado) e nunca mais alto que a janela, para o slide aparecer inteiro com margem em volta.
