@@ -11,9 +11,9 @@ import site from '../data/site.json';
 
 const links = [
   { href: '/', texto: 'Início' },
-  { href: '/cardapio', texto: 'Cardápio' },
-  { href: '/galeria', texto: 'Galeria' },
-  { href: '/contato', texto: 'Contato' },
+  { href: '/cardapio/', texto: 'Cardápio' },
+  { href: '/galeria/', texto: 'Galeria' },
+  { href: '/contato/', texto: 'Contato' },
 ];
 const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
 const redes = [
@@ -31,12 +31,12 @@ const redes = [
     <ul class="topo__links" id="menu-principal" data-menu>
       {links.map((l) => (
         <li>
-          <a class="topo__link" href={l.href} aria-current={atual === l.href ? 'page' : undefined}>{l.texto}</a>
+          <a class="topo__link" href={l.href} aria-current={atual === (l.href.replace(/\/$/, '') || '/') ? 'page' : undefined}>{l.texto}</a>
         </li>
       ))}
       <!-- no celular o destaque aparece aqui, dentro do menu; no desktop, ao lado do Instagram (abaixo) -->
       <li class="topo__destaque-menu">
-        <a class="topo__destaque" href="/reveillon" aria-current={atual === '/reveillon' ? 'page' : undefined}>
+        <a class="topo__destaque" href="/reveillon/" aria-current={atual === '/reveillon' ? 'page' : undefined}>
           <Icon name="lucide:sparkles" aria-hidden="true" />Réveillon no Boni!
         </a>
       </li>
@@ -49,7 +49,7 @@ const redes = [
   </nav>
 
   <div class="topo__acoes">
-    <a class="topo__destaque topo__destaque--acoes" href="/reveillon" aria-current={atual === '/reveillon' ? 'page' : undefined}>
+    <a class="topo__destaque topo__destaque--acoes" href="/reveillon/" aria-current={atual === '/reveillon' ? 'page' : undefined}>
       <Icon name="lucide:sparkles" aria-hidden="true" />Réveillon no Boni!
     </a>
     <ul class="topo__redes">
@@ -82,6 +82,7 @@ const redes = [
     --texto-linha: rgb(1 65 139 / .3);
     background: rgb(243 180 22 / .97); color: var(--color-texto);
     border-bottom: 2px solid var(--color-texto);
+    view-transition-name: topo; /* fica parado na troca de página (global.css → @view-transition) */
   }
   .topo :focus-visible { outline-color: var(--color-texto); }
   .topo__marca { display: block; flex: none; line-height: 0; }
@@ -180,8 +181,19 @@ const redes = [
     const abrir = () => { menu.dataset.aberto = ''; botao.setAttribute('aria-expanded', 'true'); };
     function fechar() { delete menu!.dataset.aberto; botao!.setAttribute('aria-expanded', 'false'); }
     botao.addEventListener('click', () => (menu.hasAttribute('data-aberto') ? fechar() : abrir()));
-    // clicar num link fecha o painel (os links com "#" ficam na mesma página)
-    menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) fechar(); });
+    // clicar num link fecha o painel (os links com "#" ficam na mesma página).
+    // Link para a página em que a pessoa já está: só fecha o menu e volta ao topo, sem recarregar a página.
+    const caminho = (p: string) => p.replace(/\/$/, '') || '/';
+    menu.addEventListener('click', (e) => {
+      const link = (e.target as HTMLElement).closest('a');
+      if (!link) return;
+      fechar();
+      const destino = new URL(link.href, location.href);
+      if (destino.origin === location.origin && !destino.hash && caminho(destino.pathname) === caminho(location.pathname)) {
+        e.preventDefault();
+        scrollTo({ top: 0 });
+      }
+    });
     addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && menu.hasAttribute('data-aberto')) { fechar(); botao.focus(); }
     });

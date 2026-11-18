@@ -107,7 +107,7 @@ export const espaco: Foto[] = [
  *  (o tamanho de um post do Instagram, ex.: 1080 x 1350). Cada um leva ao `link`; sem `link`, ao Instagram do bar.
  *  Para trocar: coloque o cartaz em /imagens e troque a linha. */
 export const agenda: (Foto & { link?: string })[] = [
-  { arquivo: 'reveillon_2026.png', alt: 'Cartaz do Réveillon do Bar do Boni: 31 de dezembro de 2026, às 21h, com open bar, open food, queima de fogos e shows', link: '/reveillon' },
+  { arquivo: 'reveillon_2026.png', alt: 'Cartaz do Réveillon do Bar do Boni: 31 de dezembro de 2026, às 21h, com open bar, open food, queima de fogos e shows', link: '/reveillon/' },
   // provisórias, até chegarem os cartazes dos próximos eventos
   daGaleria('celebrando_com_cerveja.png'),
   daGaleria('clientes23.png'),

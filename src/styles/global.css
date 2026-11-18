@@ -59,6 +59,12 @@
 @media (min-width: 640px) { :root { --gutter: 32px; } }
 @media (min-width: 1440px) { :root { --gutter: 48px; } }
 
+/* Troca de página suave (Chrome 126+, Safari 18.2+; nos outros, troca normal): o conteúdo faz um fade rápido
+   e o cabeçalho fixo fica parado, em vez da página "piscar" como se recarregasse */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 180ms; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+
 /* ---------- base ---------- */
 @layer base {
   /* --abas-altura: altura da barra de abas fixa da página inicial (medida em Abas.astro; 0 nas outras páginas) */

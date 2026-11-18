@@ -8,10 +8,10 @@ import { linkWhatsapp } from '../lib/links';
 
 const links = [
   { href: '/', texto: 'Home' },
-  { href: '/cardapio', texto: 'Cardápio' },
-  { href: '/galeria', texto: 'Galeria' },
+  { href: '/cardapio/', texto: 'Cardápio' },
+  { href: '/galeria/', texto: 'Galeria' },
   { href: '/#avaliacoes', texto: 'Avaliações' }, // atalho para as avaliações na página inicial
-  { href: '/contato', texto: 'Contato' },
+  { href: '/contato/', texto: 'Contato' },
 ];
 const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
 const e = site.endereco;
@@ -23,7 +23,7 @@ const ano = new Date().getFullYear();
       <ul class="rodape__links">
         {links.map((l) => (
           <li>
-            <a class="rodape__link display" href={l.href} aria-current={atual === l.href ? 'page' : undefined}>{l.texto}</a>
+            <a class="rodape__link display" href={l.href} aria-current={atual === (l.href.replace(/\/$/, '') || '/') ? 'page' : undefined}>{l.texto}</a>
           </li>
         ))}
       </ul>
