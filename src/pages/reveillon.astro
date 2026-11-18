@@ -16,13 +16,8 @@ const VIRADA = '2027-01-01T00:00:00-03:00';
 const cartaz = agenda.find((f) => f.link === '/reveillon')!;
 const e = site.endereco;
 
-const inclui = [
-  { icone: 'lucide:wine', titulo: 'Open bar', texto: 'Bebida liberada a noite toda.' },
-  { icone: 'lucide:utensils', titulo: 'Open food', texto: 'Comida à vontade para curtir até a virada.' },
-  { icone: 'lucide:sparkles', titulo: 'Queima de fogos', texto: 'A chegada de 2027 com fogos sobre a Lagoa.' },
-  { icone: 'lucide:music', titulo: 'Shows e muita música', texto: 'Música ao vivo para dançar até o ano novo.' },
-  { icone: 'lucide:star', titulo: 'Estrutura especial', texto: 'Tudo preparado para celebrar até a virada.' },
-];
+// cartões "Tudo incluso": só o título, em destaque
+const inclui = ['Open bar', 'Open food', 'Queima de fogos', 'Shows e muita música', 'Estrutura especial'];
 
 // dados estruturados de evento: o Google pode mostrar a festa nas buscas
 const evento = {
@@ -44,6 +39,8 @@ const evento = {
 ---
 <Base titulo="Réveillon 2027" descricao="Réveillon do Boni, 5ª edição: 31 de dezembro de 2026, a partir das 21h, à beira da Lagoa da Conceição. Open bar, open food, queima de fogos e shows.">
   <script type="application/ld+json" set:html={JSON.stringify(evento)} />
+  <!-- fogos de artifício ao abrir a página: tela fixa no fundo, atrás de todo o conteúdo -->
+  <canvas class="rev-fogos" data-fogos aria-hidden="true"></canvas>
 
   <section class="rev-topo" aria-labelledby="titulo-reveillon">
     <div class="rev-topo__texto">
@@ -83,12 +80,8 @@ const evento = {
       <p class="bloco__sub acento">Uma celebração completa, à beira da Lagoa, com tudo para brindar a chegada de um novo ano.</p>
     </div>
     <ul class="rev-cartoes">
-      {inclui.map((i) => (
-        <li class="tema-invertido">
-          <Icon name={i.icone} aria-hidden="true" />
-          <h3>{i.titulo}</h3>
-          <p>{i.texto}</p>
-        </li>
+      {inclui.map((titulo) => (
+        <li class="tema-invertido"><h3>{titulo}</h3></li>
       ))}
     </ul>
   </section>
@@ -132,7 +125,9 @@ const evento = {
     background: var(--bege); color: var(--azul); font: 800 16px/1 var(--font-display); letter-spacing: .04em;
   }
   .rev-selo :global(svg) { width: 18px; height: 18px; }
-  .rev-titulo { margin: 0; }
+  /* "Réveillon do Boni" com a pincelada mede ~5,5em e não quebra: no celular a letra diminui para caber
+     (senão a pincelada empurra a página para a direita) */
+  .rev-titulo { margin: 0; font-size: min(clamp(68px, 6.4vw, 104px), calc((100vw - 2 * var(--gutter)) / 5.7)); }
   .rev-frase { margin: 0; max-width: 22ch; font-size: min(clamp(30px, 3.4vw, 52px), (100vw - 2 * var(--gutter)) / 12); line-height: 1.1; text-transform: none; }
   /* "E o seu lugar é aqui!" numa linha só, embaixo da primeira frase */
   .rev-frase__fim { display: block; margin-top: .2em; }
@@ -150,10 +145,12 @@ const evento = {
   .rev-contagem .secao__titulo { font-size: min(clamp(68px, 6.4vw, 104px), calc((100vw - 2 * var(--gutter)) / 7)); }
   .rev-inclui .bloco__titulos, .rev-contagem .bloco__titulos { text-align: center; }
   .rev-cartoes { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; list-style: none; margin: 0; padding: 0; }
-  .rev-cartoes li { display: grid; align-content: start; gap: 12px; padding: 28px 24px; border-radius: var(--canto); text-transform: none; letter-spacing: 0; }
-  .rev-cartoes :global(svg) { width: 36px; height: 36px; }
-  .rev-cartoes h3 { margin: 0; font: 800 24px/1.15 var(--font-display); }
-  .rev-cartoes p { margin: 0; font-size: 17px; line-height: 1.45; }
+  /* cada cartão só com o título, centralizado e em destaque */
+  .rev-cartoes li { display: grid; place-items: center; min-height: 140px; padding: 28px 20px; border-radius: var(--canto); text-align: center; text-transform: none; letter-spacing: 0; }
+  .rev-cartoes h3 { margin: 0; font: 800 clamp(24px, 2vw, 30px)/1.15 var(--font-display); text-wrap: balance; }
+
+  /* Fogos de artifício: atrás de tudo (z-index -1 sobre o fundo do body), sem pegar cliques */
+  .rev-fogos { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
 
   /* Contagem regressiva até a virada (meia-noite de Brasília) */
   .rev-relogio { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; width: 100%; max-width: 880px; justify-self: center; }
@@ -170,12 +167,16 @@ const evento = {
 
   @media (max-width: 1023px) { .rev-cartoes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 899px) {
-    .rev-topo { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 32px; }
+    /* celular: a pincelada "Réveillon do Boni" é a primeira coisa da página, depois o cartaz e o resto do texto */
+    .rev-topo { grid-template-columns: minmax(0, 1fr); justify-items: start; gap: 24px; padding-top: 32px; }
+    .rev-topo__texto { display: contents; }
+    .rev-titulo { order: -2; }
     .rev-cartaz { order: -1; max-width: 420px; }
+    /* cartões em lista, um embaixo do outro */
+    .rev-cartoes { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .rev-cartoes li { min-height: 0; padding: 20px 24px; }
   }
   @media (max-width: 639px) {
-    .rev-cartoes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .rev-cartoes li:last-child { grid-column: 1 / -1; }
     .rev-relogio { gap: 8px; }
     .rev-relogio div { padding: 16px 4px; }
     .rev-relogio small { font-size: 11px; letter-spacing: .06em; }
@@ -183,6 +184,78 @@ const evento = {
 </style>
 
 <script>
+  // Fogos de artifício ao abrir a página: foguetes sobem, estouram em faíscas (amarelo, bege e branco)
+  // e somem com o tempo. Duram no máximo 5s, no fundo (canvas fixo atrás do conteúdo). Com movimento reduzido, não aparecem.
+  const tela = document.querySelector<HTMLCanvasElement>('[data-fogos]');
+  const semMovimento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (tela && !semMovimento) {
+    const ctx = tela.getContext('2d')!;
+    const CORES = ['#F3B416', '#F0DEC5', '#FFFFFF', '#FFD45C'];
+    const DURACAO = 3200; // ms lançando foguetes; depois as últimas faíscas terminam de cair
+    const LIMITE = 5000; // ms no total: nos últimos 400ms a tela some aos poucos e é removida
+    type Foguete = { x: number; y: number; vy: number; alvo: number; cor: string };
+    type Faisca = { x: number; y: number; vx: number; vy: number; vida: number; cor: string };
+    let foguetes: Foguete[] = [];
+    let faiscas: Faisca[] = [];
+    let largura = 0, altura = 0, inicio = 0, proximo = 0;
+
+    const medir = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      largura = innerWidth; altura = innerHeight;
+      tela.width = largura * dpr; tela.height = altura * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    const GRAVIDADE = .16;
+    const sortear = (a: number, b: number) => a + Math.random() * (b - a);
+    const cor = () => CORES[Math.floor(Math.random() * CORES.length)];
+    // o foguete sai do pé da tela com a velocidade exata para parar (e estourar) na altura sorteada
+    const lancar = () => {
+      const alvo = sortear(altura * .1, altura * .45);
+      foguetes.push({ x: sortear(largura * .08, largura * .92), y: altura, vy: -Math.sqrt(2 * GRAVIDADE * (altura - alvo)), alvo, cor: cor() });
+    };
+    const estourar = (f: Foguete) => {
+      const pequeno = largura < 640;
+      const n = pequeno ? 60 : 100, forca = pequeno ? 4.5 : 6.5;
+      for (let i = 0; i < n; i++) {
+        const ang = (i / n) * Math.PI * 2 + sortear(-.05, .05), vel = forca * sortear(.35, 1);
+        faiscas.push({ x: f.x, y: f.y, vx: Math.cos(ang) * vel, vy: Math.sin(ang) * vel, vida: 1, cor: Math.random() < .2 ? '#FFFFFF' : f.cor });
+      }
+    };
+    const quadro = (agora: number) => {
+      if (!inicio) inicio = agora;
+      const passou = agora - inicio;
+      if (passou < DURACAO && agora >= proximo) {
+        lancar(); if (Math.random() < .35) lancar(); // às vezes dois juntos
+        proximo = agora + sortear(220, 520);
+      }
+      // apaga aos poucos o quadro anterior: as faíscas deixam rastro
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0, 0, 0, .28)'; ctx.fillRect(0, 0, largura, altura);
+      ctx.globalCompositeOperation = 'lighter';
+      foguetes = foguetes.filter((f) => {
+        f.y += f.vy; f.vy += GRAVIDADE;
+        ctx.globalAlpha = 1; ctx.fillStyle = f.cor; ctx.beginPath(); ctx.arc(f.x, f.y, 2.5, 0, Math.PI * 2); ctx.fill();
+        if (f.vy >= 0 || f.y <= f.alvo) { estourar(f); return false; }
+        return true;
+      });
+      faiscas = faiscas.filter((s) => {
+        s.vx *= .975; s.vy = s.vy * .975 + .05; s.x += s.vx; s.y += s.vy; s.vida -= .011;
+        if (s.vida <= 0) return false;
+        ctx.globalAlpha = s.vida; ctx.fillStyle = s.cor;
+        ctx.beginPath(); ctx.arc(s.x, s.y, 2.6 * s.vida + .8, 0, Math.PI * 2); ctx.fill();
+        return true;
+      });
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+      if (passou > LIMITE - 400) tela.style.opacity = String(Math.max(0, (LIMITE - passou) / 400));
+      if (passou < LIMITE && (passou < DURACAO || foguetes.length || faiscas.length)) requestAnimationFrame(quadro);
+      else { removeEventListener('resize', medir); tela.remove(); }
+    };
+    const comecar = () => { medir(); addEventListener('resize', medir); requestAnimationFrame(quadro); };
+    // primeira visita: espera a tela de carregamento com a logo sair
+    if (document.documentElement.classList.contains('js-carregando')) addEventListener('boni:pronto', comecar, { once: true });
+    else comecar();
+  }
+
   // Contagem regressiva até a meia-noite de 1º de janeiro de 2027 (horário de Brasília)
   const relogio = document.querySelector<HTMLElement>('[data-contagem]');
   if (relogio) {

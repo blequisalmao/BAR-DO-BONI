@@ -122,6 +122,8 @@ import { linkWhatsapp } from '../lib/links';
 
   @media (max-width: 899px) {
     .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; padding: 32px var(--gutter) 56px; min-height: 0; }
+    /* celular: a agenda musical vem primeiro, antes da frase e dos botões */
+    .hero__insta { order: -1; }
     .agenda { --largura: min(100%, 480px); }
   }
 </style>
