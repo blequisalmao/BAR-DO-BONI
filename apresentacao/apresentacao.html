@@ -511,10 +511,15 @@ mark { background: var(--amarelo); color: var(--azul); padding: 0 .12em; }
     document.getElementById('renda-defs').innerHTML = padrao('renda', '#F0DEC5') + padrao('renda-azul', '#01418B');
   })();
 
-  // zoom dos slides para caber na largura da janela; na impressão (PDF) volta ao tamanho real
-  // no celular (até 899px) não há zoom: os slides viram telas em coluna (CSS "Celular" no fim do arquivo)
+  // zoom dos slides no computador: ~70% da largura da janela (em telas menores, até 1100px, com 48px de
+  // margem de cada lado) e nunca mais alto que a janela, para o slide aparecer inteiro com margem em volta.
+  // Na impressão (PDF) volta ao tamanho real.
+  // No celular (até 899px) não há zoom: os slides viram telas em coluna (CSS "Celular" no fim do arquivo)
   const celular = matchMedia('(max-width: 899px)');
-  const ajustar = () => document.documentElement.style.setProperty('--z', celular.matches ? 1 : Math.min(1, (innerWidth - 48) / 1920));
+  const ajustar = () => {
+    const largura = Math.max(innerWidth * 0.7, Math.min(innerWidth - 96, 1100));
+    document.documentElement.style.setProperty('--z', celular.matches ? 1 : Math.min(1, largura / 1920, (innerHeight - 120) / 1080));
+  };
   ajustar(); addEventListener('resize', ajustar);
   addEventListener('beforeprint', () => document.documentElement.style.setProperty('--z', 1));
   addEventListener('afterprint', ajustar);
