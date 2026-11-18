@@ -30,7 +30,7 @@ const ano = new Date().getFullYear();
     </nav>
 
     <div class="rodape__visita">
-      <p class="rodape__chamada acento"><span>Tá combinado então?</span> <span>A gente te espera no final da Av. das Rendeiras.</span></p>
+      <p class="rodape__chamada acento"><span>Tá combinado então?</span> <span>A gente se encontra no final da Av. das Rendeiras.</span></p>
       <dl class="rodape__info infos">
         <div>
           <dt><Icon name="lucide:map-pin" aria-hidden="true" /><span>Endereço</span></dt>
@@ -74,10 +74,10 @@ const ano = new Date().getFullYear();
   }
 
   .rodape__visita { display: grid; gap: 24px; }
-  /* Duas frases, cada uma numa linha só. A mais longa ("A gente te espera no final da Av. das Rendeiras.")
-     mede 20,6em: a letra diminui o quanto for preciso para ela caber na coluna (100cqi = largura da coluna). */
+  /* Duas frases, cada uma numa linha só. A mais longa ("A gente se encontra no final da Av. das Rendeiras.")
+     mede 21,7em: a letra diminui o quanto for preciso para ela caber na coluna (100cqi = largura da coluna). */
   .rodape__visita { container-type: inline-size; }
-  .rodape__chamada { font-size: min(clamp(22px, 2.2vw, 32px), 100cqi / 21); }
+  .rodape__chamada { font-size: min(clamp(22px, 2.2vw, 32px), 100cqi / 22.2); }
   .rodape__chamada span { display: block; white-space: nowrap; }
   /* informações: estilo .infos em global.css (sem linhas, ícone no círculo) */
   .rodape__email { overflow-wrap: anywhere; }
